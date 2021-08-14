@@ -7,7 +7,7 @@ _mysql=$(which mysql)
 site='MKZ'
 host=`hostname`
 
-# db_name,--query
+# db_name,-- valor vem da query
 versa=$($_mysql -u$user -p$pass -D mysql -B -s -e 'SELECT SUBSTRING(version(),1,3);');
 release=$($_mysql -u$user -p$pass -D mysql -B -s -e 'SELECT SUBSTRING(version(),5,2);');
 tipo='PRD'
