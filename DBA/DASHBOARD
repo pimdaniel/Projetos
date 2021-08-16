@@ -1,0 +1,9 @@
+
+########################
+# Relatorio Dashboard  #
+########################
+
+select  ORIGEM,COUNT(0)
+from DATABASES
+WHERE  TIPO = 'PRD'
+GROUP BY origem
