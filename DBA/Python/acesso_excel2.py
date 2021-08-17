@@ -1,3 +1,9 @@
+import openpyxl as openpyxl
+import xlsxwriter
+from DAL import mysqlConn
+import pandas as pd
+
+
 # -----------------------------------------------------------------------------------------------------------------------------
 path = r"C:\Claro\Desenvolvimento\XXXXXXX.xlsx"
 # Cria um excel a partir de uma query  em um database
