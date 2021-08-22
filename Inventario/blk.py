@@ -40,7 +40,7 @@ def showExistUser(_server,_db,_login,_version):
     retorno = ""
 
 
-#-- Conecta no servidor / base de dados passados como parametro 
+#-- Conecta no servidor / base de dados passados como parametro / Busca e apaga o usuario específico
 
     try:
         connectionL2 = pymssql.connect(_server, _user, _password, _db)

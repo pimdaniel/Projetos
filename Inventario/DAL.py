@@ -1,7 +1,53 @@
+
 import pymssql
 import cx_Oracle
 import mysql.connector
- 
+
+
+class bancoSQL:  
+
+  def __init__(self,servidor,banco):
+    self.servidor =servidor   
+    self.banco=banco
+
+  def __enter__(self):   
+    self.conn = pymssql.connect(self.servidor,'dbmon','monitor',self.banco)
+    return self.conn.cursor()
+   
+  def __exit__(self,a,b,c):
+    self.conn.close()
+
+class inventario:  
+  def __init__(self):
+   self._server = "P00INV"
+   self._user = "dbmon"
+   self._password="monitor"     
+   self._tns =self._user+"/"+self._password+"@"+self._server
+
+  def __enter__(self):   
+    self.conn =cx_Oracle.connect(self._tns)
+    return self.conn.cursor()
+   
+  def __exit__(self):
+    self.conn.close()
+
+
+
+def invConn():
+
+# connection = cx_Oracle.connect('DBMON/DBMON77DBA@p05inv:1521')
+# connection = cx_Oracle.connect('dbmon/monitor@P00inv')
+
+    _server = "P00INV"
+    _user = "dbmon"
+    _password="monitor"     
+    _tns = _user+"/"+_password+"@"+_server
+
+    connection = cx_Oracle.connect(_tns)
+   
+    return connection
+
+
 
 
 def labConn():
@@ -9,8 +55,20 @@ def labConn():
     _server = "10.2.20.33"
     _db = "master"
     _user = "da"
-    _password="da"
+    _password="da" 
 
+    connection = pymssql.connect(_server, _user, _password, _db)
+   
+
+    return connection
+
+
+def labConn2():
+
+    _server = "10.2.20.33\sqk2008"
+    _db = "SCSEBT2"
+    _user = "dbmon"
+    _password="monitor" 
 
     connection = pymssql.connect(_server, _user, _password, _db)
    
@@ -42,19 +100,7 @@ def sqlConnDbmon(_host,_database):
 
 
   
-def invConn():
 
-# connection = cx_Oracle.connect('DBMON/DBMON77DBA@p05inv:1521')
-# connection = cx_Oracle.connect('dbmon/monitor@P00inv')
-
-    _server = "P00INV"
-    _user = "dbmon"
-    _password="monitor"     
-    _tns = _user+"/"+_password+"@"+_server
-
-    connection = cx_Oracle.connect(_tns)
-   
-    return connection
 
 
 def mysqlConn():
