@@ -1,39 +1,49 @@
 import pymssql
 from time import gmtime, strftime
 import os
-from blk import  showSqlServer
+import sys 
+sys.path.append("../")
+from DAL.blk import  showSqlServerSOX
+from DAL.crypDAL import getDBpwd
+from DAL.CONN import bancoSQL
+from LOG.logs_APP import logDatabase
 
+#configurando o los dos erros de banco de dados
+_log,_logFile = logDatabase()
 
-##
-## Gera lista de usuarios sql server \ permissoes para um txt que é colocado na pasta E:\Inventario no servidor 2k12rjolabsql001
-##
-
-user = "sql_monit"
-password = "Db@m0n!t"
+user = "dbmon"
+password = getDBpwd()
 db = "master"
 
 # arq= time.strftime("sqlserver_SOX_"+"%Y%m%d"+".txt")
 #arq= time.strftime("/u01/app/oracle/product/12.2.0/dbhome_1/scripts/inventario/python/inv/EMB_todos_usuarios_sqlserver_"+"%d%m%Y")
 # arq= "E:/inventario/" + strftime("%Y-%m-%d-%H-%M-%S", gmtime())+".txt"
-arq = "E:/inventario/secmonit/EMB_todos_usuarios_sqlserver_" + strftime("%d%m%Y", gmtime())+".txt"
-lista = showSqlServer()
 
-#for rowsL in cursorlab.execute(query):
+'''Producao'''
+#arq = "E:/inventario/secmonit/EMB_todos_usuarios_sqlserver_" + strftime("%d%m%Y", gmtime())+".txt"
+
+'''DEV'''
+arq = r"../EMB_todos_usuarios_sqlserverV3_" + strftime("%d%m%Y", gmtime())+".txt"
+
+lista = showSqlServerSOX()
+
+f = open(arq, "a")
+
 for itens in lista:
     # --------------------------------------------------------------------------------------------------------------------------------------------------------
     # Acessando a lista de bases por servidor
 
     server = str(itens).replace("'", "").replace("(", "").replace(")", "").replace(",", "").replace('\\\\','\\')
+    
     try:
+        ''' print(server) # DEBUG '''
         connectionL2 = pymssql.connect(server, user, password, db)
     except pymssql.Error as ex:
-        sqlstate = ex.args[0]
-        print(sqlstate)
-        print ("Error on Cursor do itens")
-        print(itens)
+        _log.error(ex)
 
     cursorL2 = connectionL2.cursor()
-
+    
+       
     sql = """\
     create table #SOX ( [host_name] varchar(100),instance_name varchar(100) ,username varchar(100),account_status varchar(100),lock_date datetime,expiry_date datetime,created datetime,profil varchar(100) )
 
@@ -107,25 +117,22 @@ from (
 ) as X
     where (username not like '#%') and (username not in ('NT AUTHORITY\SYSTEM','NT SERVICE\MSSQLSERVER','NT SERVICE\SQLSERVERAGENT','dbo'))
  """""
-
-    f = open(arq, "a")
-
+    
     cursorL2.execute(sql)
 
     for rows in cursorL2:
         f.write(
             rows[0] + ";" + rows[1] + ";" + rows[2] + ";" + rows[3] + ";" + str(rows[4]) + ";" + str(
                 rows[5]) + ";" + str(rows[6]) + ";" + str(rows[7]) + "\n") 
-       # print(rows[0])
-     
-
-    f.close()
-    connectionL2.commit()
-    connectionL2.close()
+       
+    
     # --------------------------------------------------------------------------------------------------------------------------------------------------------
-
+connectionL2.commit()
+connectionL2.close()
 f.close()
  
+
+
 # Arquivo gerado pelo script para realizar o ftp
 _arq = "E:/inventario/ftp.ftp"
 
@@ -142,10 +149,9 @@ fp.write('yes'+ "\n")
 fp.write('quit'+ "\n")
 fp.close()
 
-print('Fechou arquivo')
 #ftp = "curl -u secmonitbd:bancodados321 -T " + arq +" sftp://10.53.5.12"
 
-ftp ='ftp -s:E:/inventario/ftp.ftp'
+#ftp ='ftp -s:E:/inventario/ftp.ftp'
 
 #Executando o FTP
-os.system(ftp)
+#os.system(ftp)

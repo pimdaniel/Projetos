@@ -1,26 +1,54 @@
 import cx_Oracle
 import pymssql
+import sys
+sys.path.append("../")
+from DAL.CONN import inventario
+from LOG.logs_APP import logDatabase
 
+#configurando o los dos erros de banco de dados
+_log = logDatabase()
 
 def showSqlServer():
-    # connection = cx_Oracle.connect('dbinv/orainv#04@invprd')
-    connection = cx_Oracle.connect('DBMON/DBMON77DBA@p05inv')
+
+    ''' Lista todos os servidores SQL Server de producao no Inventario '''
+
+    #connection = cx_Oracle.connect('dbmon/monitor@p00inv')
+    #cursor = connection.cursor()
+
+    try: 
+        with inventario() as cur:  
+
+            cur.execute("select distinct CONNECT_STRING from  DATABASES_MSSQL where TIPO = 'PRD' and EM_MANUTENCAO = 'N' and SITE = 'MKZ'")
+            query = list(cur.fetchall())                  
+
+            l = list()  
+
+            for itens in query:
+                l.append(str(itens).replace("'", "").replace("(", "").replace(")", "").replace(",", ""))
+
+    except Exception as e:
+            _log.error(e)  
     
-    cursor = connection.cursor()
-   # cursor.execute("select distinct CONNECT_STRING from TB_BANCOS where db_sox = 'S' and ambiente = 'PRD' and db_monit = 'S' and SIST_BANCO = 'Sql Server'")
-   # cursor.execute("select distinct CONNECT_STRING from  DATABASES_MSSQL where SOX = 'Y' and TIPO = 'PRD' and EM_MANUTENCAO = 'N' and  CONNECT_STRING not in ('192.168.43.92','10.0.195.245','10.2.13.250 ','192.168.41.56 ')")
-   # cursor.execute("select distinct CONNECT_STRING from  DATABASES_MSSQL where SOX = 'Y' and TIPO = 'PRD' and EM_MANUTENCAO = 'N' and SITE = 'MKZ' and CONNECT_STRING  not like '%BI%' ")
-    cursor.execute("select distinct CONNECT_STRING from  DATABASES_MSSQL where  TIPO = 'PRD' and EM_MANUTENCAO = 'N' and SITE = 'MKZ' and CONNECT_STRING  not like '%BI%' and CONNECT_STRING not like '10.4cls%'") # Excluido o TELCO
-
-    l = list()
+    
+    return l
 
 
-    for itens in list(cursor.fetchall()):
-        l.append(str(itens).replace("'", "").replace("(", "").replace(")", "").replace(",", ""))
 
+def showSqlServerSOX():
+    
+    with inventario() as cur:     
 
-    cursor.close()
-    connection.close()
+        ''' Servidores paro SOX '''
+        _sql = "select distinct CONNECT_STRING from  DATABASES_MSSQL where SOX = 'Y' and TIPO = 'PRD' and EM_MANUTENCAO = 'N' and SITE = 'MKZ'"
+        cur.execute(_sql)
+
+        l = list()
+        query = list(cur.fetchall())   
+        for itens in query:
+            l.append(str(itens).replace("'", "").replace("(", "").replace(")", "").replace(",", ""))
+
+        cur.close()
+
     return l
 
 
@@ -40,7 +68,7 @@ def showExistUser(_server,_db,_login,_version):
     retorno = ""
 
 
-#-- Conecta no servidor / base de dados passados como parametro / Busca e apaga o usuario específico
+#-- Conecta no servidor / base de dados passados como parametro 
 
     try:
         connectionL2 = pymssql.connect(_server, _user, _password, _db)

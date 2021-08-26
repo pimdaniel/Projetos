@@ -1,0 +1,21 @@
+
+
+CREATE USER 'dbmomn'@'localhost' IDENTIFIED BY'monitor';
+CREATE USER 'dbmomn'@'localhost' IDENTIFIED BY 'password';
+
+GRANT select *.* TO'dbmomn'@'localhost';
+
+
+
+
+
+######################################################
+####################     MYSQL       #################
+######################################################
+
+# Colocar caracter na concatenação
+
+select concat('\'',User,'\''),Host,'\'') from user 
+       concat('\"','24/7','\"')
+
+

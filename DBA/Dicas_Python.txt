@@ -1,0 +1,34 @@
+def searchSQLogins(a,_busca,_versao):
+
+     # Verficando a versao do SQL
+    for i in range(0,len(a)):     
+        if _versao in str(a.loc[i,["VERSAO"]]):           
+                try: 
+                    with bancoSQL(str(a['CONNECT_STRING'].values[i]),'master') as cur:         
+                
+                        cur.execute("select name from syslogins")
+                        query = list(cur.fetchall())
+                    
+                        for rows in query:
+                            df =  df.append({'Logins': str(rows[0])}, ignore_index=True)
+
+                except Exception as e:
+                       print(e)
+        else:                     
+                try: 
+                    with bancoSQL(str(a['CONNECT_STRING'].values[i]),'master') as cur:         
+                    
+                            cur.execute("select name from sys.syslogins")
+                            query = list(cur.fetchall())
+                        
+                            for rows in query:
+                                             df =  df.append({'Logins': str(rows[0])}, ignore_index=True)
+
+                except Exception as e:
+                        print(e)
+                        #_log.error(e)
+
+    if df.loc[df['Logins'] == _busca].empty:
+            return 'Nao Achou'
+    else:
+        return 'Achouuu'
