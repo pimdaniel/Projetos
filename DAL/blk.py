@@ -1,8 +1,10 @@
 import cx_Oracle
 import pymssql
+import pandas as pd
 import sys
 sys.path.append("../")
 from DAL.CONN import inventario
+from DAL.CONN import inventario,bancoSQL,sqlConn
 from LOG.logs_APP import logDatabase
 
 #configurando o los dos erros de banco de dados
@@ -32,8 +34,6 @@ def showSqlServer():
     
     return l
 
-
-
 def showSqlServerSOX():
     
     with inventario() as cur:     
@@ -51,9 +51,124 @@ def showSqlServerSOX():
 
     return l
 
+# --------------------------------------------------------------------------------------------------------------------
+
+def showSqlServerVersions():
+
+    v='%2000%'
+
+    df = pd.DataFrame({'CONNECT_STRING': [],'VERSAO': []})
+
+    with inventario() as cur:     
+        
+        _sql = f"select distinct CONNECT_STRING,case when versao like '{v}'  THEN 'SQL2000'    ELSE 'SQL2008' END  from  DATABASES_MSSQL where TIPO = 'PRD' and EM_MANUTENCAO = 'N' and SITE = 'MKZ' and host='NTSPO006'"
+        cur.execute(_sql)
+    
+        for itens in cur:
+           aux =  str(itens[0]).replace("'", "").replace("(", "").replace(")", "").replace(",", "").replace('\\\\','\\')
+           df = df.append({'CONNECT_STRING': str(aux),'VERSAO': str(itens[1]) }, ignore_index=True)   
+        
+    return df
+
+
+
+def searchSQLogins(_server,_busca,_versao):
+   
+        if '2000' in _versao:           
+                try: 
+                    with bancoSQL(str(_server),'master') as cur:         
+                
+                        cur.execute(f"select name from syslogins where name = '{_busca}'")                        
+                        _usr = cur.fetchone()
+                        if _usr == None:
+                                   return False
+                                    
+                except Exception as e:
+                       print(e)
+        else:                     
+                    try: 
+                        with bancoSQL(str(_server),'master') as cur:         
+                        
+                                cur.execute(f"select name from sys.syslogins where name = '{_busca}'")                        
+                                _usr = cur.fetchone()
+                                if _usr == None:
+                                    return False
+
+                    except Exception as e:
+                            print(e)
+                            #_log.error(e)
+
+        return  True 
+ 
+ 
+def searchSQLUser(_server,_busca,_bd):
+
+                try:
+                    with bancoSQL(str(_server),_bd) as cur:         
+
+                        cur.execute(f"select name from sysusers where name = '{_busca}'")                        
+                        _usr = cur.fetchone()
+                        if _usr == None:
+                                    return False                                
+                 
+                except Exception as e:
+                    print(e)     
+
+                return  True 
+
+
+def listAllSqlDatabase(_server):
+
+                df = pd.DataFrame({'DATABASES': [],'SERVIDOR': []})
+                try: 
+                    with bancoSQL(_server,'master') as cur:         
+                
+                        cur.execute("select name from sysdatabases")
+                        query = list(cur.fetchall())
+                    
+                        for rows in query:
+                            df =  df.append({'DATABASES': str(rows[0]),'SERVIDOR': str(_server)}, ignore_index=True)
+
+                except Exception as e:
+                       print(e)
+                return df
+
+def dropSqlUser(_server,_busca,_db):
+
+             try:
+                    connection = sqlConn(_server,_db) 
+                    connection.autocommit(True)
+                    cursor = connection.cursor()
+                    sql = f"exec dbo.sp_revokedbaccess [{_busca}];"
+                    cursor.execute(sql)
+                        
+             except Exception as e:
+                       print(e)
+
+             connection.commit()
+             connection.close()
+             print(f'Usuario {_busca} foi apagado')
+
+def dropSqlogin(_server,_busca):    
+             try:
+                 
+                    connection2 = sqlConn(_server,'master') 
+                    connection2.autocommit(True)
+                    cursorL2 = connection2.cursor()
+                    sql=f"exec dbo.sp_droplogin    [{_busca}];"
+                    cursorL2.execute(sql)
+
+             except Exception as e:  
+                       pass                     
+                       
+
+             connection2.commit()
+             connection2.close()
+             print(f'Login {_busca} foi apagado')
+
+# --------------------------------------------------------------------------------------------------------------------
 
 def showExistUser(_server,_db,_login,_version):
-
 
     _user = "sql_monit"
     _password = "Db@m0n!t"
@@ -66,7 +181,6 @@ def showExistUser(_server,_db,_login,_version):
     loginAD = "SELECT top 1 name FROM SYSUSERS WHERE NAME ='"+'embratel\\' + _login+"'"
 
     retorno = ""
-
 
 #-- Conecta no servidor / base de dados passados como parametro 
 
