@@ -286,12 +286,10 @@ DEALLOCATE db_final
 
 
 
-######################################################
-####################  SQL Server #####################
-######################################################
+#############################################
+# Listar Tipo de Recovery dos bancos		#
+#############################################
 
-
-# Listar Tipo de Recovery dos bancos
 
 select name, databasepropertyex(name, 'Recovery') as RecoveryModel 
 from master.dbo.sysdatabases 
@@ -299,7 +297,11 @@ order by name,databasepropertyex(name, 'Recovery')
 
 
 
-# AGENDAMENTO POR DADOS DO REPORTING SERVICES
+###############################################
+# AGENDAMENTO POR DADOS DO REPORTING SERVICES #
+###############################################
+
+
 if (day(getdate()) = 1) 
    select 'daniel.pimenta' as [TO],'daniel.pimenta@claro.com.br' as[Cc]
 
@@ -308,7 +310,7 @@ if (day(getdate()) = 1)
 
 
 ######################################################
-# 			APAGANDO USUARIOS E LOGINS			  	 #
+# 			APAGANDO USUARIOS E LOGINS 1 por vez	 #
 ######################################################
 
 
@@ -374,3 +376,109 @@ DEALLOCATE db_final
  order by id asc
    
     
+--------------------------------  FIM  -----------------------------
+
+
+
+######################################################
+# 			APAGANDO VARIOS USUARIOS E LOGINS    	 #
+######################################################
+
+
+/* 
+
+create table  #apagar ( usuario varchar(50) )
+
+-- truncate table #apagar
+
+insert into #apagar values ('CLAROBR\Z071918')
+insert into #apagar values ('CLAROBR\Z071915')
+insert into #apagar values ('CLAROBR\Z071918')
+insert into #apagar values ('CLAROBR\Z071915')
+insert into #apagar values ('CLAROBR\Z071918')
+
+*/
+
+--------------------
+SET NOCOUNT ON
+
+IF OBJECT_ID('tempdb..#result') IS NOT NULL
+BEGIN
+		truncate table  #result
+END
+ELSE
+BEGIN
+		create table #result (id int identity(1,1) ,name varchar(100), base varchar(100))
+END
+
+IF OBJECT_ID('tempdb..#comandos') IS NOT NULL
+BEGIN
+		truncate table  #comandos
+END
+ELSE
+BEGIN
+		create table #comandos (id int identity(1,1), comando varchar(1000))
+
+END  
+
+
+declare @db varchar(100),@user varchar(20),@query_user varchar(200),@query_login varchar(200),@usr varchar(50)
+  
+
+DECLARE apagados CURSOR FOR  
+
+select  name  from master..syslogins s inner join #apagar a on s.name = a.usuario
+
+
+OPEN apagados   
+FETCH NEXT FROM apagados INTO @user 
+
+WHILE @@FETCH_STATUS = 0   
+BEGIN 
+
+  
+  
+	DECLARE db_final CURSOR FOR  
+
+	select name as db ,@user as busca  from sys.sysdatabases where name not in ('tempdb')
+
+	OPEN db_final   
+	FETCH NEXT FROM db_final INTO @db,@user  
+
+	WHILE @@FETCH_STATUS = 0   
+	BEGIN 
+		
+			set @query_user	 = 'insert into #result select name , '+''''+@db+'''' +' as base  from  '+ @db +'..sysusers where name = ' + ''''+@user +''''
+			exec(@query_user) 
+	 
+		   FETCH NEXT FROM db_final INTO @db,@user  
+	END   
+
+	CLOSE db_final   
+	DEALLOCATE db_final
+	
+	insert into #comandos
+	select 'exec '+ convert(varchar,base) + '..sp_revokedbaccess '+ '''' + convert(varchar,name) +'''' as comando  from #result
+
+	insert into #comandos	
+	select distinct 'drop login ['+ convert(varchar,name) + ']' as comando from #result	 
+
+	truncate table #result 
+
+FETCH NEXT FROM apagados INTO @user
+END   
+
+CLOSE apagados   
+DEALLOCATE apagados 
+
+
+
+
+  
+ select comando
+ from  #comandos  
+ order by id asc
+
+  
+
+

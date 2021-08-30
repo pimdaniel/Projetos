@@ -1,21 +1,35 @@
 
+#####################################
+#       Criação de usuário          #
+#####################################
 
-CREATE USER 'dbmomn'@'localhost' IDENTIFIED BY'monitor';
-CREATE USER 'dbmomn'@'localhost' IDENTIFIED BY 'password';
+
+CREATE USER 'dbmomn'@'localhost' IDENTIFIED BY'<SENHA>';
+CREATE USER 'dbmomn'@'%' IDENTIFIED BY 'password';
 
 GRANT select *.* TO'dbmomn'@'localhost';
 
 
 
 
-
-######################################################
-####################     MYSQL       #################
-######################################################
-
-# Colocar caracter na concatenação
+#####################################
+# Colocar caracter na concatenação  #
+#####################################
 
 select concat('\'',User,'\''),Host,'\'') from user 
        concat('\"','24/7','\"')
 
 
+
+####################################################
+# Processo de criação e associar a role ao usuario #
+####################################################
+
+
+CREATE ROLE 'APL_SISTEMA';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON `db_sge`.* TO `APL_SISTEMA`@`%`
+
+GRANT 'APL_SISTEMA' TO 'sgeadmin'@'10.54.0.115';
+
+SET DEFAULT ROLE APL_SISTEMA to 'sgeadmin'@'10.88.132.78','sgeadmin'@'10.88.132.79';
