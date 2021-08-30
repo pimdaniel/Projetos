@@ -6,11 +6,7 @@ select concat(user,'@',host) from mysql.user;
 
 
 -- Versoes até a 5.7
-
-
-
 -- Generico 
-
 
 SELECT  Bancos,Tabelas,usuario,servidor,PERMISSAO
 FROM  (  
@@ -117,6 +113,8 @@ SELECT
 FROM mysql.user gus
 ) AS X
 ORDER BY usuario;
+
+
 
 ##########################################################
 #   Lista usuarioS \ Tipo de permissao [ COMUM ou ADMIN] #

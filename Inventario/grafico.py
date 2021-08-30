@@ -1,8 +1,10 @@
 import numpy as np  
 import matplotlib.pyplot as plt
 import pandas as pd
+import sys 
+sys.path.append("../")
 from DAL import labConn2
-from logs_APP import logDatabase
+from LOG import logs_APP as log
 import plotly.express as  px
 
 
@@ -11,7 +13,7 @@ import plotly.express as  px
 _arq = pd.read_excel(r"C:\Claro\Desenvolvimento\Python\server.xlsx")
 
  #configurando o los dos erros de banco de dados
-_log = logDatabase()
+_log = log.logDatabase()
  
 #Filtra linha e coluna
 #print(_arq.loc[:,["banco"]])
