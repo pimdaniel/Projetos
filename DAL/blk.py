@@ -166,9 +166,14 @@ def dropSqlogin(_server,_busca):
              connection2.close()
              print(f'Login {_busca} foi apagado')
 
+
+
+
 # --------------------------------------------------------------------------------------------------------------------
 
+
 def showExistUser(_server,_db,_login,_version):
+
 
     _user = "sql_monit"
     _password = "Db@m0n!t"
@@ -181,6 +186,7 @@ def showExistUser(_server,_db,_login,_version):
     loginAD = "SELECT top 1 name FROM SYSUSERS WHERE NAME ='"+'embratel\\' + _login+"'"
 
     retorno = ""
+
 
 #-- Conecta no servidor / base de dados passados como parametro 
 

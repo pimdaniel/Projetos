@@ -5,6 +5,12 @@
 select concat(user,'@',host) from mysql.user;
 
 
+
+
+##########################################################
+#   Lista usuarios e todas as suas permissoes            #
+##########################################################
+
 -- Versoes até a 5.7
 -- Generico 
 
@@ -116,8 +122,12 @@ ORDER BY usuario;
 
 
 
+
+
+
+
 ##########################################################
-#   Lista usuarioS \ Tipo de permissao [ COMUM ou ADMIN] #
+#   Lista usuarios \ Tipo de permissao [ COMUM ou ADMIN] #
 ##########################################################
 
 SELECT DISTINCT USUARIO,servidor,PERMISSAO

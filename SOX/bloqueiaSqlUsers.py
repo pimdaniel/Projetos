@@ -1,5 +1,7 @@
 import cx_Oracle
-from blk import showExistUser
+import sys 
+sys.path.append("../")
+from DAL.blk import showExistUser
 import time
 import os
 

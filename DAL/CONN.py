@@ -52,6 +52,16 @@ class inventario:
 
 
 
+def sqlConn(_host,_db):
+  _server=_host
+  _user = "dbmon"
+  _password = cr.getDBpwd()
+  _db = _db
+  connection = pymssql.connect(_server, _user, _password, _db)
+
+  return connection
+
+
 def invConn():
 
     _server = "P00INV"
@@ -89,15 +99,7 @@ def labConn2():
 
     return connection
 
-
-def sqlConn(_host):
-  _server=_host
-  _user = "dbmon"
-  _password = cr.getDBpwd()
-  _db = "master"
-  connection = pymssql.connect(_server, _user, _password, _db)
-
-  return connection
+ 
 
 
 def sqlConnDbmon(_host,_database):
