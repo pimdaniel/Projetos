@@ -4,7 +4,7 @@
 
 select concat(user,'@',host) from mysql.user;
 
-
+ CONCAT("'",user,"'",'@',"'",host,"'")
 
 
 ##########################################################
@@ -14,7 +14,7 @@ select concat(user,'@',host) from mysql.user;
 -- Versoes até a 5.7
 -- Generico 
 
-SELECT  Bancos,Tabelas,usuario,servidor,PERMISSAO
+SELECT  usuario,PERMISSAO
 FROM  (  
 SELECT
     CONCAT("`",gtb.Db,"`") AS Bancos,

@@ -1,5 +1,7 @@
-from DAL import labConn,bancoSQL
-from logs_APP import logDatabase
+import sys
+sys.path.append("../")
+from DAL.CONN import labConn,bancoSQL
+from LOG.logs_APP import logDatabase
 import pandas as pd
 
 '''
@@ -12,7 +14,8 @@ _log = logDatabase()
  
 
 try: 
-    with bancoSQL("10.2.20.33\sqk2008",'master') as cur:         
+    _server = 'ntspo006'
+    with bancoSQL("_server",'master') as cur:         
  
         #cur = bancoSQL("10.2.20.33")
 
