@@ -118,6 +118,7 @@ SELECT
     ) AS PERMISSAO
 FROM mysql.user gus
 ) AS X
+where usuario = '12018952'
 ORDER BY usuario;
 
 
@@ -167,3 +168,24 @@ SELECT
 FROM mysql.user gus
 ) AS X
 ORDER BY PERMISSAO;
+
+
+
+#################################################################
+#  Listaos donos das views,procedures,funcoes,eventos e rotinas #
+#################################################################
+
+
+
+select concat(TIPO,";",BANCO,";",DEFINER,";",NOME) as FULL
+from (
+select 'EVENT' TIPO,EVENT_SCHEMA AS BANCO,DEFINER,EVENT_NAME AS NOME FROM information_schema.EVENTS WHERE DEFINER not in ('root@localhost')
+union 
+select 'VIEW' as TIPO,TABLE_SCHEMA AS BANCO ,DEFINER,TABLE_NAME as nome from information_schema.VIEWS where DEFINER not in ('root@localhost')
+union
+select  ROUTINE_TYPE AS TIPO,ROUTINE_SCHEMA AS BANCO,DEFINER,ROUTINE_NAME as nome from information_schema.routines where DEFINER not in ('root@localhost')
+union
+select 'TRIGGERS' AS TIPO, TRIGGER_SCHEMA AS BANCO,DEFINER,TRIGGER_NAME NOME FROM information_schema.TRIGGERS where DEFINER not in ('root@localhost')
+) as X
+order by TIPO,BANCO,DEFINER,NOME;
+

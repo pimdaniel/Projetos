@@ -1,9 +1,13 @@
+import sys
+sys.path.append("../")
 from DAL import labConn
 from DAL import escreve
 from DAL import sqlConnDbmon
+from DAL import blk
+from DAL.blk import showSqlServer
 import pymssql
 import pandas as pd
-from blk import showSqlServer
+
 
 path = r"E:\Desenvolvimento\lista_backup.xlsx"
 

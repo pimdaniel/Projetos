@@ -8,22 +8,28 @@ _log,_logFile  = logDatabase()
  
 
 # ----------------------- Maneira 01---------------------------------------
-'''
-conn =mysqlConn()
-cur = conn.cursor()
+try: 
+    conn =mysqlConn()
 
-sql="select user from mysql.user;"
+    cur = conn.cursor()
 
-cur.execute(sql)
+    sql="select user from mysql.user;"
+
+    cur.execute(sql)
 
 
-for itens in cur: 
-    print(str(itens[0]))
-    
-conn.close()
-'''
+    for itens in cur: 
+        print(str(itens[0]))
+        
+    conn.close()
+
+except Exception as e:
+   #_log.error(e)      
+   print('erro acessar mysql')
+
+
 # ----------------------- Maneira 02 ---------------------------------------
-
+'''
 try: 
     with bancoMysql("10.243.172.57","mysql") as cur:         
        
@@ -38,3 +44,4 @@ try:
 except Exception as e:
    #_log.error(e)      
    print(e)
+'''

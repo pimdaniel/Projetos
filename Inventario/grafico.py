@@ -1,8 +1,10 @@
+import sys
+sys.path.append("../")
 import numpy as np  
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys 
-sys.path.append("../")
+
 from DAL import labConn2
 from LOG import logs_APP as log
 import plotly.express as  px
