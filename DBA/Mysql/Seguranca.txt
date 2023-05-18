@@ -5,3 +5,6 @@ mysql_config_editor print --all
 
 mysql_config_editor print --login-path=testing
 
+Senha#01
+
+mysql_config_editor set --login-path=shellbackup --user=mysqlbackup --password 
