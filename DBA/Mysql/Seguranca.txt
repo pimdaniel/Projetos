@@ -1,0 +1,7 @@
+
+mysql_config_editor set --login-path=testing --user=testuser --password --host=dev.example.com --port=5555
+
+mysql_config_editor print --all
+
+mysql_config_editor print --login-path=testing
+
