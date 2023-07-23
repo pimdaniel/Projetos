@@ -1,0 +1,61 @@
+
+## Criação da entrutura de diretorios
+
+#Diretorios de configurações
+	
+	mkdir -p /mysql/conf.d/mysqld
+	mkdir -p /mysql/app.d
+    mkdir -p /mysql/log.d
+
+#Direotrios de Dados
+	mkdir -p /mysql/data/databases   
+	mkdir -p /mysql/data/innodb/log
+	mkdir -p /mysql/data/tmpdir
+	mkdir -p /mysql/data/binario_log
+    mkdir -p /mysql/data/relay_log
+# Diretorios de Backup
+
+	mkdir -p /mysql/backup/dump
+	mkdir -p /mysql/backup/MEB
+	mkdir -p /mysql/backup/scripts
+
+--------------------------------------------------------------------------------------------------
+
+## Criacao dos link simbolicos
+
+
+ #BUG
+	ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5  
+ 	ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5     
+
+    n -s /mysql/conf.d/mysqld/my.cnf  /etc/my.cnf
+
+ # Mysql - como root
+
+    ln -s /mysql/app.d/mysql  /usr/local/mysql   
+    ln -s /mysql/conf.d/mysqld/my.cnf  /etc/my.cnf
+
+ # Configuracao de acordo com o binario atual
+
+   ln -s /mysql/app.d/mysql-commercial-8.0.31-el7-x86_64  mysql 
+
+ --------------------------------------------------------------------------------------------------  
+
+
+ 
+## Comando para subir o mysql pela primeira vez { obs: --initialize } PEGAR A SENHA DO ROOT NO LOG
+/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64/bin/mysqld_safe  --defaults-file=/mysql/conf.d/mysqld/my.cnf --initialize --user=mysql  --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --datadir=/mysql/data/databases --log-error=/mysql/log.d/log_error.log  &
+
+cat   /mysql/log/log_error.log	  [ Para pegar a senha de root ]  %kudvXv#f3HY
+ 
+
+## Iniciar  o mysql para poder alterar a senha do root
+/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64/bin/mysqld_safe --defaults-file=/mysql/conf.d/mysqld/my.cnf  --user=mysql --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --log-error=/mysql/log.d/log_error.log --datadir=/mysql/data/databases  &
+ 
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#007';
+
+vi  /home/mysql/.bash_profile
+ adicionar no final do arquivo:  export PATH=$PATH:/mysql/app.d/mysql/bin
+
+ ls -s /app/mysql/link01

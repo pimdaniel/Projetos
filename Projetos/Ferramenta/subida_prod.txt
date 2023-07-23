@@ -1,0 +1,46 @@
+
+## Comando para subir o mysql pela primeira vez { obs: --initialize }  
+
+/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64/bin/mysqld_safe   --defaults-file=/mysql/conf.d/mysqld/my.cnf --initialize --basedir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64  --datadir=/mysql/data/databases --plugin-dir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64/lib/plugin --log-error=/mysql/log/mysqld_error.log --pid-file=/mysql/mysql.pid --socket=/mysql/mysql.sock --port=3306 &
+
+## Iniciar  o mysql para poder alterar a senha do root
+
+/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64/bin/mysqld_safe   --defaults-file=/mysql/conf.d/mysqld/my.cnf  --basedir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64  --datadir=/mysql/data/databases --plugin-dir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64/lib/plugin --log-error=/mysql/log/mysqld_error.log --pid-file=/mysql/mysql.pid --socket=/mysql/mysql.sock --port=3306 &
+
+ ->  U_qV;l&Z?7lM
+
+ ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#007';
+
+
+/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64/bin/mysqld  --defaults-file=/mysql/conf.d/mysqld/my.cnf  --basedir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64  --datadir=/mysql/data/databases --plugin-dir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64/lib/plugin --log-error=/mysql/log/mysqld_error.log --pid-file=/mysql/mysql.pid --socket=/mysql/mysql.sock --port=3306 &
+
+
+vi  /home/mysql/.bash_profile
+ adicionar no final do arquivo:  export PATH=$PATH:/mysql/app.d/mysql/bin
+
+#### Criacao dos link simbolicos
+
+    ln -s /mysql/conf.d/mysqld/my.cnf  /etc/my.cnf
+	ln -s /mysql/app.d/mysql-commercial-8.0.31-el7-x86_64  mysql   
+	
+	
+	cd /usr/local
+	ln -s /mysql/app.d/mysql mysql 
+
+
+ln -s /mysql/app.d/mysql-commercial-8.0.31-el7-x86_64  mysql
+
+#BUG
+	ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5  
+ 	ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5  
+
+
+
+
+10.88.132.214  
+ln -s /mysql/conf.d/mysqld/my.cnf  /etc/my.cnf
+
+cd /usr/local
+	ln -s /mysql/app.d/mysql mysql 
+
+

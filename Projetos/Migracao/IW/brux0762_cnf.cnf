@@ -1,0 +1,211 @@
+[mysqld]
+#MIGRATION
+#COPIA DO CNF DA BRUX0395 PARA UTILIZAR NA BRUX0762
+#
+#
+#bind-address=127.0.0.1
+#
+
+#
+# Under MySQL 5.7, ROW_FORMAT=FIXED is no longer an option for the InnoDB Storage Engine.
+# https://dba.stackexchange.com/questions/133026/error-1031-hy000-at-line-x-table-storage-engine-for-tbl-doesnt-have-this-o
+innodb_strict_mode=off
+
+datadir=/mysql/mysqldata01/db
+socket=/mysql/mysqldata01/mysql.sock
+user=mysql
+#default-tmp-storage-engine=MyISAM
+
+# MyISAM
+myisam_sort_buffer_size=16777216
+
+sql_mode="NO_ENGINE_SUBSTITUTION"
+secure_file_priv=
+
+plugin-load="thread_pool.so;audit_log.so"
+
+##### RECOLOCADO EM 2016-05-22 ##
+##plugin-load=audit_log.so
+audit_log_file=/mysql/auditlog/brux0395-audit.log
+audit_log_policy=LOGINS
+audit_log_strategy=PERFORMANCE
+audit_log_rotate_on_size=128M
+audit_log_buffer_size=12582912
+
+##plugin-load=thread_pool.so
+thread_cache_size=180
+thread_pool_size=36
+thread_pool_stall_limit=100
+thread_pool_prio_kickup_timer=1000
+thread_pool_max_unused_threads=0
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=1
+default-storage-engine=innodb
+default_tmp_storage_engine=InnoDB
+#default_tmp_storage_engine=MyISAM
+
+# Comentado as 2  linha abaixo para a migracao
+#internal_tmp_disk_storage_engine=innodb
+#metadata_locks_hash_instances=256
+
+slow_query_log=1
+slow_query_log_file=/iw/log.d/mysqld/brux0762-slow.log
+long_query_time=10
+log_error_verbosity=3
+
+## Binary Log Configuration
+#log-bin=/mysql/binario_log/brux0395
+max_binlog_size=128M
+expire_logs_days=2
+# binlog_format=MIXED
+binlog_format=ROW
+binlog-ignore-db=iwhis_atd
+binlog-ignore-db=iwhis_cad
+binlog-ignore-db=iwhis_com
+binlog-ignore-db=iwhis_hem
+binlog-ignore-db=iwhis_itv
+binlog-ignore-db=iwhis_sys
+binlog-ignore-db=iwhis_vnd
+binlog-ignore-db=iwtmp_all
+binlog-ignore-db=iwtmp_atd
+binlog-ignore-db=iwtmp_bi
+binlog-ignore-db=iwtmp_cad
+binlog-ignore-db=iwtmp_cem
+binlog-ignore-db=iwtmp_cor
+binlog-ignore-db=iwtmp_crm
+binlog-ignore-db=iwtmp_ctv
+binlog-ignore-db=iwtmp_dim
+binlog-ignore-db=iwtmp_dv
+binlog-ignore-db=iwtmp_dwh
+binlog-ignore-db=iwtmp_ebt
+binlog-ignore-db=iwtmp_eng
+binlog-ignore-db=iwtmp_ent
+binlog-ignore-db=iwtmp_fin
+binlog-ignore-db=iwtmp_fp
+binlog-ignore-db=iwtmp_gda
+binlog-ignore-db=iwtmp_gen
+binlog-ignore-db=iwtmp_hem
+binlog-ignore-db=iwtmp_itv
+binlog-ignore-db=iwtmp_ool
+binlog-ignore-db=iwtmp_prd
+binlog-ignore-db=iwtmp_pta
+binlog-ignore-db=iwtmp_rh
+binlog-ignore-db=iwtmp_rem
+binlog-ignore-db=iwtmp_stq
+binlog-ignore-db=iwtmp_sys
+binlog-ignore-db=iwtmp_trf
+binlog-ignore-db=iwtmp_vnd
+binlog-ignore-db=iwtmp_wfw
+binlog-ignore-db=iwtmp_wrp
+binlog-ignore-db=iwtmp_wvd
+binlog-ignore-db=test
+binlog-ignore-db=vt_migracao
+
+
+## Relay Log Configuration
+relay_log=/mysql/binario_log/relay_log/brux0762-relay-bin
+relay-log-index=/mysql/binario_log/relay_log/brux0762-relay-bin.index
+master-info-file=/mysql/binario_log/relay_log/brux0762-master.info
+relay-log-info-file=/mysql/binario_log/relay_log/brux0762-relay-log.info
+
+# Desabilitar pesquisa de DNS
+skip-name-resolve
+skip-slave-start
+
+log-error=/iw/log.d/mysqld/mysqld.log
+pid-file=/iw/lock.d/mysqld/mysqld.pid
+
+tmpdir=/mysql/tmpdir
+#Comentado do update
+#max_tmp_tables=1000
+
+event_scheduler=ON
+max_connections=2200
+max_user_connections=2100
+
+# max_allowed_packet=1024M
+max_allowed_packet=2048M
+open_files_limit = 131072
+
+# query_cache_type = 0 # comentou pelo update
+#query_cache_limit = 2M
+#query_cache_size = 0
+#query_cache_min_res_unit=2K
+concurrent_insert=2
+low_priority_updates=1
+key_buffer_size = 5G
+tmp_table_size = 512M
+max_heap_table_size = 512M
+
+interactive_timeout=600
+wait_timeout=600
+
+net_write_timeout=1200
+net_read_timeout=1200
+innodb_lock_wait_timeout=50
+innodb_max_dirty_pages_pct=75.00
+
+transaction-isolation=READ-COMMITTED
+
+table_open_cache=25600
+table_definition_cache=6144
+
+## alteracao innodb_flush_method por Vitor 04012017
+sort_buffer_size=64K
+join_buffer_size=32K
+read_rnd_buffer_size=32K
+read_buffer_size=32K
+net_buffer_length=8K
+innodb_log_compressed_pages=0
+innodb_flush_method=O_DIRECT
+innodb_read_io_threads=64
+innodb_write_io_threads=64
+innodb_flush_neighbors=0
+innodb_buffer_pool_instances=64
+innodb_page_cleaners=64
+innodb_open_files=-1
+innodb_stats_persistent_sample_pages=100
+innodb_stats_persistent=1
+innodb_io_capacity=1000
+innodb_io_capacity_max=2500
+innodb_lru_scan_depth=256
+innodb_data_home_dir=
+log_timestamps=SYSTEM
+
+# Data files must be able to hold your data and indexes
+innodb_data_file_path = /mysql/mysqldata01/innodb/ibdata1:100M;/mysql/mysqldata01/innodb/ibdata2:100M:autoextend
+
+# Set buffer pool size to 50-80% of your computer's memory,
+# but make sure on Linux x86 total memory usage is < 2GB
+innodb_buffer_pool_size=110G
+innodb_log_group_home_dir = /mysql/mysqldata01/innodb/iblogs
+
+# Set the log file size to about 25% of the buffer pool size
+innodb_log_file_size=8G
+innodb_log_files_in_group=3
+innodb_log_buffer_size=16M
+innodb_flush_log_at_trx_commit = 2
+innodb_doublewrite=false
+innodb_file_per_table=1
+server-id=101852174
+
+## Bases de dados que serao replicadas do MASTER (full)
+
+slave-net-timeout=30
+
+## Bases de dados que NAO serao replicadas do MASTER
+replicate-ignore-db=mysql
+
+[mysql]
+socket=/mysql/mysqldata01/mysql.sock
+
+[mysqladmin]
+socket=/mysql/mysqldata01/mysql.sock
+
+[mysql_upgrade]
+socket=/mysql/mysqldata01/mysql.sock
+
+[mysqlbackup]
+backup_innodb_data_home_dir=''
+backup_innodb_data_file_path= /mysql/mysqldata01/innodb/ibdata1:100M;/mysql/mysqldata01/innodb/ibdata2:100M:autoextend

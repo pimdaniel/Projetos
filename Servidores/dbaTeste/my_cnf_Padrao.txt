@@ -1,0 +1,181 @@
+# ----------------------------------------------------
+# MySQL Server Configuration File
+# SERVIDOR : cbm2bm89492  - 10.88.134.89
+#
+# Criado por : Daniel Pimenta 
+# Data: 21/07/2022
+#
+# ----------------------------------------------------------------------
+
+[client]
+
+port= 3306
+socket=/mysql/mysql.sock
+
+
+[mysql]
+
+socket=/mysql/mysql.sock
+max_allowed_packet=128M
+prompt='[MySQL] \u@\h> '
+
+
+
+
+[mysqldump]
+
+max_allowed_packet=128M
+socket=/mysql/mysql.sock
+
+[mysqld_safe]
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+log-error=/mysql/log/mysqld.log
+
+
+[mysqld]
+
+user=mysql
+port=3306
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+datadir=/mysql/data/databases                   # Diretorio dos databases
+tmpdir=/mysql/data/tmpdir                       # Tabelas temporarias
+
+
+plugin-load="thread_pool.so;audit_log.so"
+
+
+max_connections         = 500                # Values < 1000 are typically good
+max_user_connections    = 400                # Limit one specific user/application
+thread_cache_size       = 15                 # 8+(max_connections/100)
+
+
+max_allowed_packet=1G
+default_storage_engine=InnoDB
+
+
+
+#Auditoria
+#
+audit_log_file=/mysql/auditlog/clstsgslx4566-audit.log
+audit_log_policy=LOGINS
+audit_log_strategy=PERFORMANCE
+audit_log_rotate_on_size=128M
+audit_log_buffer_size=12582912
+
+
+
+#plugin-load-add=validate_password.so                              # Politica de senha
+#default_authentication_plugin=mysql_native_password        # Para garantir compatibilidade com versoes antigas de mysql como tambem de linguagem de programacao
+#character_set_server           = utf8
+#collation_server               = utf8_unicode_ci
+#init_connect                   = 'SET collation_connection = utf8_unicode_ci; SET NAMES utf8;'
+#skip-character-set-client-handshake
+
+
+
+explicit_defaults_for_timestamp=1
+
+# Query Cache  VERIFICAR
+# have_query_cache=1
+
+
+
+# Session variables
+
+sort_buffer_size               = 128k       # Espaço de sort (order\group by) MAX=4G
+tmp_table_size                 = 100M        # Make sure your temporary results do NOT contain BLOB/TEXT attributes
+read_buffer_size               = 100M
+read_rnd_buffer_size           = 100k           #Leitura tabelas MyISAM
+join_buffer_size               = 50M
+bulk_insert_buffer_size        = 128M
+net_buffer_length=8K
+
+# Other buffers and caches
+
+table_definition_cache         = 100        # As big as many tables you have
+table_open_cache               = 100        # connections x tables/connection (~2)
+
+
+# Slow Query Log
+
+slow_query_log_file            = /mysql/log.d/slow.log   ## botar direotrio
+slow_query_log                 = 1
+long_query_time=10
+#log_queries_not_usingi_indexes  = 0
+long_query_time                = 2
+
+
+
+# Logging
+log-error=/mysql/log.d/mysqld_error.log                                                       # MySQL error log
+log_error_verbosity=3
+
+
+
+# General Query Log { Funcina para verificar tudo que é enviado pelos client's para dentro do mysql - investigativo
+#general_log_file=general.log
+#general_log=0
+
+
+
+#Replication
+server_id=1
+
+
+## Binary Log Configuration
+
+log_bin=/mysql/data/binario_log/cbm2bm89492-log-bin
+log_bin_index=/mysql/data/binario_log/cbm2bm89492-log-bin-index
+
+binlog_cache_size=1M
+binlog_stmt_cache_size=1M               # Since 5.5
+max_binlog_size=128M                    # Make bigger for high traffic to reduce number of files
+sync_binlog=1                           # Set to 1 or higher to reduce potential loss of binary-log data
+expire_logs_days=7                      # We will survive easter holidays
+binlog_format=ROW                       # Use MIXED if you experience some troubles
+binlog_row_image=MINIMAL                # Since 5.6
+
+
+# MyISAM variables
+
+key_buffer_size=10G                                 # Set to 25 - 33 % of RAM if you still use MyISAM
+myisam_recover_options='BACKUP,FORCE'              # Since 5.5
+max_heap_table_size=768M                           # Should be greater or equal to tmp_table_size
+
+
+
+ concurrent_insert=2
+ low_priority_updates=1
+ wait_timeout=600
+ transaction-isolation=READ-COMMITTED
+
+
+
+ # InnoDB variables
+
+ innodb_data_file_path   = /mysql/data/innodb/ibdata1:100M;/mysql/data/innodb/ibdata2:100M:autoextend
+ innodb_log_group_home_dir = /mysql/data/innodb/log
+
+ innodb_log_compressed_pages=0
+ innodb_log_files_in_group=3
+ innodb_buffer_pool_size=28G                 # Go up to 80% of your available RAM
+ innodb_buffer_pool_instances=16            # Bigger if huge InnoDB Buffer Pool or high concurrency
+ innodb_file_per_table=1                    # Is the recommended way nowadays
+ innodb_log_buffer_size=16M                 # Bigger if innodb_flush_log_at_trx_commit = 0
+ innodb_log_file_size=256M                  # Bigger means more write throughput but longer recovery time
+ innodb_flush_method=O_DIRECT
+ innodb_read_io_threads=64
+ innodb_write_io_threads=64
+ innodb_flush_neighbors=0
+ innodb_page_cleaners=64
+ innodb_open_files=-1
+ innodb_stats_persistent_sample_pages=100
+ innodb_stats_persistent=1
+ innodb_io_capacity=100                    # Verificar
+ innodb_io_capacity_max=2500
+ innodb_lru_scan_depth=256
+ innodb_flush_log_at_trx_commit = 2
+ innodb_doublewrite=false
+

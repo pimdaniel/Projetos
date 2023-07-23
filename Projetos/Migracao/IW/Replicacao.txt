@@ -1,0 +1,283 @@
+
+
+Nó Master
+
+ FLUSH TABLES WITH READ LOCK;  [ Numa sessao]
+
+ [Outra sessao]
+
+SHOW MASTER STATUS\G
+*************************** 1. row ***************************
+             File: mysql-bin.000003
+         Position: 73
+     Binlog_Do_DB: test
+ Binlog_Ignore_DB: manual, mysql
+Executed_Gtid_Set: 3E11FA47-71CA-11E1-9E33-C80AA9429562:1-5
+1 row in set (0.00 sec)
+
+
+
+
+
+Nó Slave
+
+# Depois da cópia dos dados, excluir o arquivo abaixo no servidor destino(BRUX0762):
+./mysqldata01/db/auto.cnf
+
+ CHANGE REPLICATION SOURCE TO    
+         SOURCE_HOST='10.18.52.174',
+         SOURCE_USER='replicator',
+         SOURCE_PASSWORD='esS1RaT0zf3!ra',
+         SOURCE_LOG_FILE='brux0395.066687',
+         SOURCE_LOG_POS=157;
+
+
+-----------------------------
+
+ CHANGE REPLICATION SOURCE TO    
+         SOURCE_HOST='10.18.52.174',
+         SOURCE_USER='replicator',
+         SOURCE_PASSWORD='esS1RaT0zf3!ra',
+         SOURCE_LOG_FILE='brux0395.066697',
+         SOURCE_LOG_POS=24956675;
+
+
+
+
+START REPLICA;
+STOP REPLICA;
+
+Or from MySQL 8.0.22:
+mysql> STOP REPLICA;
+mysql> SHOW REPLICA STATUS \G;
+
+
+
+SET GLOBAL slave_parallel_workers = 4;
+
+-------------------------------  Monitoracao da replica  ---------------------
+
+SHOW REPLICA STATUS \G;
+
+ -> SQL_Delay : The number of seconds that the replica must lag the source.
+
+
+Pular erro na replica :
+00
+
+{ Nao pode rodar quando  replication I/O (receiver) and SQL (applier) threads are running. }
+SET GLOBAL sql_replica_skip_counter = 100;
+
+
+
+------------------------------------------------------------- Variaveis no my.cnf ----------------------------------------------------
+
+    datadir=/mysql/mysqldata01/db
+socket=/mysql/mysqldata01/mysql.sock
+/iw/log.d/mysqld/brux0762-slow.log
+/mysql/tmpdir/brux0762
+relay_log=/mysql/binario_log/relay_log/brux0762-relay-bin
+relay-log-index=/mysql/binario_log/relay_log/brux0762-relay-bin.index
+master-info-file=/mysql/binario_log/relay_log/brux0762-master.info
+relay-log-info-file=/mysql/binario_log/relay_log/brux0762-relay-log.info
+
+
+
+innodb_buffer_pool_size=110G  --> 150
+The innodb_redo_log_capacity variable supersedes the innodb_log_file_size
+
+innodb_redo_log_capacity = 8589934592 --8G
+
+
+replica_compressed_protocol
+
+--slave-skip-errors=all
+
+
+
+
+############################################################
+
+
+ show global variables like 'local_infile';
+ show global variables like 'explicit_defaults_for_timestamp';
+
+
+
+
+log-bin=/mysql/tmpdir/brux0762
+
+
+
+## Relay Log Configuration
+relay_log=/mysql/binario_log/relay_log/brux0762-relay-bin
+relay-log-index=/mysql/binario_log/relay_log/brux0762-relay-bin.index
+master-info-file=/mysql/binario_log/relay_log/brux0762-master.info
+relay-log-info-file=/mysql/binario_log/relay_log/brux0762-relay-log.info
+
+
+Seconds_Behind_Master
+
+
+select * from replication_connection_configuration \G;
+
+-------------------------------
+ Last_Error: Coordinator stopped because there were error(s) in the worker(s). The most recent failure being: Worker 1 failed executing transaction 'ANONYMOUS' at source log , end_log_pos 58101587. See error log and/or performance_schema.replication_applier_status_by_worker table for more details about this failure or others, if any.
+
+################### Erro ao parar a replica :
+
+
+2023-07-16T21:58:14.408863Z 0 [System] [MY-010931] [Server] /usr/local/mysql/bin/mysqld: ready for connections. Version: '8.0.33-commercial'  socket: '/mysql/mysqldata01/mysql.sock'  port: 3306  MySQL Enterprise Server - Commercial.
+2023-07-16T21:58:14.408926Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /tmp/mysqlx.sock
+2023-07-16T23:36:13.656197Z 6 [Warning] [MY-010584] [Repl] Replica SQL for channel '': Coordinator thread of multi-threaded replica is being stopped in the middle of assigning a group of events; deferring to exit until the group completion ... , Error_code: MY-000000
+2023-07-16T23:37:14.128428Z 6 [ERROR] [MY-010584] [Repl] Replica SQL for channel '': ... The replica coordinator and worker threads are stopped, possibly leaving data in inconsistent state. A restart should restore consistency automatically, although using non-transactional storage for data or info tables or DDL queries could lead to problems. In such cases you have to examine your data (see documentation for details). Error_code: MY-001756
+
+--- Ultima subida
+ Could not execute Delete_rows event on table iwprd_crm.fp_cotacao_consolidado; Lock wait timeout exceeded; try restarting transaction, Error_code: 1205; handler error HA_ERR_LOCK_WAIT_TIMEOUT; 
+ the event's source log brux0395.066697, end_log_pos 14074785, Error_code: MY-001205
+
+
+
+mysql tables in use 1, locked 1
+200470 lock struct(s), heap size 21684344, 9286354 row lock(s), undo log entries 4615712
+MySQL thread id 7, OS thread handle 140534619522816, query id 3431 Applying batch of row changes (delete)
+
+
+
++-------+-----------------+-----------------+-----------+---------+-------+----------------------------------------+------------------+
+| Id    | User            | Host            | db        | Command | Time  | State                                  | Info             |
++-------+-----------------+-----------------+-----------+---------+-------+----------------------------------------+------------------+
+|     9 | event_scheduler | localhost       | NULL      | Daemon  | 41654 | Waiting for next activation            | NULL             |
+| 50589 | root            | localhost       | NULL      | Query   |     0 | init                                   | show processlist |
+| 75741 | system user     | connecting host | NULL      | Connect |  2206 | Waiting for source to send event       | NULL             |
+| 75742 | system user     |                 | NULL      | Query   |     0 | Waiting for Replica Worker queue       | NULL             |
+| 75743 | system user     |                 | NULL      | Query   | 34157 | Waiting for an event from Coordinator  | NULL             |
+| 75744 | system user     |                 | iwprd_crm | Query   | 35420 | Applying batch of row changes (delete) | NULL             |
+| 75745 | system user     |                 | NULL      | Query   | 34159 | Waiting for an event from Coordinator  | NULL             |
+| 75746 | system user     |                 | NULL      | Query   | 34368 | Waiting for an event from Coordinator  | NULL             |
+| 75747 | system user     |                 | NULL      | Query   | 34621 | Waiting for an event from Coordinator  | NULL             |
+| 75748 | system user     |                 | NULL      | Query   | 35504 | Waiting for an event from Coordinator  | NULL             |
+| 75749 | system user     |                 | NULL      | Query   | 36869 | Waiting for an event from Coordinator  | NULL             |
+| 75750 | system user     |                 | NULL      | Query   | 36875 | Waiting for an event from Coordinator  | NULL             |
+| 75751 | system user     |                 | NULL      | Query   | 36875 | Waiting for an event from Coordinator  | NULL             |
+| 75752 | system user     |                 | NULL      | Query   | 36875 | Waiting for an event from Coordinator  | NULL             |
+
+
+SELECT PROCESSLIST_COMMAND,PROCESSLIST_INFO FROM performance_schema.threads;
+
+
+SELECT WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events_stages_current    WHERE EVENT_NAME LIKE 'stage/sql/Applying batch of row changes (delete)';
+
+SELECT * FROM performance_schema.threads where PROCESSLIST_STATE <> 'Waiting for an event from Coordinator' and PROCESSLIST_INFO is not null \G;
+
+SELECT WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events_stages_current WHERE EVENT_NAME LIKE 'stage/sql/Applying batch of row changes%';
+
+SELECT EVENT_NAME, WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events_stages_current WHERE EVENT_NAME LIKE 'stage/sql/Applying batch of row changes%';
+
+
+
+ iwprd_crm.fp_ordem_acao_consolidado
+
+
+
+ select * from performance_schema.events_waits_summary_global_by_event_name order by sum_timer_wait desc limit 5;
+
+
+
+
+ table_open_cache      | 25600  --> 
+
+ innodb_io_capacity    | 1000  --> 1500
+
+ slow_query_log        | ON  --> OFF
+
+ 
+
+
+reset replica;
+
+CHANGE REPLICATION SOURCE TO    
+         SOURCE_HOST='10.18.52.174',
+         SOURCE_USER='replicator',
+         SOURCE_PASSWORD='esS1RaT0zf3!ra',
+         SOURCE_LOG_FILE='brux0395.066821',
+         SOURCE_LOG_POS=20013317;
+
+
+   Replica_IO_State: Waiting for source to send event
+                  Source_Host: 10.18.52.174
+                  Source_User: replicator
+                  Source_Port: 3306
+                Connect_Retry: 60
+              Source_Log_File: brux0395.066802
+          Read_Source_Log_Pos: 15523177
+               Relay_Log_File: brux0762-relay-bin.000865
+                Relay_Log_Pos: 37903816
+        Relay_Source_Log_File: brux0395.066749
+           Replica_IO_Running: Yes
+          Replica_SQL_Running: Yes
+              Replicate_Do_DB:
+          Replicate_Ignore_DB: iwhis%.%
+
+
+
+select max(DAT_ACESSO_ATU) from iwprd_sys.usuario;
+
+
+5 | system user     | connecting host   | NULL      | Connect | 13241 | Waiting for source to send event       | NULL             |
+|    6 | system user     |                   | NULL      | Query   |     0 | Waiting for Replica Worker queue       | NULL             |
+|    7 | system user     |                   | iwprd_wfw | Query   |  1199 | Applying batch of row changes (delete) | NULL             |
+
+
+ 5 | system user     | connecting host | NULL      | Connect | 22769 | Waiting for source to send event            | NULL             |
+|     6 | system user     |                 | NULL      | Query   |   109 | Waiting for dependent transaction to commit | NULL             |
+|     7 | system user     |                 | iwprd_all | Query   |   292 | altering table                              | NULL             |
+|     8 | system user     |                 | NULL      | Query   |   110 | Waiting for an event from Coordinator       
+
+ 
+
+---------------------
+ 19/07 - select * from performance_schema.log_status\G;
+
+   5 | system user     | connecting host | NULL      | Connect | 85237 | Waiting for source to send event       | NULL             |
+|     6 | system user     |                 | NULL      | Query   |     0 | Waiting for Replica Worker queue       | NULL             |
+|     7 | system user     |                 | iwprd_crm | Query   | 19785 | Applying batch of row changes (delete) | NULL             |
+
+fp_cotacao_consolidado
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+mysqlbinlog -v /mysql/binario_log/relay_log/brux0762-relay-bin.000738  --start-position=593469 | grep iwprd_all
+
+
+nohup rsync -avHSr /mysql/backup/*.sql mysql@10.88.136.67:/mysql/backup/.
+
+
+0395 :
+show global variables like '%binlog_transaction_dependency_tracking%';   -- COMMIT_ORDER
+
+set global binlog_transaction_dependency_tracking = 'COMMIT_ORDER';
+set global binlog_transaction_dependency_tracking = 'WRITESET';
+
+0762:
+show global variables like '%binlog_transaction_dependency_tracking%';   -- COMMIT_ORDER
+
+
+
+select * from performance_schema.events_statements_current where THREAD_ID=6447;
+
+select SQL_TEXT,DIGEST_TEXT from performance_schema.events_statements_current where THREAD_ID=6447;
+
+THREAD_ID: 50691
+               EVENT_ID: 1313291
+           END_EVENT_ID: NULL
+             EVENT_NAME: statement/sql/alter_table
+                 SOURCE: log_event.cc:4789
+            TIMER_START: 137589137189660000
+              TIMER_END: 142797647143546000
+             TIMER_WAIT: 5208509953886000
+              LOCK_TIME: 6000000
+               SQL_TEXT: ALTER TABLE iwprd_crm.cpc_cotacao_consolidado ENABLE KEYS
+                 DIGEST: f9d11211c38df4563d9fba097e109d287a3b677691688c44ad6d7aa72c064f4f
+            DIGEST_TEXT: ALTER TABLE `iwprd_crm` . `cpc_cotacao_consolidado` ENABLE KEYS
+         CURRENT_SCHEMA: iwprd_all
+

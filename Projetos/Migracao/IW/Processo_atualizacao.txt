@@ -1,0 +1,33 @@
+[ERROR] [MY-010045] [Server] Event Scheduler: [root@localhost][iwprd_dbhis.lock_history] Unknown table 'INNODB_LOCK_WAITS' in information_schema
+[ERROR] [MY-010768] [Server] Error in creating stored program 'iwprocedure.VND_TEND_VARIACAO_V3'
+[ERROR] [MY-010768] [Server] Error in creating stored program 'iwprocedure.VND_TEND_VARIACAO_V2'
+[ERROR] [MY-010768] [Server] Error in creating stored program 'iwprocedure.VND_FECHADO_V1'
+[ERROR] [MY-013235] [Server] Error in parsing Routine 'iwprocedure'.'PICOS_ENGENHARIA_UN'
+
+
+
+[ERROR] [MY-000067] [Server] unknown variable 'query_cache_min_res_unit=2K'.
+[ERROR] [MY-000067] [Server] unknown variable 'query_cache_size=0'.
+[ERROR] [MY-000067] [Server] unknown variable 'query_cache_limit=2M'
+[ERROR] [MY-000067] [Server] unknown variable 'query_cache_type=0'
+[ERROR] [MY-000067] [Server] unknown variable 'max_tmp_tables=1000'
+[ERROR] [MY-000067] [Server] unknown variable 'metadata_locks_hash_instances=256'.
+[ERROR] [MY-000067] [Server] unknown variable 'internal_tmp_disk_storage_engine=innodb'
+
+
+-------------------------------------------------------------------------------------
+1) Parar o banco de dados [OK]
+2) Para o backup do Mysqlshell - [OK]
+3) Colocar o novo backup na crontab [ 30 0 * * *  /iw/scripts/backupMEB.sh 1>/iw/log.d/iw/backupMEB.sh_brux0395_out.log 2>/iw/log.d/iw/backupMEB.sh_brux0395_err.log ] [OK]
+4) Comentar o backup antigo da crontab[OK]
+5) Dropar o link simbolico do binário antigo [rm mysql]
+6) Criar o novo link simbólico [c ]
+7) Subir o mysql 
+
+
+nohup rsync -avHSr /mysql/backup/brux0395/Master/202307080030/ mysql@brux0762:/mysql/backup/. &
+
+inicio do bkp : /dev/mapper/vgbrux0395100-lvol2  5.0T  606G  4.2T  13% /mysql/backup
+
+
+

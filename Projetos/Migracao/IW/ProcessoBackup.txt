@@ -1,0 +1,38 @@
+
+CREATE USER 'mysqlbackup'@'localhost' IDENTIFIED BY 'Senha#01';
+
+GRANT SELECT, BACKUP_ADMIN, RELOAD, PROCESS, SUPER, REPLICATION CLIENT ON *.*  TO `mysqlbackup`@`localhost`;
+GRANT CREATE, INSERT, DROP, UPDATE ON mysql.backup_progress TO 'mysqlbackup'@'localhost'; 
+GRANT CREATE, INSERT, DROP, UPDATE, SELECT, ALTER ON mysql.backup_history TO 'mysqlbackup'@'localhost';
+
+
+mysql_config_editor set --login-path=backup --user=mysqlbackup --password
+
+
+
+
+1) Backup MEB to one file
+
+#!/bin/bash
+echo "inicio"
+date
+
+# Pega data
+NOW=$(date +%Y%m%d%H%M)
+BACKUP_HOME=/mysql/backup/Master/$NOW
+
+INNODB="$BACKUP_HOME/innodb/ibdata1:100M;$BACKUP_HOME/innodb/ibdata2:100M:autoextend"
+
+#Executando o backup pelo MEB
+
+#/iw/app.d/mysql-commercial-backup-8.0.33-el7-x86_64/bin/mysqlbackup --login-path=backup  --port=3306 --protocol=tcp --backup-dir=$BACKUP_HOME --backup_innodb_data_file_path=$INNODB  --with-timestamp backup-and-apply-log --no-locking --read-threads=35 --process-threads=35 --write-threads=35 --compress-method=lz4 --compress-level=8  --exclude-tables="^(iwtmp_all|iwtmp_atd|iwtmp_bi|iwtmp_cad|iwtmp_cem|iwtmp_cor|iwtmp_crm|iwtmp_ctv|iwtmp_dim|iwtmp_dv|iwtmp_dwh|iwtmp_ebt|iwtmp_eng|iwtmp_ent|iwtmp_fin|iwtmp_fp|iwtmp_gda|iwtmp_gen|iwtmp_hem|iwtmp_itv|iwtmp_ool|iwtmp_prd|iwtmp_pta|iwtmp_rem|iwtmp_rh|iwtmp_stq|iwtmp_sys|iwtmp_trf|iwtmp_vnd|iwtmp_wfw|iwprd_wvd|iwtmp_wrp|iwtmp_wvd  )\."
+
+
+/iw/app.d/mysql-commercial-backup-8.0.33-el7-x86_64/bin/mysqlbackup --login-path=backup  --port=3306 --protocol=tcp --backup-dir=$BACKUP_HOME --backup_innodb_data_file_path=$INNODB  --with-timestamp backup-and-apply-log --no-locking --read-threads=15 --process-threads=35 --write-threads=35 --compress-method=lz4 --compress-level=8  --exclude-tables="^(iwprd_sys|iwprd_vnd|iwprd_wvd|iwtmp_vnd|iwprd_cad|iwprd_com|iwprd_crm)\."
+
+echo "Fim backup"
+date
+
+
+# Limpa últimos backups
+#find /mysql/backup/brux0395/Master/ -maxdepth 1 -type d -name "202*" -mtime +2 -print0 | xargs -0 rm -rf

@@ -1,0 +1,116 @@
+
+
+Simulação efetuada com sucesso !
+
+1)Foi criado um banco de dados chamado de teste. Este banco foi criado no diretorio correto DATADIR = /app/mysql/data/databases/
+
+2) Banco foi parado e foi criado o diratorio /app/mysql/link01/teste/
+
+2) Foi movido o diretorio  /app/mysql/data/databases/teste para  /app/mysql/link01/teste/
+
+3) Sendo assim o banco teste agora está localizado em : /app/mysql/link01/teste/
+
+4) Foi criado o link simbolico de dentro do diretorio /app/mysql/data/databases/ :  ln -s /app/mysql/link01/teste/ teste
+
+        [mysql@net002prdlnx821 databases]$ ll
+        total 70740
+        -rw-r-----. 1 mysql mysql      836 Jan 25 10:41  audit.20230125T134115.log
+        -rw-r-----. 1 mysql mysql      648 Jul 22 00:15  audit.20230722T032035.log
+        -rw-r-----. 1 mysql mysql     1096 Jul 22 00:21  audit.20230722T032213.log
+        -rw-r-----. 1 mysql mysql      648 Jul 22 00:22  audit.20230722T032350.log
+        -rw-r-----. 1 mysql mysql     8746 Jul 22 00:41  audit.log
+        -rw-r-----. 1 mysql mysql       56 Jan 25 09:47  auto.cnf
+        -rw-------. 1 mysql mysql     1680 Jan 25 09:47  ca-key.pem
+        -rw-r--r--. 1 mysql mysql     1112 Jan 25 09:47  ca.pem
+        -rw-r--r--. 1 mysql mysql     1112 Jan 25 09:47  client-cert.pem
+        -rw-------. 1 mysql mysql     1676 Jan 25 09:47  client-key.pem
+        -rw-r-----. 1 mysql mysql     3769 Jul 22 00:32  ib_buffer_pool
+        -rw-r-----. 1 mysql mysql 12582912 Jul 22 00:23  ibtmp1
+        drwxr-x---. 2 mysql mysql      231 Jul 22 00:23 '#innodb_temp'
+        drwxr-x---. 2 mysql mysql     4096 Jan 25 20:42  mysql
+        -rw-r-----. 1 mysql mysql 26214400 Jul 22 00:32  mysql.ibd
+        drwxr-x---. 2 mysql mysql     8192 Jan 25 09:47  performance_schema
+        -rw-------. 1 mysql mysql     1676 Jan 25 09:47  private_key.pem
+        -rw-r--r--. 1 mysql mysql      452 Jan 25 09:47  public_key.pem
+        -rw-r--r--. 1 mysql mysql     1112 Jan 25 09:47  server-cert.pem
+        -rw-------. 1 mysql mysql     1676 Jan 25 09:47  server-key.pem
+        drwxr-x---. 2 mysql mysql       36 Jan 25 09:47  sys
+        lrwxrwxrwx. 1 mysql mysql       24 Jul 22 00:20  teste -> /app/mysql/link01/teste/
+        -rw-r-----. 1 mysql mysql 16777216 Jul 22 00:32  undo_001
+        -rw-r-----. 1 mysql mysql 16777216 Jul 22 00:32  undo_002
+
+
+5) O banco foi iniciado sem problemas 
+
+        root@localhost [(none)]> show databases;
+        +--------------------+
+        | Database           |
+        +--------------------+
+        | information_schema |
+        | mysql              |
+        | performance_schema |
+        | sys                |
+        | teste              |
+        +--------------------+
+
+
+6) Foi iniciado um backup e ocorreu o mesmo erro do IW : ERROR: Source path '/app/mysql/data/databases/tetse/teste.ibd' must be in datadir '/app/mysql/data/databases' or be external.
+
+7) Feito rollback  do processo
+
+ 7.1) rm teste
+
+ 7.2) cp -r /app/mysql/link01/teste/ ./    [Estando no diretorio: /app/mysql/data/databases  ]
+
+ 7.3) Bando no ar novamente 
+
+        [mysql@net002prdlnx821 databases]$ ll
+        total 58456
+        -rw-r-----. 1 mysql mysql      836 Jan 25 10:41  audit.20230125T134115.log
+        -rw-r-----. 1 mysql mysql      648 Jul 22 00:15  audit.20230722T032035.log
+        -rw-r-----. 1 mysql mysql     1096 Jul 22 00:21  audit.20230722T032213.log
+        -rw-r-----. 1 mysql mysql      648 Jul 22 00:22  audit.20230722T032350.log
+        -rw-r-----. 1 mysql mysql    10336 Jul 22 00:42  audit.20230722T034220.log
+        -rw-r-----. 1 mysql mysql     3622 Jul 22 00:47  audit.20230722T034716.log
+        -rw-r-----. 1 mysql mysql       56 Jan 25 09:47  auto.cnf
+        -rw-------. 1 mysql mysql     1680 Jan 25 09:47  ca-key.pem
+        -rw-r--r--. 1 mysql mysql     1112 Jan 25 09:47  ca.pem
+        -rw-r--r--. 1 mysql mysql     1112 Jan 25 09:47  client-cert.pem
+        -rw-------. 1 mysql mysql     1676 Jan 25 09:47  client-key.pem
+        -rw-r-----. 1 mysql mysql     3750 Jul 22 00:47  ib_buffer_pool
+        drwxr-x---. 2 mysql mysql       10 Jul 22 00:47 '#innodb_temp'
+        drwxr-x---. 2 mysql mysql     4096 Jan 25 20:42  mysql
+        -rw-r-----. 1 mysql mysql 26214400 Jul 22 00:46  mysql.ibd
+        drwxr-x---. 2 mysql mysql     8192 Jan 25 09:47  performance_schema
+        -rw-------. 1 mysql mysql     1676 Jan 25 09:47  private_key.pem
+        -rw-r--r--. 1 mysql mysql      452 Jan 25 09:47  public_key.pem
+        -rw-r--r--. 1 mysql mysql     1112 Jan 25 09:47  server-cert.pem
+        -rw-------. 1 mysql mysql     1676 Jan 25 09:47  server-key.pem
+        drwxr-x---. 2 mysql mysql       36 Jan 25 09:47  sys
+        drwxr-x---. 2 mysql mysql       31 Jul 22 00:48  teste
+        -rw-r-----. 1 mysql mysql 16777216 Jul 22 00:47  undo_001
+        -rw-r-----. 1 mysql mysql 16777216 Jul 22 00:47  undo_002
+        [mysql@net002prdlnx821 databases]$ /app/mysql/app.d/mysql/support-files/mysql.server start
+        Starting MySQL........... SUCCESS!
+
+
+        root@localhost [(none)]> show databases;
+        +--------------------+
+        | Database           |
+        +--------------------+
+        | information_schema |
+        | mysql              |
+        | performance_schema |
+        | sys                |
+        | teste              |
+        +--------------------+
+
+
+  7.4)  INFO: Compress Apply Backup operation completed successfully.
+
+
+  []'s
+
+
+
+
