@@ -2,3 +2,23 @@
 
 NET002PRDLNX554 - produção
 net002prdlnx821 - destino novo
+
+
+
+nohup rsync -avHSr /backup/FULL_554/2023-07-25_23-59-01/ mysql@net002prdlnx821:/app/mysql/backup/NET002PRDLNX554. &
+
+
+
+# net002prdlnx821
+
+my.cnf -> /app/mysql/conf.d/my.cnf
+
+
+app.d = mysql -> /usr/local/mysql
+
+/usr/local = mysql -> /app/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64
+
+
+# restore
+
+https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=308871886398926&parent=EXTERNAL_SEARCH&sourceId=HOWTO&id=1575651.1&_afrWindowMode=0&_adf.ctrl-state=4jy0q652l_4

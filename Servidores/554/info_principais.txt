@@ -1,0 +1,19 @@
+
+
+# Subindo o serviço
+
+/usr/sbin/mysqld --basedir=/usr --datadir=/app/mysql/data --plugin-dir=/usr/lib64/mysql/plugin --log-error=/app/mysql/net002prdlnx554.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/lib/mysql/mysql.sock --port=3306
+
+/bin/sh /usr/bin/mysqld_safe --datadir=/app/mysql/data --pid-file=/var/run/mysqld/mysqld.pid
+
+
+
+# Backup 
+
+# Variaveis
+USER=backup;
+PASS=B@ck11p!;
+MYSQLBACKUP_DIR=/opt/mysql/meb-3.12/bin
+BACKUP_DIR=/backup
+#EXPURGO=`ls -1 $BACKUP_DIR/FULL |awk -F "_" '{print $1}'`
+LOG=$BACKUP_DIR/MYSQLBACKUP_NET002PRDLNX554_COMPRESS_FULL_IMAGE_`date +"%Y%m%d_%H%M"`.log

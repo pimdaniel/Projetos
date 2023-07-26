@@ -1,0 +1,128 @@
+[client]
+port=3306
+socket=/var/lib/mysql/mysql.sock                                # Alterar
+
+[mysql]
+port=3306
+no-auto-rehash
+prompt = \u@\h [\d]>\_
+
+[mysqld]
+datadir=/app/mysql/data
+lc_messages_dir= /app/mysql                                               # Alterar /usr/share/mysql
+socket=/app/mysql/mysql.sock                                # Alterar /var/lib/mysql/mysql.sock
+secure-file-priv = ""
+
+audit_log_file=/app/mysql/audit/NET002PRDLNX554-audit.log
+audit_log_policy=LOGINS
+audit_log_strategy=PERFORMANCE
+audit_log_rotate_on_size=128M
+audit_log_buffer_size=12582912
+
+# Temp Tables
+tmp_table_size = 2048M
+max_heap_table_size=2048M
+tmpdir=/app/mysql/tmp
+max_tmp_tables=900
+
+# Binary log
+log-bin=/app/mysql/data/mysql_log_bin
+binlog-format=MIXED
+expire_logs_days = 1
+log_bin_trust_function_creators=1
+sync_binlog = 1
+max_binlog_size=1073741824
+max_binlog_cache_size=18446744073709551615
+binlog_cache_size=64M
+
+# Desabilitar pesquisa de DNS
+skip-name-resolve
+skip-slave-start
+
+# Thread Pool
+plugin-load=thread_pool.so
+plugin-load=thread_pool=thread_pool.so;tp_thread_state=thread_pool.so;tp_thread_group_state=thread_pool.so;tp_thread_group_stats=thread_pool.so
+
+# Password Validation
+plugin-load=validate_password.so
+
+#NET
+net_read_timeout=3600
+net_write_timeout=3600
+
+
+# Temp Tables
+tmp_table_size = 2048M
+max_heap_table_size=2048M
+tmpdir=/app/mysql/tmp
+
+explicit_defaults_for_timestamp =TIMESTAMP
+
+event_scheduler=ON
+
+#innodb_force_recovery = 1
+query_cache_type = 0
+query_cache_limit = 2M
+query_cache_size = 64M
+query_cache_min_res_unit=2K
+innodb_file_per_table=1
+user=mysql
+port=3306
+innodb_stats_persistent=1
+innodb_read_io_threads=16
+innodb_write_io_threads=4
+table_open_cache_instances=16
+innodb_buffer_pool_instances=16
+#innodb_page_cleaners=16
+#innodb_buffer_pool_size=1024M
+
+#innodb_buffer_pool_size=20480M
+innodb_buffer_pool_size=45G
+innodb_log_buffer_size=16M
+#new
+innodb_flush_log_at_trx_commit = 2
+log-error=/app/mysql/net002prdlnx554.log
+pid-file=/app/mysql/mysqld.pid                         # Alterar
+max_allowed_packet=1024M
+innodb_flush_neighbors=0
+innodb_log_file_size=8G
+# sort_buffer_size=5G
+sort_buffer_size=64K
+table_definition_cache = 5120
+table_open_cache = 5120
+max_connections = 2000
+max_connect_errors=1000
+net_write_timeout=3600
+net_read_timeout=3600
+wait_timeout=3600
+interactive_timeout=28800
+#innodb_io_capacity=1000
+#innodb_io_capacity_max=2500
+innodb_doublewrite=false
+innodb_flush_method=O_DIRECT
+innodb_log_files_in_group=2
+
+# MyISAM
+concurrent_insert = ALWAYS
+myisam-recover-options = FORCE,BACKUP
+skip-external-locking
+myisam_sort_buffer_size = 128M
+key_buffer_size=35000000000
+
+# Warnings
+#log_error_verbosity = 3
+
+# Scheduler
+event_scheduler=ON
+
+# Slow Query Log
+slow_query_log = 1
+long_query_time= 310
+slow_query_log_file = /app/mysql/query-slow_NET002PRDLNX554.log
+expire_logs_days=2
+
+[mysqld_safe]
+log-error=/app/mysql/net002prdlnx554.log                    # Alterar
+pid-file=/app/mysql/mysqld.pid                              # Alterar
+lc_messages_dir=/app/mysql                                  # Alterar
+

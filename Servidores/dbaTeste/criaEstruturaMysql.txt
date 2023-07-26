@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+
+
+#Diretorios de configurações
+	
+	mkdir -p /mysql/conf.d/mysqld
+	mkdir -p /mysql/app.d
+    mkdir -p /mysql/log.d
+
+#Direotrios de Dados
+	mkdir -p /mysql/data/databases      #datadir
+	mkdir -p /mysql/data/innodb/log
+	mkdir -p /mysql/data/tmpdir
+	mkdir -p /mysql/data/binario_log
+
+# Diretorios de Backup
+
+	mkdir /mysql/backup/dump
+	mkdir -p /mysql/backup/MEB
+	mkdir -p /mysql/backup/scripts
