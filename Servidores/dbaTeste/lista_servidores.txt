@@ -1,0 +1,6 @@
+
+CBM2BM14203 - 10.88.134.88 
+
+CBM2BM89492 - 10.88.134.89
+
+echo -n > /mysql/log.d/log_error.log

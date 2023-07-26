@@ -53,7 +53,7 @@ cat   /mysql/log/log_error.log	  [ Para pegar a senha de root ]  %kudvXv#f3HY
 /mysql/app.d/mysql-commercial-8.0.33-el7-x86_64/bin/mysqld_safe --defaults-file=/mysql/conf.d/mysqld/my.cnf  --user=mysql --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --log-error=/mysql/log.d/log_error.log --datadir=/mysql/data/databases  &
  
 
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#007';
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#21';
 
 vi  /home/mysql/.bash_profile
  adicionar no final do arquivo:  export PATH=$PATH:/mysql/app.d/mysql/bin

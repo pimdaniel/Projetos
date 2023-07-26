@@ -1,0 +1,20 @@
+#!/bin/bash
+
+BASE_DIR=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64
+CONF=/mysql/conf.d/mysqld/my.cnf
+DATADIR=/mysql/data/databases
+LOG_ERROR=/mysql/log.d/log_error.log
+
+
+
+
+echo {$BASE_DIR}
+echo {$CONF}
+echo {$DATADIR}
+echo {$LOG_ERROR}
+
+
+ln -s /mysql/app.d/mysql  /usr/local/mysql   
+ln -s /mysql/conf.d/mysqld/my.cnf  /etc/my.cnf
+
+

@@ -281,3 +281,17 @@ THREAD_ID: 50691
             DIGEST_TEXT: ALTER TABLE `iwprd_crm` . `cpc_cotacao_consolidado` ENABLE KEYS
          CURRENT_SCHEMA: iwprd_all
 
+
+
+mysql> select id,user,state,time,info,time from information_schema.PROCESSLIST where id = 100765164 order by time  \G;
+*************************** 1. row ***************************
+   id: 100765164
+ user: iwetl
+state: updating
+ time: 1929
+ info: DELETE QUICK FROM iwprd_crm.fp_cotacao_consolidado WHERE DAT_COTACAO BETWEEN @DAT_MIN AND DATE_SUB(@DAT_MAX,INTERVAL 3 MONTH)
+ time: 1929
+1 row in set (0.02 sec)
+
+ERROR:
+No query specified
