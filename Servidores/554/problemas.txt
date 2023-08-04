@@ -1,0 +1,264 @@
+#####################################      Dump Memória 03/08/2023             #####################################
+
+
+select * from EVENTS where EVENT_NAME = "60_MIN_AUDIENCIA_PORTAL_IN"  \G;
+
+
+*************************** 1. row ***************************
+       EVENT_CATALOG: def
+        EVENT_SCHEMA: BI
+          EVENT_NAME: 60_MIN_AUDIENCIA_PORTAL_IN
+             DEFINER: site_in@%
+           TIME_ZONE: SYSTEM
+          EVENT_BODY: SQL
+    EVENT_DEFINITION: BEGIN
+## Limpa a audincia do dia para atualizao recorrente ##
+
+insert into eventHistory (evento,etapa,execucao) values ('60_MIN_AUDIENCIA_PORTAL_IN','Inicio', now());
+
+DELETE FROM BI.TOTALIZADOR_ACESSOS_PORTAL_IN_0 WHERE ANO_MES_DIA > date_format(date_sub(Now(),INTERVAL 1 Month),'%Y/%m/%d');
+
+COMMIT;
+##-------------------------------------------------------##
+
+## Faz insert do dia sysdate ----------------------------##
+
+INSERT INTO BI.TOTALIZADOR_ACESSOS_PORTAL_IN_0
+   SELECT COUNT(ID_REPOSITORIO) AS QTDE,
+          ID_REPOSITORIO AS ID_RELATORIO,
+          ID_POSTS,
+          LOGIN,
+          date_format(DT_DOWNLOAD, '%Y/%m/%d') AS ANO_MES_DIA,
+          date_format(DT_DOWNLOAD, '%Y/%m') AS ANO_MES,
+          date_format(DT_DOWNLOAD, '%H') AS HORA
+   FROM BI.AUDIT_ACESSO_RELATORIO
+   WHERE date_format(DT_DOWNLOAD, '%Y%m%d') >
+         date_format(date_sub(Now(), INTERVAL 1 MONTH), '%Y%m%d')
+   GROUP BY ID_REPOSITORIO,
+            ID_POSTS,
+            LOGIN,
+            date_format(DT_DOWNLOAD, '%Y/%m/%d'),
+            date_format(DT_DOWNLOAD, '%Y/%m'),
+            date_format(DT_DOWNLOAD, '%H');
+
+
+#-------------------------------------------------------##
+
+COMMIT;
+#------------------------------------------------------#
+
+
+
+DELETE FROM BI.TOTALIZADOR_ACESSOS_PORTAL_IN_5 WHERE ANO_MES_DIA > date_format(date_sub(Now(),INTERVAL 1 Month),'%Y/%m/%d');
+commit;
+
+DROP TABLE  IF EXISTS BI.TEMP_MENU_PORTAL_IN_S_FILTRO;
+DROP TABLE  IF EXISTS BI.TEMP_CADASTRAL_PORTAL_IN;
+
+
+CREATE TABLE BI.TEMP_MENU_PORTAL_IN_S_FILTRO as SELECT * FROM BI.VW_MENU_PORTAL_IN_S_FILTRO;
+CREATE TABLE BI.TEMP_CADASTRAL_PORTAL_IN as SELECT * FROM  BASE_RH_AMX.VW_CADASTRAL_PORTAL_IN;
+
+
+ALTER TABLE   BI.TEMP_MENU_PORTAL_IN_S_FILTRO
+ADD INDEX IDX2_ID_REPOS_PORTAL_IN_S_FILTRO (ID_REPOSITORIO);
+/*
+ALTER TABLE   BI.TOTALIZADOR_ACESSOS_PORTAL_IN_5
+ADD INDEX IDX2_DATA_FILTRO_ANO_MES_ACESSO(ANO_MES);
+*/
+ALTER TABLE  BI.TEMP_CADASTRAL_PORTAL_IN
+ADD INDEX IDX_LOGIN_CADASTRAL (LOGIN);
+
+INSERT INTO  BI.TOTALIZADOR_ACESSOS_PORTAL_IN_5
+SELECT AA.QTDE,
+       AA.ID_RELATORIO,
+       AA.ID_POSTS,
+       AA.LOGIN,
+       CC.NOME,
+       CC.E_MAIL,
+       CC.DESC_CARGO,
+       CC.CIDADE_AD,
+       CC.ID_CIDADE_AMX,
+       CC.ID_NET_PRACAS,
+       CC.DESC_CIDADE_AMX,
+       AA.ANO_MES_DIA,
+       (CASE
+           WHEN (dayname(`AA`.`ANO_MES_DIA`) =  'Sunday')
+           THEN
+               'Domingo'
+           WHEN (dayname(`AA`.`ANO_MES_DIA`) =  'Monday')
+           THEN
+               'Segunda-Feira'
+           WHEN (dayname(`AA`.`ANO_MES_DIA`) =  'Tuesday')
+           THEN
+               'Terca-Feira'
+           WHEN (dayname(`AA`.`ANO_MES_DIA`) =  'Wednesday')
+           THEN
+               'Quarta-Feira'
+           WHEN (dayname(`AA`.`ANO_MES_DIA`) =  'Thursday')
+           THEN
+               'Quinta-Feira'
+           WHEN (dayname(`AA`.`ANO_MES_DIA`) =  'Friday')
+           THEN
+               'Sexta-Feira'
+           WHEN (dayname(`AA`.`ANO_MES_DIA`) =  'Saturday')
+           THEN
+               'Sabado'
+           ELSE
+              dayname(`AA`.`ANO_MES_DIA`)
+        END)
+          DIA_SEMANA,
+       AA.ANO_MES,
+       date_format(AA.ANO_MES_DIA, '%d/%m/%Y')
+          AS DIA_MES_ANO,
+       date_format(AA.ANO_MES_DIA, '%m/%Y')
+          AS MES_ANO,
+       AA.HORA,
+       BB.ORDEM,
+       BB.VISIVEL,
+       BB.ID_REPOSITORIO,
+       BB.ID_MENUS,
+       BB.PATH,
+       BB.TIPO_RELATORIO_MENU,
+       BB.NOME_RELATORIO,
+       BB.DESCRICAO_RELATORIO,
+       BB.FK_ID_EMPRESA_RELATORIO,
+       BB.DESCRICAO_EMPRESA_RELATORIO,
+       BB.DISPONIBILIDADE,
+       BB.STATUS_MENU,
+       BB.TIPO_RELATORIO,
+       BB.LINK_RELATORIO,
+       BB.ARQUIVO_QLIKVIEW,
+       BB.RELATORIO_ATUALIZADO_POR_IN,
+       BB.VISUALIZACOES,
+       BB.ACESSOS,
+       BB.ULTIMA_ATUALIZACAO,
+       CASE
+          WHEN BB.TIPO_RELATORIO  = 'EXTRACAO' AND DD.LOGIN   = 'ops$in_i103'
+          THEN
+             'ORIGEM JOBSCHEDULER'
+          WHEN BB.TIPO_RELATORIO  = 'EXTRACAO' AND DD.LOGIN   <> 'ops$in_i103'
+          THEN
+             'CARGA FRIA'
+          WHEN BB.TIPO_RELATORIO   = 'TABLEAU' AND DD.LOGIN   = 'ops$in_i103'
+          THEN
+             'UPLOAD_AUTOMATICO'
+          ELSE
+             'N/A'
+       END
+          AS TIPO_CARGA
+FROM BI.TOTALIZADOR_ACESSOS_PORTAL_IN_0 AA INNER JOIN
+     BI.TEMP_MENU_PORTAL_IN_S_FILTRO BB ON AA.ID_RELATORIO = BB.ID_REPOSITORIO
+     INNER JOIN
+     (SELECT LOGIN,
+             NOME,
+             CIDADE_AD,
+             MAX(DESC_CARGO) AS DESC_CARGO,
+             ID_CIDADE_AMX,
+             ID_NET_PRACAS,
+             DESC_CIDADE_AMX,
+             E_MAIL
+      FROM BI.TEMP_CADASTRAL_PORTAL_IN
+      GROUP BY LOGIN,
+               NOME,
+               CIDADE_AD,
+               ID_CIDADE_AMX,
+               ID_NET_PRACAS,
+               DESC_CIDADE_AMX,
+               E_MAIL) CC
+                    ON  AA.LOGIN = CC.LOGIN
+     LEFT JOIN BI.COPIA_AUDIT_POST_DADOS_PORTAL_IN_0 DD
+        ON AA.ID_POSTS = DD.ID_POSTS
+WHERE
+
+       AA.ANO_MES_DIA >
+          date_format(date_sub(Now(), INTERVAL 1 MONTH), '%Y/%m/%d');
+commit;
+
+
+DROP TABLE  IF EXISTS BI.TEMP_MENU_PORTAL_IN_S_FILTRO;
+DROP TABLE  IF EXISTS BI.TEMP_CADASTRAL_PORTAL_IN;
+
+#--------------------------#
+
+
+DROP TABLE  IF EXISTS BI.TEMP_CADASTRAL_PORTAL_IN_ORIGEM_CONTABIL;
+
+CREATE TABLE BI.TEMP_CADASTRAL_PORTAL_IN_ORIGEM_CONTABIL as SELECT * FROM  BASE_RH_AMX.VW_CADASTRAL_PORTAL_IN_ORIGEM_CONTABIL;
+
+DELETE FROM BI.TOTALIZADOR_ACESSOS_PORTAL_IN_6 WHERE ANO_MES_DIA > date_format(date_sub(Now(),INTERVAL 1 Month),'%Y/%m/%d');
+commit;
+
+INSERT INTO  BI.TOTALIZADOR_ACESSOS_PORTAL_IN_6
+Select AA.*,BB.DESC_EMPRESA_CONTABIL from BI.TOTALIZADOR_ACESSOS_PORTAL_IN_5 AA left join (
+SELECT LOGIN,
+             NOME,
+             CIDADE_AD,
+             MAX(DESC_CARGO) AS DESC_CARGO,
+             ID_CIDADE_AMX,
+             ID_NET_PRACAS,
+             DESC_CIDADE_AMX,
+             E_MAIL,
+             DESC_EMPRESA_CONTABIL
+      FROM BI.TEMP_CADASTRAL_PORTAL_IN_ORIGEM_CONTABIL
+      GROUP BY LOGIN,
+               NOME,
+               CIDADE_AD,
+               ID_CIDADE_AMX,
+               ID_NET_PRACAS,
+               DESC_CIDADE_AMX,
+               E_MAIL,
+               DESC_EMPRESA_CONTABIL) BB ON AA.LOGIN = BB.LOGIN
+               WHERE
+
+       AA.ANO_MES_DIA >
+          date_format(date_sub(Now(), INTERVAL 1 MONTH), '%Y/%m/%d');
+
+commit;
+
+insert into eventHistory (evento,etapa,execucao) values ('60_MIN_AUDIENCIA_PORTAL_IN','Fim', now());
+
+## FIM;
+
+END
+          EVENT_TYPE: RECURRING
+          EXECUTE_AT: NULL
+      INTERVAL_VALUE: 12
+      INTERVAL_FIELD: HOUR
+            SQL_MODE: NO_ENGINE_SUBSTITUTION
+              STARTS: 2020-12-15 00:00:01
+                ENDS: NULL
+              STATUS: ENABLED
+       ON_COMPLETION: NOT PRESERVE
+             CREATED: 2021-10-07 12:49:53
+        LAST_ALTERED: 2021-10-07 12:49:53
+       LAST_EXECUTED: 2023-08-03 12:00:01
+       EVENT_COMMENT:
+          ORIGINATOR: 1
+CHARACTER_SET_CLIENT: utf8mb4
+COLLATION_CONNECTION: utf8mb4_general_ci
+  DATABASE_COLLATION: latin1_swedish_ci
+1 row in set (0.00 sec)
+
+
+############################################################################################################################################################################################################################################
+
+:: Eventos schedulados no servidor ::
+
+root@localhost [information_schema]> select DEFINER,EVENT_SCHEMA,EVENT_NAME from events;
+
++--------------+----------------------------+---------------------+----------------+----------------+
+| EVENT_SCHEMA | EVENT_NAME                 | STARTS              | INTERVAL_VALUE | INTERVAL_FIELD |
++--------------+----------------------------+---------------------+----------------+----------------+
+| PORTAL_IN    | cleanup_diario_in_session  | 2016-10-27 16:45:14 | 6              | HOUR           |
+| BI           | REMOVE_ACESSO_REPORTS      | 2019-01-03 15:06:33 | 4              | HOUR           |
+| BI           | AUDIT_ACESSOS_SOX          | 2019-01-03 15:34:33 | 12             | HOUR           |
+| STAGE        | MIDDLEWARE_EVENT           | 2021-04-26 11:13:55 | 1              | HOUR           |
+| BI           | 60_MIN_AUDIENCIA_PORTAL_IN | 2020-12-15 00:00:01 | 12             | HOUR           |
++--------------+----------------------------+---------------------+----------------+----------------+
+
+
+
+
+
+

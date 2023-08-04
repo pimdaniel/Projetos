@@ -7,9 +7,20 @@ net002prdlnx821 - destino novo
 
 nohup rsync -avHSr /backup/FULL_554/2023-07-25_23-59-01/ mysql@net002prdlnx821:/app/mysql/backup/NET002PRDLNX554. &
 
+ 
+
+
+
 
 
 # net002prdlnx821
+
+
+ /usr/local/mysql/bin/mysqld --basedir=/usr/local/mysql --datadir=/app/mysql/data/databases --plugin-dir=/usr/local/mysql/lib/plugin --log-errql/log.d/net002prdlnx821.log --pid-file=/app/mysql/mysql.d/mysqld.pid --socket=/app/mysql/mysql.d/mysql.sock --port=3306
+
+
+
+
 
 my.cnf -> /app/mysql/conf.d/my.cnf
 
@@ -22,3 +33,28 @@ app.d = mysql -> /usr/local/mysql
 # restore
 
 https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=308871886398926&parent=EXTERNAL_SEARCH&sourceId=HOWTO&id=1575651.1&_afrWindowMode=0&_adf.ctrl-state=4jy0q652l_4
+
+
+
+## Instalacao 5.6.42
+
+ 
+## Comando para subir o mysql pela primeira vez { obs: --initialize } PEGAR A SENHA DO ROOT NO LOG
+/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/bin/mysqld_safe  --defaults-file=/mysql/conf.d/mysqld/my.cnf --initialize --user=mysql  --basedir=/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/ --datadir=/app/mysql/data/my56/databases --log-error=/mysql/log.d/log_error_56.log  &
+
+cat   /mysql/log/log_error.log	  [ Para pegar a senha de root ] :   
+ 
+
+## Iniciar  o mysql para poder alterar a senha do root
+/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/bin/mysqld_safe --defaults-file=/mysql/conf.d/mysqld/my.cnf  --user=mysql --basedir=/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/ --log-error=/mysql/log.d/log_error_56.log --datadir=/app/mysql/data/my56/databases  &
+ 
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#21';
+
+/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/bin/mysqld --defaults-file=/mysql/conf.d/mysqld/my.cnf  --user=mysql --basedir=/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/ --log-error=/mysql/log.d/log_error_56.log --datadir=/app/mysql/data/my56/databases  &
+
+
+
+
+
+
