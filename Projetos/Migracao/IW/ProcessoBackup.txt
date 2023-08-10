@@ -10,6 +10,9 @@ mysql_config_editor set --login-path=backup --user=mysqlbackup --password
 
 
 
+mysql_config_editor set --login-path=root --user=root --password
+
+
 
 1) Backup MEB to one file
 

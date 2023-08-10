@@ -5,9 +5,13 @@ SELECT SUBSTRING_INDEX(USER(), '@', -1) AS ip,      @@hostname as hostname,     
 
 
 SELECT   @@innodb_buffer_pool_size AS buffer_pool_size,   ROUND(@@innodb_buffer_pool_size / 4) AS recommended_log_file_size_quarter,   ROUND(@@innodb_buffer_pool_size / 2) AS recommended_log_file_size_half;
+
 SELECT   ROUND(187904819200 / 4 / 1073741824, 2) AS recommended_log_file_size_quarter_gb,   ROUND(187904819200 / 2 / 1073741824, 2) AS recommended_log_file_size_half_gb;
+
 select   concat(@@version_compile_os, " ", @@version_compile_machine) as OS_Version;
+
 select       @@port as port
+
 system lscpu
 
 
@@ -30,3 +34,6 @@ SHOW VARIABLES LIKE 'tmp_table_size';
 
 
 select TIME_FORMAT(SEC_TO_TIME(VARIABLE_VALUE ),'%Hh %im')  as Uptime from information_schema.GLOBAL_STATUS where VARIABLE_NAME='Uptime';
+
+
+select id,user,state,time,info from information_schema.PROCESSLIST where time > 120 and state like '%lock%' order by time  \G;

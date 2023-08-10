@@ -1,0 +1,76 @@
+
+
+                                        :: Apontamentos da Oracle ::
+
+1) Aumentar o innodb_buffer_pool_size :: Impacto baixo
+
+    Valor atual: 120259084288  -- 112G
+    Valor novo : 187904819200  -- 175G
+
+
+2) Aumentar o innodb_log_file_size  :: Impacto baixo
+
+    Valor atual: 8589934592   --  8G
+    Valor novo : 93415538688  -- 87G
+
+3) Aumentar o join_buffer_size 
+
+
+ Valor atual : 32768 -- 32k  
+ Valor novo : 65536  -- 64k            OBS: -> usar index nas consultas
+
+
+4) Aumentar o table_open_cache
+
+ Valor atual : 25600  -- 25k  
+ Valor novo :  51200  -- 50k            OBS: -> usar index nas consultas
+
+
+ 5) Desfragmentar as tabelas 
+ 
+    o `iwprd_crm`.`fp_cotacao`  :: 3.845.958   ::  ALTER TABLE iwprd_crm.fp_cotacao FORCE;
+    o `iwprd_crm`.`fp_cotacao_consolidado`                       ALTER TABLE  `iwprd_crm`.`fp_cotacao_consolidado` FORCE;
+    o `iwprd_crm`.`fp_portabilidade`                             ALTER TABLE `iwprd_crm`.`fp_portabilidade`  FORCE;
+    o `iwprd_fin`.`rut_consolida_mobile`                         ALTER TABLE `iwprd_fin`.`rut_consolida_mobile` FORCE;
+    o `iwprd_fin`.`rut_consolida_sap`                            ALTER TABLE `iwprd_fin`.`rut_consolida_sap` FORCE;
+    o `iwprd_prd`.`prd_registro_deposito_historico`              ALTER TABLE `iwprd_prd`.`prd_registro_deposito_historico` FORCE;
+    o `iwprd_prd`.`prd_registro_transacao`                       ALTER TABLE `iwprd_prd`.`prd_registro_transacao` FORCE;
+    o `iwprd_wfw`.`wfi_tarefa_matricula`;                        ALTER TABLE `iwprd_wfw`.`wfi_tarefa_matricula`  FORCE;
+    o `iwprd_wrp`.`bi_status_plataforma_ofensores_suspensos`     ALTER TABLE `iwprd_wrp`.`bi_status_plataforma_ofensores_suspensos` FORCE;
+    o `iwprd_wrp`.`bi_transacoes_total_status_instituicao`       ALTER TABLE  `iwprd_wrp`.`bi_transacoes_total_status_instituicao` FORCE; 
+    o `iwtmp_fin`.`inad_fatura`                                  ALTER TABLE `iwtmp_fin`.`inad_fatura` FORCE;
+
+6) Verificar tabelas com estatisticas desatualizadas
+
+    CALL CheckAndUpdateStatsForAllTables('iwprd_vnd')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_wvd')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_crm')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_sys')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_wfw')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_gen')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_cor')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_com')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_fin')
+    CALL CheckAndUpdateStatsForAllTables('iwprd_hem')
+
+7) Implementar Rotate slowlog e logerror
+
+
+8) Área de desenvolvimento deve olhar o arquivo criado com as queries ruins 
+
+
+                                    :: Aplicação referente a infra estrutura ::
+
+ 1) Já montei um novo aquivo my-tunning.cnf  e basta substituir pelo original :: Contém todas os novos valores das variáveis
+ 
+    -> Inclui os itens  : 1,2,3,4
+
+2) Os itens 5 e 6 precisam ser agendados e executados aos poucos visto que nao temos ciencia  dos processos que rodam no IW , nem o hoario dos mesmos e nem as tabelas
+
+3) O item 7 já  criei o arquivo. Bastas agenda-lo na crontab
+
+    
+
+
+
+

@@ -257,8 +257,21 @@ root@localhost [information_schema]> select DEFINER,EVENT_SCHEMA,EVENT_NAME from
 | BI           | 60_MIN_AUDIENCIA_PORTAL_IN | 2020-12-15 00:00:01 | 12             | HOUR           |
 +--------------+----------------------------+---------------------+----------------+----------------+
 
+545.991.843
+
+innodb_stats_include_delete_marked
 
 
 
+[ERROR] /usr/sbin/mysqld: Table './STAGE/LOGRADOURO' is marked as crashed and should be repaired
+[ERROR] /usr/sbin/mysqld: Table './STAGE/LOGRADOURO' is marked as crashed and should be repaired
+
+[ERROR] /usr/sbin/mysqld: Table './mysql/event' is marked as crashed and should be repaired
 
 
+repair table  STAGE.LOGRADOURO;
+
+repair table  mysql.event;
+
+
+select backup_id,start_time,end_time,exit_state,compression_level,last_error from mysql.backup_history where year(start_time) = '2023' order by start_time;

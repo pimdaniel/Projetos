@@ -1,0 +1,644 @@
+CREATE USER 'dbmon'@'localhost' IDENTIFIED BY 'monitoracaocoti20';
+
+
+
+############################# Servidor de Orgiem que foi migrado ################################################
+mysql> show global variables like '%data%';
++---------------------------------------------+-----------------------+
+| Variable_name                               | Value                 |
++---------------------------------------------+-----------------------+
+| character_set_database                      | utf8mb4               |
+| collation_database                          | utf8mb4_general_ci    |
+| datadir                                     | E:\xampp\mysql\data\  |
+| innodb_background_scrub_data_check_interval | 3600                  |
+| innodb_background_scrub_data_compressed     | OFF                   |
+| innodb_background_scrub_data_interval       | 604800                |
+| innodb_background_scrub_data_uncompressed   | OFF                   |
+| innodb_data_file_path                       | ibdata1:8M:autoextend |
+| innodb_data_home_dir                        | E:/xampp/mysql/data   |
+| innodb_immediate_scrub_data_uncompressed    | OFF                   |
+| innodb_stats_on_metadata                    | OFF                   |
+| innodb_temp_data_file_path                  | ibtmp1:12M:autoextend |
+| max_length_for_sort_data                    | 1024                  |
+| max_long_data_size                          | 10485760              |
+| metadata_locks_cache_size                   | 1024                  |
+| metadata_locks_hash_instances               | 8                     |
+| myisam_data_pointer_size                    | 6                     |
+| skip_show_database                          | OFF                   |
+| updatable_views_with_limit                  | YES                   |
++---------------------------------------------+-----------------------+
+mysql> show databases;
++------------------------------+
+| Database                     |
++------------------------------+
+| copc_adm_cfg                 |
+| copc_ferr_agtec              |
+| copc_func                    |
+| copc_sharepoint              |
+| extractions_db               |
+| extractions_db_dwh           |
+| extractions_db_dwh_exec_reag |
+| extractions_db_dwh_tec1      |
+| extractions_db_inn_tec1      |
+| extractions_db_toa           |
+| extractions_db_toa_dev       |
+| functions_db                 |
+| information_schema           |
+| mysql                        |
+| performance_schema           |
+| phpmyadmin                   |
+| test                         |
++------------------------------+
+
+SELECT table_schema "DB Name",
+ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB"
+FROM information_schema.tables
+GROUP BY table_schema;
+
++------------------------------+---------------+
+| DB Name                      | DB Size in MB |
++------------------------------+---------------+
+| copc_adm_cfg                 |          14.7 |
+| copc_ferr_agtec              |          39.1 |
+| copc_sharepoint              |           5.4 |
+| extractions_db               |         283.2 |
+| extractions_db_dwh           |         121.0 |
+| extractions_db_dwh_exec_reag |          25.2 |
+| extractions_db_dwh_tec1      |        7712.0 |
+| extractions_db_inn_tec1      |         260.5 |
+| extractions_db_toa           |         118.6 |
+| extractions_db_toa_dev       |          84.8 |
+| information_schema           |           0.2 |
+| mysql                        |           3.5 |
+| performance_schema           |           0.0 |
+| phpmyadmin                   |           0.4 |
++------------------------------+---------------+
+
+curl -v telnet://10.29.3.89:3306
+
+########################################### Servidor Novo ####################################################################
+
+
+Claro@12345
+curl -v telnet://c:3306
+
+#####My.cnf
+
+# ----------------------------------------------------------------------
+# MySQL Server Configuration File
+# SERVIDOR : net002prdlnx849 - 10.29.3.89
+#
+# Criado por : Daniel Pimenta
+# Data: 30/09/2022
+#
+# ----------------------------------------------------------------------
+
+[client]
+
+port= 3306
+socket=/mysql/mysql.sock
+
+
+[mysql]
+
+socket=/mysql/mysql.sock
+max_allowed_packet=128M
+prompt='[MySQL] \u@\h> '
+#default_character_set          = utf8                 # Possibly this setting is correct for most recent Linux systems
+
+
+[mysqldump]
+
+max_allowed_packet=128M
+socket=/mysql/mysql.sock
+
+[mysqld_safe]
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+log-error=/mysql/log.d/mysqld_safe.log
+
+
+[mysqld]
+
+user=mysql
+port=3306
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+datadir=/mysql/data/databases
+
+#plugin-load-add=validate_password.so                              # Politica de senha
+# Recovery
+#innodb_force_recovery=2
+
+# Tabelas temporarias
+
+tmpdir=/mysql/data/tmpdir
+#max_tmp_tables=100
+
+
+default_authentication_plugin=mysql_native_password             # Para garantir compatibilidade com versoes antigas de mysql como tambem de linguagem de programacao
+
+
+
+
+max_allowed_packet=128M
+default_storage_engine=InnoDB
+
+#character_set_server           = utf8
+#collation_server               = utf8_unicode_ci
+#init_connect                   = 'SET collation_connection = utf8_unicode_ci; SET NAMES utf8;'
+#skip-character-set-client-handshake
+
+max_connections                = 900                                 # Values < 1000 are typically good
+max_user_connections           = 800                                 # Limit one specific user/application
+thread_cache_size              = 200                                 # Up to max_connections makes sense
+max_connect_errors             = 500
+
+
+
+explicit_defaults_for_timestamp=1
+
+# Query Cache
+
+# ######query_cache_type=1                             # Set to 0 to avoid global QC Mutex
+# query_cache_size=32M                                 # Avoid too big (> 128M) QC because of QC clean-up lock!
+# query_cache_limit=32M
+# query_cache_min_res_unit=512
+
+
+# Session variables
+
+sort_buffer_size               = 8M                                  # Could be too big for many small sorts
+tmp_table_size                 = 512M                                # Make sure your temporary results do NOT contain BLOB/TEXT attributes
+
+read_buffer_size               = 1M
+read_rnd_buffer_size           = 512k
+join_buffer_size               = 32M
+bulk_insert_buffer_size        = 128M
+
+
+# Other buffers and caches
+
+table_definition_cache         = 1000                                 # As big as many tables you have
+table_open_cache               = 1000                                 # connections x tables/connection (~2)
+
+# Slow Query Log
+
+slow_query_log_file            = /mysql/data/slow.log   
+slow_query_log                 = 0
+log_queries_not_using_indexes  = 1
+long_query_time                = 30
+#min_examined_row_limit         = 100
+
+
+# General Query Log { Funcina para verificar tudo que é enviado pelos client's para dentro do mysql - investigativo
+
+#general_log_file=general.log
+#general_log=0
+
+
+
+#Replication
+
+server_id=1
+
+
+
+# Logging
+
+log-error=/mysql/log.d/mysqld.log                          # MySQL error log
+
+log_bin=/mysql/data/binario_log/net002prdlnx849-log-bin
+log_bin_index=/mysql/data/binario_log/net002prdlnx849-log-bin-index
+
+
+binlog_cache_size=1M
+binlog_stmt_cache_size=1M                                  # Since 5.5
+max_binlog_size=128M                                       # Make bigger for high traffic to reduce number of files
+sync_binlog=1                                              # Set to 1 or higher to reduce potential loss of binary-log data
+expire_logs_days=7                                         # We will survive easter holidays
+binlog_format=ROW                                          # Use MIXED if you experience some troubles
+binlog_row_image=MINIMAL                                   # Since 5.6
+
+
+
+# MyISAM variables
+
+key_buffer_size=1G                                         # Set to 25 - 33 % of RAM if you still use MyISAM
+myisam_recover_options='BACKUP,FORCE'                      # Since 5.5
+#myisam_recover = 'BACKUP,FORCE'
+
+
+# MEMORY variables
+
+max_heap_table_size=768M                               # Should be greater or equal to tmp_table_size
+
+
+##############   InnoDB variables
+
+# innodb_data_home_dir    = /home/nwn/mysqldata/instA/innodb/data
+innodb_data_file_path   = /mysql/data/innodb/ibdata1:100M;/mysql/data/innodb/ibdata2:100M:autoextend
+innodb_log_group_home_dir = /mysql/data/innodb/log
+
+innodb_buffer_pool_size=10G                            # Go up to 80% of your available RAM
+innodb_buffer_pool_instances=16                        # Bigger if huge InnoDB Buffer Pool or high concurrency
+innodb_file_per_table=1                                # Is the recommended way nowadays
+innodb_log_buffer_size=8M                              # Bigger if innodb_flush_log_at_trx_commit = 0
+innodb_log_file_size=256M                              # Bigger means more write throughput but longer recovery time
+
+
+
+#############################################################        FIM   ###########################################################################################
+
+  
+mkdir /mysql/conf.d/mysqld/
+
+
+#### Criacao dos link simbolicos
+
+	ln -s /etc/my.cnf  /mysql/conf.d/mysqld/my.cnf 				  [link para o diretorio padrao do mysql para o arquivo de configuracao]
+	ln -s /mysql/app.d/mysql-commercial-8.0.26-el7-x86_64 mysql   [link para chamar de mysql o diretorio do  binario]
+	ln -fs /usr/local/mysql /mysql/app.d/mysql  					  [link para o binario apontar para o diretorio default do mysql para linux]
+
+	ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5  [link para apontar para uma versao antiga fake pois o client do mysql exisge uma versao antiga ] {error:  ./mysql: error while loading shared libraries: libncurses.so.5: cannot open shared object file: No such file or directory }
+ 	ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5     [link para apontar para uma versao antiga fake pois o client do mysql exisge uma versao antiga ] {error:  ./mysql: error while loading shared libraries: libncurses.so.5: cannot open shared object file: No such file or directory }
+
+
+
+
+## Comando para subir o mysql pela primeira vez { obs: --initialize } PEGAR A SENHA DO ROOT NO LOG
+./mysqld_safe  --defaults-file=/mysql/conf.d/mysqld/my.cnf --initialize --user=mysql  --basedir=/mysql/app.d/mysql-commercial-8.0.26-el7-x86_64 --datadir=/mysql/data/databases --log-error=/mysql/log.d/logmy-hml08.log  &
+ 
+ 
+## Iniciar  o mysql para poder alterar a senha do root
+/mysql/app.d/mysql-commercial-8.0.26-el7-x86_64/bin/mysqld_safe --defaults-file=/mysql/conf.d/mysqld/my.cnf    --user=mysql    --basedir=/mysql/app.d/mysql-commercial-8.0.26-el7-x86_64 --log-error=/mysql/log.d/logmy-hml08.log --datadir=/mysql/data/databases  &
+
+
+
+## Subir mysql normal
+/mysql/app.d/mysql-commercial-8.0.26-el7-x86_64/bin/mysqld --defaults-file=/mysql/conf.d/mysqld/my.cnf    --user=mysql    --basedir=/mysql/app.d/mysql-commercial-8.0.26-el7-x86_64 --log-error=/mysql/log.d/logmy-hml08.log --datadir=/mysql/data/databases  &
+
+
+
+ 
+### Variavel para poder criar views
+
+	SET GLOBAL log_bin_trust_function_creators = 1;
+  
+  
+ 
+  
+### Exportacao de usuario de um outro mysql para o novo  
+
+	select concat('CEATE USER ''',user,'''','@','''','%','''',' IDENTIFIED BY ','''','Inicio@1','''',';') from mysql.user;
+
+	CREATE USER 'cop_rel'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_acess_ad'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_acess_sp_ad'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_change_agtec'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_dev_cop'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_dev_toa'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_ext_dwh'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_prod_cop'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_sel_cfg'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_sharepoint'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'usr_sp_acess_ad'@'%' IDENTIFIED BY 'Inicio@1';
+	CREATE USER 'pma'@'%' IDENTIFIED BY 'Inicio@1';
+
+	select concat('show grants for ''',user,'''','@','''','%','''',';') from mysql.user;
+
+	show grants for 'cop_rel'@'%';
+	show grants for 'usr_acess_ad'@'%';
+	show grants for 'usr_acess_sp_ad'@'%';
+	show grants for 'usr_change_agtec'@'%';
+	show grants for 'usr_dev_cop'@'%';
+	show grants for 'usr_dev_toa'@'%';
+	show grants for 'usr_ext_dwh'@'%';
+	show grants for 'usr_prod_cop'@'%';
+	show grants for 'usr_sel_cfg'@'%';
+	show grants for 'usr_sharepoint'@'%';
+	show grants for 'usr_sp_acess_ad'@'%';
+	show grants for 'usr_acess_sp_ad'@'%';
+	show grants for 'pma'@'%';
+
+
+	GRANT SELECT, EXECUTE, SHOW VIEW ON *.* TO `cop_rel`@`%`;
+	GRANT USAGE ON *.* TO `usr_acess_ad`@`%`;
+	GRANT USAGE ON *.* TO `usr_acess_sp_ad`@`%`;
+	GRANT ALL PRIVILEGES ON *.* TO `usr_change_agtec`@`%` WITH GRANT OPTION;
+	GRANT SELECT, EXECUTE, SHOW VIEW ON `copc\_adm\_cfg`.* TO `usr_change_agtec`@`%`;
+	GRANT SELECT, EXECUTE, SHOW VIEW ON `copc\_ferr\_agtec`.* TO `usr_change_agtec`@`%`;
+	GRANT ALL PRIVILEGES ON *.* TO `usr_dev_cop`@`%`  WITH GRANT OPTION;
+	GRANT USAGE ON *.* TO `usr_dev_toa`@`%`;
+	GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER ON `extractions_db_toa`.* TO `usr_dev_toa`@`%` WITH GRANT OPTION;
+	GRANT USAGE ON *.* TO `usr_ext_dwh`@`%`;
+	GRANT SELECT, UPDATE ON `extractions_db_dwh`.* TO `usr_ext_dwh`@`%`;
+	GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, FILE, CREATE TEMPORARY TABLES, EXECUTE, SHOW VIEW ON *.* TO `usr_prod_cop`@`%`;
+	GRANT USAGE ON *.* TO `usr_sel_cfg`@`%`;
+	GRANT SELECT, SHOW VIEW ON `copc_adm_cfg`.* TO `usr_sel_cfg`@`%`;
+	GRANT USAGE ON *.* TO `usr_sharepoint`@`%`;
+	GRANT SELECT, INSERT, UPDATE, DELETE, DROP, INDEX ON `copc_sharepoint`.* TO `usr_sharepoint`@`%`;
+	GRANT USAGE ON *.* TO `usr_sp_acess_ad`@`%`;
+	GRANT USAGE ON *.* TO `usr_acess_sp_ad`@`%`;
+	
+	
+###########################################
+#               BACKUP MYSQL              #
+###########################################
+
+
+00 01 * * *  /mysql/backup/scripts/mysql_MEB_backup.sh
+00 02 * * *  /mysql/backup/scripts/mysql_DUMP_backup.sh
+
+
+00 03 * * *  /mysql/backup/scripts/limpeza_DUMP.sh
+30 03 * * *  /mysql/backup/scripts/limpeza_MEB.sh
+	
+	
+	
+##############################  DEV ##########################################
+
+ 
+Criação do usuário  mysql no S.O
+
+Criação dos seguintes filesystems :
+
+/mysql -> 100Gb
+/mysql/data -> 500Gb
+/mysql/log -> 100Gb
+/backup -> 100Gb
+
+
+  
+  CALL db_ferr_dmt.mov_eqpt_devolucao EF1101000948
+  
+  
+  SET @id_eqpt = (SELECT
+
+    ID
+
+FROM
+
+    db_ferr_dmt.tbl_equipamentos
+
+WHERE ENDERECAVEL = eqpt);
+
+
+
+DELETE FROM db_ferr_dmt.tbl_eqpt_assoc WHERE id_caso REGEXP (caso) AND id_eqpt = @id_eqpt;
+
+
+
+END
+
+
+SELECT ID FROM  db_ferr_dmt.tbl_equipamentos WHERE ENDERECAVEL = 'EF1101000948';
+
+
+
+CALL db_ferr_dmt.mov_eqpt_devolucao('0000255471.replace(",", "|")'  , '" + EF1101000948 + "')
+
+
+
+
+
+select * db_ferr_dmt.tbl_eqpt_assoc WHERE id_caso REGEXP ('0000255471.replace(",", "|")') AND id_eqpt = 'EF1101000948';
+
+
+
+
++------------------+----------------------------+
+| user             | host                       |
++------------------+----------------------------+
+| cop_rel          | %                          |
+| dbmon            | %                          |
+| pma              | %                          |
+| ura              | %                          |
+| usr_acess_ad     | %                          |
+| usr_acess_sp_ad  | %                          |
+| usr_change_agtec | %                          |
+| usr_dev_cop      | %                          |
+| usr_dev_toa      | %                          |
+| usr_ext_dwh      | %                          |
+| usr_procedure    | %                          |
+| usr_prod_cop     | %                          |
+| usr_sel_cfg      | %                          |
+| usr_sharepoint   | %                          |
+| usr_sp_acess_ad  | %                          |
+| usr_ver          | %                          |
+| mysql.infoschema | localhost                  |
+| mysql.session    | localhost                  |
+| mysql.sys        | localhost                  |
+| root             | localhost                  |
+| usr_dev_cop      | net002prdlnx849.dcing.corp |
+| usr_dev_cop1     | net002prdlnx849.dcing.corp |
++------------------+----------------------------+
+
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON  db_scm.* TO  'usr_ver'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON  bd_admin_scm.* TO  'usr_ver'@'%';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON  db_controlemapas.* TO  'usr_ver'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON   db_admin.* TO  'usr_ver'@:: '%';
+
+login: usr_ver
+senha: Cl@r0ver2023
+
+:: ONDA 3 ::
+
+CREATE USER 'usr_cat'@'%' IDENTIFIED BY 'usrCATteste';
+servidor: net002prdlnx849
+usuario: usr_cat
+senha:usrCATteste 
+
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_mdu.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_g5.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_cat_ged.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_caixas_fibra.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_admin_mdu.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_admin_cat_teste.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_admin_cat_ged.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_admin_75.* TO  'usr_cat'@'%';
+			GRANT SELECT,INSERT,UPDATE,DELETE,SHOW VIEW,EXECUTE,CREATE TEMPORARY TABLES,EVENT, TRIGGER ON db_adm_cat_mdu.* TO  'usr_cat'@'%';
+
+ 
+ 
+
+
+
+
+
+																:: JIRA criação de usuario para PRODUÇÃO ::
+
+db_sgat: [PDST-49432] fechada
+CREATE USER 'OPS$DP_SGAT'@'%' IDENTIFIED BY 'S05g@oiuT';
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON   db_sgat.* TO 'OPS$DP_SGAT'@'%';
+
+
+Usuario criado
+
+login : OPS$DP_SGAT
+senha: S05g@oiuT
+
+----------------------------------------------------------------------------------------------------------------
+
+db_sisnet: [PDST-49460]
+CREATE USER 'OPS$DP_SISNET'@'%' IDENTIFIED BY 'S58!s@Ne099';
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON   db_sisnet.* TO 'OPS$DP_SISNET'@'%';
+
+Usuario criado
+
+login : OPS$DP_SISNET
+senha: S58!s@Ne099
+
+Qualquer dúvida ou problema nos reporte
+
+----------------------------------------------------------------------------------------------------------------
+ bd_fca_empresarial: [PDST-52834]
+CREATE USER 'OPS$DP_FCAEMP'@'%' IDENTIFIED BY 'F@0dg5CBdp';
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON   db_sisnet.* TO 'OPS$DP_FCAEMP'@'%';
+
+
+Usuario criado
+
+login : OPS$DP_FCAEMP
+senha: F@0dg5CBdp
+
+Qualquer dúvida ou problema nos reporte
+----------------------------------------------------------------------------------------------------------------
+
+ bd_cx_log : [PDST-52830]
+
+CREATE USER 'OPS$DP_CXLOGTOTAL'@'%' IDENTIFIED BY 'C#0258Ct0tal';
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON   bd_cx_log.* TO 'OPS$DP_CXLOGTOTAL'@'%';
+ 
+Usuario criado
+
+login : OPS$DP_CXLOGTOTAL
+senha: C#0258Ct0tal
+
+Qualquer dúvida ou problema nos reporte
+----------------------------------------------------------------------------------------------------------------
+
+
+ db_controlemapas : [PDST-52826]
+
+CREATE USER 'OPS$DP_CONTROLEDANOS'@'%' IDENTIFIED BY 'C05m@PSTFl';
+GRANT SELECT, INSERT, UPDATE, DELETE ,SHOW VIEW ON   db_controlemapas.* TO 'OPS$DP_CONTROLEDANOS'@'%';
+ 
+Usuario criado
+
+login : OPS$DP_CONTROLEDANOS
+senha: C05m@PSTFl
+
+Qualquer dúvida ou problema nos reporte
+
+
+OPS$DP_CONTROLEDANOS -> portal_danos
+
+OPS$DP_FCAEMP -> bd_fca_empresarial
+
+OPS$DP_CXLOGTOTAL -> bd_cx_log
+
+##################################################################################################################################################################
+
+CREATE USER 'usr_cat'@'%' IDENTIFIED BY 'usrCATteste';
+
+--> dump-db_admin-202305221228.sql  ::  ERROR 1049 (42000) at line 1235: Unknown database 'db_sco' [ ERRO PARA FAZER O DUMP ]
+
+--> dump-db_mdu-202305221231.sql :: ERROR 1064 (42000) at line 2515: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+ 
+    OBS: Erro  foi solucionado apagando a ultima linha do dump ( Favor verificar ) 
+
+
+
+
+
+ALTER DATABASE db_celula
+    DEFAULT CHARACTER SET utf8,
+        DEFAULT COLLATE utf8_general_ci;
+
+
+
+SELECT 
+   schema_name,
+   default_character_set_name, 
+   default_collation_name
+FROM information_schema.schemata 
+WHERE schema_name in ('db_celula','db_controlemapas');
+ 
+
+ALTER DATABASE db_controlemapas CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+ALTER DATABASE db_celula CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+[MySQL] root@localhost> show global variables like '%tmp_table_size%';
++----------------+-----------+
+| Variable_name  | Value     |
++----------------+-----------+
+| tmp_table_size | 536870912 |
++----------------+-----------+
+
+[MySQL] root@localhost> select @@internal_tmp_mem_storage_engine;
++-----------------------------------+
+| @@internal_tmp_mem_storage_engine |
++-----------------------------------+
+| TempTable                         |
++-----------------------------------+
+
+
+[MySQL] root@localhost> select @@temptable_use_mmap;
++----------------------+
+| @@temptable_use_mmap |
++----------------------+
+|                    1 |
++----------------------+
+
+
+
+set global  internal_tmp_mem_storage_engine =MEMORY;
+set global  internal_tmp_mem_storage_engine =TempTable;
+
+
+select table_id,space,name,path from information_schema.INNODB_SYS_DATAFILES join information_schema.INNODB_SYS_TABLES using (space) where name like '%tmp%'\G;
+ 
+SELECT SESSION_ID, SPACE, PATH, TABLE_SCHEMA, TABLE_NAME, SIZE, DATA_LENGTH, INDEX_LENGTH, ENGINE, PURPOSE FROM information_schema.GLOBAL_TEMPORARY_TABLES LEFT JOIN information_schema.INNODB_TEMP_TABLE_INFO USING(NAME) LEFT JOIN INFORMATION_SCHEMA.INNODB_SESSION_TEMP_TABLESPACES USING(SPACE)\G;
+
+
+
+SELECT cidade,
+       cluster,
+        CASE
+            WHEN STR_TO_DATE(dttoday, '%b/%Y') < STR_TO_DATE(DATE_FORMAT(NOW(), '%b/%Y'), '%b/%Y') THEN dttoday
+            ELSE CONCAT(dttoday, ' SEMANA - ', DATE_FORMAT(dttoday_full, '%W'))
+        END AS dttoday,
+    hostname,
+    hoststreammodulation,
+    hoststreamwidth,
+    hoststreamalias,
+    SUM(hoststreamqtdterminal_online_atual) AS soma_hs_online_atual,
+    COUNT(hoststreamalias) AS contar_hs_alias,
+    ROUND(AVG(d07_media_mediavalor), 0) AS SNR_7_Dias,
+    status_d07,
+    ROUND(AVG(d30_media_mediavalor), 0) AS SNR_30_Dias,
+    status,
+    regional,
+    TRIM(subcluster) AS subcluster
+   FROM tb_snr
+  WHERE STR_TO_DATE(dttoday, '%b/%Y') = (SELECT MAX(STR_TO_DATE(dttoday, '%b/%Y')) FROM tb_snr)
+  GROUP BY cidade, cluster, dttoday, hostname, hoststreammodulation, hoststreamwidth, hoststreamalias, status, regional, subcluster, status_d07, DATE_FORMAT(dttoday_full, '%W');
+
+
+show index from tb_snr;
+
+
+
+create  index IX_DATA on tb_snr(dttoday);
+
+
+
+
+SELECT s.ID as IDN, s.Tipo as TipoN, s.Notificacao as NotificacaoN, s.DataInicial as DataInicialN, s.Contrato as ContratoN, s.Node as NodeN, s.Rua as RuaN, s.Numero as NumeroN, s.Bairro as BairroN, s.Cidade as CidadeN, s.Ocorrencia as OcorrenciaN, s.ID_User as ID_UserN, s.Status as StatusN, s.DataFinal as DataFinalN, s.Complemento as ComplementoN, s.Observacao as ObservacaoN, s.TipoOS as TipoOSN, s.EmTratamento as EmTratamentoN, s.UserTratamento as UserTratamentoN, s.Cliente as ClienteN, s.Anatel as AnatelN, s.IDOrigem as IDOrigemN, s.ContratoDuplicado as ContratoDuplicadoN, s.VT1 as VT1N, s.MDU as MDUN, s.Reprojeto as ReprojetoN, s.User_Abertura as UsuarioNETSMSN, TIMEDIFF('2023-08-07 16:34:45', s.DataFinal) AS TempoN, a.ID as IDP, a.Num_AR as ARP, a.DT_Inicio_Projetando as DTInicioP, a.DT_Fim_Projetando as DTFimP, a.ID_User_Projetando as IDUserP, a.Status as StatusP, a.Obs as ObsP, a.Motivo as MotivoP, a.Antes as AntesP, a.Depois as DepoisP, a.Servico as ServicoP, a.Editado as EditadoP, a.Liberado as LiberadoP, TIMEDIFF('2023-08-07 16:34:45', a.DT_Fim_Projetando) AS TempoP, e.ID as IDE, e.DT_Fim_Executando as DTFimE, e.DT_Fim_Executando_EPO as DTFimEPOE, e.ID_User as IDUserE, e.ID_Epo as EPOE, e.Obs as ObsE, e.Motivo as MotivoE, e.DT_Inicio_Executando as DTInicioE, e.Status as StatusE, TIMEDIFF('2023-08-07 16:34:45', e.DT_Fim_Executando) AS TempoE FROM tbl_adequacao s LEFT JOIN tbl_adequacao_projetando a
+ ON s.ID = a.ID_Baixa  AND a.ID = (SELECT MAX(z.ID) from tbl_adequacao_projetando z where z.ID_Baixa = s.ID) LEFT JOIN tbl_adequacao_executando e
+ ON s.ID = e.ID_Baixa  AND e.ID = (SELECT MAX(z.ID) from tbl_adequacao_executando z where z.ID_Baixa = s.ID) LEFT JOIN db_admin.tbl_node n ON s.Node = n.ID
+where 1 = 1 and s.Status = 1 and a.Num_AR = 12 and n.Nome = '1' GROUP BY s.ID ORDER BY FIELD(s.Anatel, 1) ASC, s.DataInicial;
