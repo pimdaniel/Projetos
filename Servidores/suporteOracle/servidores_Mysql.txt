@@ -1,0 +1,87 @@
+
+
+########################   Porta IN  #############################################
+
+Servidor: NET002PRDLNX554
+
+Acessar:
+
+            1) Entrar no servidor brux1279  e digitar sshnet  <enter>
+            2) ssh -l mysql  NET002PRDLNX554
+            3) Logar no S.O como mysql  --> login S.O : Mysql:M4zzalli
+            4) login no mysql : root:M4zzalli
+
+
+Serviço:
+
+    /usr/sbin/mysqld --basedir=/usr --datadir=/app/mysql/data --plugin-dir=/usr/lib64/mysql/plugin --log-error=/app/mysql/net002prdlnx554.log --pid-file=/app/mysql/mysqld.pid --socket=/var/lib/mysql/mysql.sock --port=3306
+
+
+Backup : agendado na crontab  [MEB]
+
+#.......................................................................................................................................................................................................#
+
+
+
+########################   IW  #############################################
+
+
+Servidor: brux0395
+
+Acessar: 
+            1) Entrar no servidor brux1279 e digitar :   ssh -l mysql brux0395
+            2) login no mysql : root:rootiw 
+
+
+Subir a base:
+                /iw/app.d/mysql/support-files/mysql.server start
+
+
+Parar o banco :
+                mysqladmin -uroot -p shutdown
+
+#.......................................................................................................................................................................................................#
+
+
+
+########################   Projeto Shadown  #############################################
+
+Servidor: net002prdlnx849 - 10.29.3.89
+
+Acessar:
+
+            1) Entrar no servidor brux1279 e digitar :   ssh -l mysql 10.29.3.89  :: MyCl@r0db007
+            2) login no mysql : root:Mysql#007
+ 
+
+Backup : agendado na crontab  [MEB]
+ 
+Subir a base:
+                /mysql/app.d/mysql/support-files/mysql.server start
+
+Parar o banco :
+                mysqladmin -uroot -p shutdown
+
+
+#.......................................................................................................................................................................................................#
+
+
+
+########################   Zabbix - COTI 2.0  #############################################
+
+Servidor: zbgrdblx01 - 10.88.4.142
+
+             1) Entrar no servidor brux1279 e digitar :   ssh -l mysql 10.88.4.142  :: MyCl@r0db007
+             2) login no mysql : root:Mysql#007
+
+
+Backup : agendado na crontab  [MEB]
+
+
+Subir a base:
+                /mysql/app.d/mysql/support-files/mysql.server start
+
+Parar o banco :
+                mysqladmin -uroot -p shutdown
+
+#.......................................................................................................................................................................................................#

@@ -1,0 +1,278 @@
+/mysql
+/mysql/data
+/mysql/log
+/mysql/backup
+MyCl@r0db007
+
+Servidor:
+Grafana BD Campinas  - zbgrdblx01    - 10.88.4.142
+
+
+ln -s /mysql/app.d/mysql  /usr/local/mysql
+
+
+# ----------------------------------------------------------------------
+# MySQL Server Configuration File
+# SERVIDOR : zbgrdblx01 - 10.88.4.142
+#
+# Criado por : Daniel Pimenta
+# Data: 30/09/2022
+#
+# ----------------------------------------------------------------------
+
+[client]
+
+port= 3306
+socket=/mysql/mysql.sock
+
+
+[mysql]
+
+socket=/mysql/mysql.sock
+max_allowed_packet=128M
+prompt='[MySQL] \u@\h> '
+#default_character_set          = utf8                 # Possibly this setting is correct for most recent Linux systems
+
+
+[mysqldump]
+
+max_allowed_packet=128M
+socket=/mysql/mysql.sock
+
+[mysqld_safe]
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+log-error=/mysql/log.d/mysqld_safe.log
+
+
+[mysqld]
+
+user=mysql
+port=3306
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+datadir=/mysql/data/databases
+
+#plugin-load-add=validate_password.so                              # Politica de senha
+# Recovery
+#innodb_force_recovery=2
+
+# Tabelas temporarias
+
+tmpdir=/mysql/data/tmpdir
+#max_tmp_tables=100
+
+
+default_authentication_plugin=mysql_native_password             # Para garantir compatibilidade com versoes antigas de mysql como tambem de linguagem de programacao
+
+
+
+
+max_allowed_packet=128M
+default_storage_engine=InnoDB
+
+#character_set_server           = utf8
+#collation_server               = utf8_unicode_ci
+#init_connect                   = 'SET collation_connection = utf8_unicode_ci; SET NAMES utf8;'
+#skip-character-set-client-handshake
+
+max_connections                = 900                                 # Values < 1000 are typically good
+max_user_connections           = 800                                 # Limit one specific user/application
+thread_cache_size              = 200                                 # Up to max_connections makes sense
+max_connect_errors             = 500
+
+
+
+explicit_defaults_for_timestamp=1
+
+# Query Cache
+
+# ######query_cache_type=1                             # Set to 0 to avoid global QC Mutex
+# query_cache_size=32M                                 # Avoid too big (> 128M) QC because of QC clean-up lock!
+# query_cache_limit=32M
+# query_cache_min_res_unit=512
+
+
+# Session variables
+
+sort_buffer_size               = 8M                                  # Could be too big for many small sorts
+tmp_table_size                 = 512M                                # Make sure your temporary results do NOT contain BLOB/TEXT attributes
+
+read_buffer_size               = 1M
+read_rnd_buffer_size           = 512k
+join_buffer_size               = 32M
+bulk_insert_buffer_size        = 128M
+
+
+# Other buffers and caches
+
+table_definition_cache         = 1000                                 # As big as many tables you have
+table_open_cache               = 1000                                 # connections x tables/connection (~2)
+
+# Slow Query Log
+
+slow_query_log_file            = /mysql/data/slow.log   
+slow_query_log                 = 0
+log_queries_not_using_indexes  = 1
+long_query_time                = 30
+#min_examined_row_limit         = 100
+
+
+# General Query Log { Funcina para verificar tudo que é enviado pelos client's para dentro do mysql - investigativo
+
+#general_log_file=general.log
+#general_log=0
+
+
+
+#Replication
+
+server_id=1
+
+
+
+# Logging
+
+log-error=/mysql/log.d/mysqld.log                          # MySQL error log
+
+log_bin=/mysql/data/binario_log/net002prdlnx849-log-bin
+log_bin_index=/mysql/data/binario_log/net002prdlnx849-log-bin-index
+
+
+binlog_cache_size=1M
+binlog_stmt_cache_size=1M                                  # Since 5.5
+max_binlog_size=128M                                       # Make bigger for high traffic to reduce number of files
+sync_binlog=1                                              # Set to 1 or higher to reduce potential loss of binary-log data
+expire_logs_days=7                                         # We will survive easter holidays
+binlog_format=ROW                                          # Use MIXED if you experience some troubles
+binlog_row_image=MINIMAL                                   # Since 5.6
+
+
+
+# MyISAM variables
+
+key_buffer_size=1G                                         # Set to 25 - 33 % of RAM if you still use MyISAM
+myisam_recover_options='BACKUP,FORCE'                      # Since 5.5
+#myisam_recover = 'BACKUP,FORCE'
+
+
+# MEMORY variables
+
+max_heap_table_size=768M                               # Should be greater or equal to tmp_table_size
+
+brux1279
+##############   InnoDB variables
+
+# innodb_data_home_dir    = /home/nwn/mysqldata/instA/innodb/data
+innodb_data_file_path   = /mysql/data/innodb/ibdata1:100M;/mysql/data/innodb/ibdata2:100M:autoextend
+innodb_log_group_home_dir = /mysql/data/innodb/log
+
+innodb_buffer_pool_size=10G                            # Go up to 80% of your available RAM
+innodb_buffer_pool_instances=16                        # Bigger if huge InnoDB Buffer Pool or high concurrency
+innodb_file_per_table=1                                # Is the recommended way nowadays
+innodb_log_buffer_size=8M                              # Bigger if innodb_flush_log_at_trx_commit = 0
+innodb_log_file_size=256M                              # Bigger means more write throughput but longer recovery time
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+#### Criacao dos link simbolicos
+
+	ln -sv   /mysql/conf.d/mysqld/my.cnf   /etc/my.cnf
+	
+	ln -s /mysql/app.d/mysql-commercial-8.0.33-el7-x86_64  mysql   
+	
+	
+	cd /usr/local
+	ln -s /mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 mysql 
+	
+	ln -fs /usr/local/mysql /mysql/app.d/mysql  [link para o binario apontar para o diretorio default do mysql para linux]
+
+
+#BUG
+	ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5  
+ 	ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5     
+
+wHqmb2p56y*s
+
+## Comando para subir o mysql pela primeira vez { obs: --initialize } PEGAR A SENHA DO ROOT NO LOG
+./mysqld_safe  --defaults-file=/mysql/conf.d/mysqld/my.cnf --initialize --user=mysql  --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --datadir=/mysql/data/databases --log-error=/mysql/log/log_error.log  &
+
+
+## Iniciar  o mysql para poder alterar a senha do root
+./mysql/app.d/mysql-commercial-8.0.33-el7-x86_64/bin/mysqld_safe --defaults-file=/mysql/conf.d/mysqld/my.cnf    --user=mysql    --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --log-error=/mysql/log/log_error.log --datadir=/mysql/data/databases  &
+ 
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#007';
+
+
+create user 'DBCOTI'@'%' IDENTIFIED BY 'coti#20#bd';
+
+DBUser= DBCOTI
+DBPassword= coti#20#bd
+
+innodb_buffer_pool_size             | 10737418240
+
+set global innodb_buffer_pool_size = 37580963840;
+37580963840
+
+
+
+SELECT TABLE_SCHEMA,PARTITION_NAME,TABLE_NAME,TABLE_ROWS
+FROM information_schema.partitions             
+WHERE table_schema = 'zabbix'  AND table_name in ('trends','history','trends_uint','history_str','history_uint','history_text','history_log');
+
+
+
+
+
+SELECT TABLE_SCHEMA,PARTITION_NAME,TABLE_NAME,TABLE_ROWS
+FROM information_schema.partitions             
+WHERE table_schema = 'zabbix_prod'  AND table_name in ('trends','history','trends_uint','history_str','history_uint','history_text','history_log');
+
+
+
+select count(irt.itemid) as count, i.hostid, h.name, irt.error from item_rtdata irt inner join items i on irt.itemid = i.itemid inner join hosts h on h.hostid = i.hostid where i.status =0 and irt.state = 1 group by i.hostid, irt.error order by count
+INTO OUTFILE '/mysql/backup/tbl_medicao.csv'
+FIELDS ENCLOSED BY '"'
+TERMINATED BY ';'
+ESCAPED BY '"'
+LINES TERMINATED BY '\r\n';
+
+#################################################
+innotop
+
+
+############### Queries Zabbix ###################################################
+
+SELECT table_name AS 'Table', round(((data_length + index_length) / 1024 / 1024 / 1024), 2) 'Size (GB)', round(((data_free) / 1024 / 1024 / 1024), 2) 'Data Free Size (GB)' FROM information_schema.TABLES WHERE table_schema = "zabbix" and (table_name like 'history%' or table_name like 'trends%' or table_name like 'events') order by 'Size (GB)' desc;
+
+select count(i.itemid) as count, h.host, i.delay from items i inner join hosts h on h.hostid = i.hostid where i.flags = 1 and i.status = 0 and h.status = 0 and (i.delay = '1m' or i.delay = '30s' or i.delay = '15s' or i.delay = '60s') group by delay, h.host order by count deac limit 100;
+
+select count(i.itemid) as count, h.host, i.delay from items i inner join hosts h on h.hostid = i.hostid where i.flags = 1 and i.status = 0 and h.status = 0 and (i.delay = '1m' or i.delay = '30s' or i.delay = '15s' or i.delay = '60s') group by delay, h.host order by count desc limit 100;
+
+select count(i.itemid) as count, h.host, i.delay from items i inner join hosts h on h.hostid = i.hostid where i.flags = 1 and i.status = 0 and h.status = 0 and (i.delay = '2m' or i.delay = '120s' or i.delay = '3m' or i.delay = '180s') group by delay, h.host order by count desc limit 100;
+
+ SELECT hosts.host, COUNT(items.itemid) AS item_count
+FROM hosts
+JOIN items ON items.hostid = hosts.hostid
+GROUP BY hosts.host order by item_count DESC limit 100;
+
+SELECT items.itemid, items.name, items.delay FROM items WHERE items.delay like '%;%' and items.status = 0;
+########################################################################################################################################################
+
+max_allowed_packet=256M
+max_connect_errors              = 1000000
+innodb_buffer_pool_instances=48
+innodb_log_buffer_size=128M
+innodb_log_file_size            = 4G
+innodb_flush_log_at_trx_commit  = 2
+innodb_thread_concurrency=14
+innodb_read_io_threads=14
+innodb_write_io_threads=14
+key_buffer_size                 = 64M  
+innodb_lock_wait_timeout        = 600
+
+########
+secure_file_priv=""
+

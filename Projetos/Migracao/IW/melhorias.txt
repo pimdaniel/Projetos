@@ -40,6 +40,9 @@
     o `iwprd_wrp`.`bi_transacoes_total_status_instituicao`       ALTER TABLE  `iwprd_wrp`.`bi_transacoes_total_status_instituicao` FORCE; 
     o `iwtmp_fin`.`inad_fatura`                                  ALTER TABLE `iwtmp_fin`.`inad_fatura` FORCE;
 
+
+
+
 6) Verificar tabelas com estatisticas desatualizadas
 
     CALL CheckAndUpdateStatsForAllTables('iwprd_vnd')

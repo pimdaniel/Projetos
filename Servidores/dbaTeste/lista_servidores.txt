@@ -4,3 +4,15 @@ CBM2BM14203 - 10.88.134.88
 CBM2BM89492 - 10.88.134.89
 
 echo -n > /mysql/log.d/log_error.log
+
+10.88.134.88 , 10.88.134.89
+
+###### Criacao link simbolico  #####################
+
+ ln -s /mysql/app.d/mysql  /usr/local/mysql 
+10.88.134.88 ,  10.88.134.89
+ ln -s /mysql/conf.d/mysqld/my.cnf /etc/my.cnf 
+
+################################################################
+
+my

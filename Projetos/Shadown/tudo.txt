@@ -1,3 +1,24 @@
+
+
+############################
+
+Remover esse link simbolico :
+/mysql/app.d/mysql-commercial-8.0.26-el7-x86_64 :   mysql -> /usr/local/mysql
+
+
+Criar link simbolico SHADOWN
+
+ln -s  /mysql/app.d/mysql  /usr/local/mysql
+
+
+
+###################################################
+
+
+
+
+
+
 CREATE USER 'dbmon'@'localhost' IDENTIFIED BY 'monitoracaocoti20';
 
 
@@ -80,7 +101,7 @@ curl -v telnet://10.29.3.89:3306
 
 
 Claro@12345
-curl -v telnet://c:3306
+curl -v telnet://10.29.3.89:3306
 
 #####My.cnf
 
@@ -635,10 +656,5 @@ show index from tb_snr;
 
 create  index IX_DATA on tb_snr(dttoday);
 
-
-
-
-SELECT s.ID as IDN, s.Tipo as TipoN, s.Notificacao as NotificacaoN, s.DataInicial as DataInicialN, s.Contrato as ContratoN, s.Node as NodeN, s.Rua as RuaN, s.Numero as NumeroN, s.Bairro as BairroN, s.Cidade as CidadeN, s.Ocorrencia as OcorrenciaN, s.ID_User as ID_UserN, s.Status as StatusN, s.DataFinal as DataFinalN, s.Complemento as ComplementoN, s.Observacao as ObservacaoN, s.TipoOS as TipoOSN, s.EmTratamento as EmTratamentoN, s.UserTratamento as UserTratamentoN, s.Cliente as ClienteN, s.Anatel as AnatelN, s.IDOrigem as IDOrigemN, s.ContratoDuplicado as ContratoDuplicadoN, s.VT1 as VT1N, s.MDU as MDUN, s.Reprojeto as ReprojetoN, s.User_Abertura as UsuarioNETSMSN, TIMEDIFF('2023-08-07 16:34:45', s.DataFinal) AS TempoN, a.ID as IDP, a.Num_AR as ARP, a.DT_Inicio_Projetando as DTInicioP, a.DT_Fim_Projetando as DTFimP, a.ID_User_Projetando as IDUserP, a.Status as StatusP, a.Obs as ObsP, a.Motivo as MotivoP, a.Antes as AntesP, a.Depois as DepoisP, a.Servico as ServicoP, a.Editado as EditadoP, a.Liberado as LiberadoP, TIMEDIFF('2023-08-07 16:34:45', a.DT_Fim_Projetando) AS TempoP, e.ID as IDE, e.DT_Fim_Executando as DTFimE, e.DT_Fim_Executando_EPO as DTFimEPOE, e.ID_User as IDUserE, e.ID_Epo as EPOE, e.Obs as ObsE, e.Motivo as MotivoE, e.DT_Inicio_Executando as DTInicioE, e.Status as StatusE, TIMEDIFF('2023-08-07 16:34:45', e.DT_Fim_Executando) AS TempoE FROM tbl_adequacao s LEFT JOIN tbl_adequacao_projetando a
- ON s.ID = a.ID_Baixa  AND a.ID = (SELECT MAX(z.ID) from tbl_adequacao_projetando z where z.ID_Baixa = s.ID) LEFT JOIN tbl_adequacao_executando e
- ON s.ID = e.ID_Baixa  AND e.ID = (SELECT MAX(z.ID) from tbl_adequacao_executando z where z.ID_Baixa = s.ID) LEFT JOIN db_admin.tbl_node n ON s.Node = n.ID
-where 1 = 1 and s.Status = 1 and a.Num_AR = 12 and n.Nome = '1' GROUP BY s.ID ORDER BY FIELD(s.Anatel, 1) ASC, s.DataInicial;
+init-file=/mysql/conf.d/initSql.sql
+SET GLOBAL local_infile = 'ON';

@@ -57,4 +57,67 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#21';
 
 
 
+############################################################################################# Variaveis originais ################################################################
 
+
+
+basedir=/usr/       - /app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/
+
+character_sets_dir=/usr/share/mysql/charsets/ -   /app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/share/charsets/
+
+datadir=/app/mysql/data/   - /app/mysql/data/my56/databases
+
+general_log_file=/app/mysql/data/NET002PRDLNX554.log   -- /app/mysql/data/my56/databases/net002prdlnx821.log
+
+innodb_log_group_home_dir=./
+
+innodb_undo_directory=.
+
+lc_messages_dir=/usr/share/mysql/    -                            /app/mysql/my56/
+
+log_bin=/app/mysql/data/mysql_log_bin   -                        /app/mysql/data/my56/mysql_log_bin
+
+log_bin_index=/app/mysql/data/mysql_log_bin.index -             /app/mysql/data/my56/mysql_log_bin.index
+
+log_error=/app/mysql/net002prdlnx554.log    -  /app/mysql/log.d/log_error_56.log
+
+plugin_dir=/usr/lib64/mysql/plugin/   -         /app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/lib/plugin/
+
+slave_load_tmpdir=/app/mysql/tmp  -             /app/mysql/my56/tmp
+
+slow_query_log_file=/app/mysql/query-slow_NET002PRDLNX554.log   - /app/mysql/my56/query-slow_net002prdlnx821_56.log
+
+socket=/var/lib/mysql/mysql.sock   -                            /app/mysql/my56/mysql.sock
+ 
+tmpdir=/app/mysql/tmp   -                                       /app/mysql/my56/tmp
+
+
+pid_file=/app/mysql/mysqld.pid    -                     /app/mysql/my56/mysqld.pid 
+plugin_dir=/usr/lib64/mysql/plugin/   -     /app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/lib/plugin/
+
+
+###########
+
+/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/bin/mysqld --defaults-file=/app/mysql/conf.d/my.cnf --basedir=/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64 --datadir=/app/mysql/data/my56/databases --plugin-dir=/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/lib/plugin --log-error=/app/mysql/log.d/log_error_56.log --pid-file=/app/mysql/my56/mysqld.pid --socket=/app/mysql/my56/mysql.sock --port=3306
+
+
+###########
+
+## Restore error
+/app/mysql/app.d/meb-3.12.5-el7-x86-64bit/bin/mysqlbackup --defaults-file=/app/mysql/conf.d/my.cnf -uroot --backup-dir=/app/mysql/backup/restore --datadir=/app/mysql/data/my56/databases  --uncompress
+/app/mysql/app.d/meb-3.12.5-el7-x86-64bit/bin/mysqlbackup --defaults-file=/app/mysql/conf.d/my.cnf -uroot --backup-image=NET002PRDLNX554_IMAGE_BACKUP_20230807_0059.mbi  --backup-dir=/app/mysql/backup/restore --datadir=/app/mysql/data/my56/databases --uncompress
+/app/mysql/app.d/meb-3.12.5-el7-x86-64bit/bin/mysqlbackup --datadir=/app/mysql/data/my56/databases   --backup-image=/app/mysql/backup/restore/NET002PRDLNX554_IMAGE_BACKUP_20230807_0059.mbi --backup-dir=/app/mysql/backup/restore   copy-back-and-apply-log
+##############
+
+
+###### Upgrade 5.6 to 5.7  ###########
+
+Stop the old (MySQL 5.6) server.
+Upgrade the MySQL binaries in place by replacing the old binaries with the new ones.
+Start the MySQL 5.7 server normally (no special options)
+Run mysql_upgrade to upgrade the system tables.
+
+############################################
+
+##### Restore Portal IN
+/app/mysql/app.d/meb-3.12.5-el7-x86-64bit/bin/mysqlbackup --datadir=/app/mysql/data/my56/databases   --backup-image=/app/mysql/backup/restore/NET002PRDLNX554_IMAGE_BACKUP_20230807_0059.mbi --backup-dir=/app/mysql/backup/restore   copy-back-and-apply-log --uncompress --force
