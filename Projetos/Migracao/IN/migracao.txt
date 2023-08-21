@@ -1,0 +1,3139 @@
+
+
+
+Restore Inicial : cp -fR /app/mysql/bkp56/my56/ /app/mysql/data/
+
+
+
+
+
+# 5.6
+/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/bin/mysqld --defaults-file=/app/mysql/conf.d/my.cnf --basedir=/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64 --datadir=/app/mysql/data/my56/databases --plugin-dir=/app/mysql/app.d/mysql-advanced-5.6.42-linux-glibc2.12-x86_64/lib/plugin --log-error=/app/mysql/my56/net002prdlnx821_56.log --pid-file=/app/mysql/my56/mysqld.pid --socket=/app/mysql/my56/mysql.sock --port=3306 &
+
+
+
+
+
+
+1) mysql -u root -p --execute="SET GLOBAL innodb_fast_shutdown=0"   [ no mysql 5.6]
+
+2) mysqladmin -u root -p shutdown
+
+ 
+
+4) Subir o binario de 5.7 com essa opcao : --skip-grant-tables
+/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/bin/mysqld --defaults-file=/app/mysql/conf.d/my.cnf --basedir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64 --datadir=/app/mysql/data/my56/databases --plugin-dir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/lib/plugin --log-error=/app/mysql/my56/net002prdlnx821_56.log --pid-file=/app/mysql/my56/mysqld.pid --socket=/app/mysql/my56/mysql.sock --skip-grant-tables --port=3306 &
+
+
+5) 
+/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/bin/mysqld --defaults-file=/app/mysql/conf.d/my.cnf --basedir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64 --datadir=/app/mysql/data/my56/databases --plugin-dir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/lib/plugin --log-error=/app/mysql/my56/net002prdlnx821_56.log --pid-file=/app/mysql/my56/mysqld.pid --socket=/app/mysql/my56/mysql.sock --port=3306 &
+
+
+
+[mysql@net002prdlnx821 bin]$ ./mysql_upgrade -uroot -p
+Enter password:
+Checking if update is needed.
+Checking server version.
+Running queries to upgrade MySQL server.
+Checking system database.
+mysql.columns_priv                                 OK
+mysql.db                                           OK
+mysql.engine_cost                                  OK
+mysql.event                                        OK
+mysql.func                                         OK
+mysql.general_log                                  OK
+mysql.gtid_executed                                OK
+mysql.help_category                                OK
+mysql.help_keyword                                 OK
+mysql.help_relation                                OK
+mysql.help_topic                                   OK
+mysql.innodb_index_stats                           OK
+mysql.innodb_table_stats                           OK
+mysql.ndb_binlog_index                             OK
+mysql.plugin                                       OK
+mysql.proc                                         OK
+mysql.procs_priv                                   OK
+mysql.proxies_priv                                 OK
+mysql.server_cost                                  OK
+mysql.servers                                      OK
+mysql.slave_master_info                            OK
+mysql.slave_relay_log_info                         OK
+mysql.slave_worker_info                            OK
+mysql.slow_log                                     OK
+mysql.tables_priv                                  OK
+mysql.time_zone                                    OK
+mysql.time_zone_leap_second                        OK
+mysql.time_zone_name                               OK
+mysql.time_zone_transition                         OK
+mysql.time_zone_transition_type                    OK
+mysql.user                                         OK
+Upgrading the sys schema.
+Checking databases.
+sys.sys_config                                     OK
+Upgrade process completed successfully.
+Checking if update is needed.
+
+5) Para o mysql
+
+6) Subir mysql 5.7 padrao
+
+   /app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/bin/mysqld --defaults-file=/app/mysql/conf.d/my.cnf --basedir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64 --datadir=/app/mysql/data/my56/databases --plugin-dir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/lib/plugin --log-error=/app/mysql/my56/net002prdlnx821_56.log --pid-file=/app/mysql/my56/mysqld.pid --socket=/app/mysql/my56/mysql.sock  --port=3306 &
+
+
+ 
+#Restore
+/app/mysql/app.d/meb-3.12.5-el7-x86-64bit/bin/mysqlbackup --datadir=/app/mysql/data/my56/databases   --backup-image=/app/mysql/backup/restore/NET002PRDLNX554_IMAGE_BACKUP_20230807_0059.mbi --backup-dir=/app/mysql/backup/restore   copy-back-and-apply-log --uncompress --force
+
+
+
+
+
+
+
+# 5.7
+/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/bin/mysqld --defaults-file=/app/mysql/conf.d/my.cnf --basedir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64 --datadir=/app/mysql/data/my56/databases --plugin-dir=/app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64/lib/plugin --log-error=/app/mysql/my56/net002prdlnx821_56.log --pid-file=/app/mysql/my56/mysqld.pid --socket=/app/mysql/my56/mysql.sock --skip-grant-tables --port=3306 &
+
+mysql_upgrade -uroot -p
+ 
+
+
+# Check IN 
+
+
+[mysql@net002prdlnx821 bin]$ ./mysql_upgrade -uroot -p
+Enter password:
+Checking if update is needed.
+Checking server version.
+Running queries to upgrade MySQL server.
+mysql_upgrade: (non fatal) [WARNING] 1642: Table mysql.host is not empty. It is deprecated and will be removed in a future release.
+Checking system database.
+mysql.backup_history                               OK
+mysql.backup_progress                              OK
+mysql.columns_priv                                 OK
+mysql.db                                           OK
+mysql.engine_cost                                  OK
+mysql.event                                        OK
+mysql.func                                         OK
+mysql.general_log                                  OK
+mysql.gtid_executed                                OK
+mysql.help_category                                OK
+mysql.help_keyword                                 OK
+mysql.help_relation                                OK
+mysql.help_topic                                   OK
+mysql.host                                         OK
+mysql.innodb_index_stats                           OK
+mysql.innodb_table_stats                           OK
+mysql.inventory                                    OK
+mysql.ndb_binlog_index                             OK
+mysql.plugin                                       OK
+mysql.proc                                         OK
+mysql.procs_priv                                   OK
+mysql.proxies_priv                                 OK
+mysql.server_cost                                  OK
+mysql.servers                                      OK
+mysql.slave_master_info                            OK
+mysql.slave_relay_log_info                         OK
+mysql.slave_worker_info                            OK
+mysql.slow_log                                     OK
+mysql.tables_priv                                  OK
+mysql.time_zone                                    OK
+mysql.time_zone_leap_second                        OK
+mysql.time_zone_name                               OK
+mysql.time_zone_transition                         OK
+mysql.time_zone_transition_type                    OK
+mysql.user                                         OK
+mysql.user_info                                    OK
+The sys schema is already up to date (version 1.5.1).
+Checking databases.
+ATIVIDADES.ATIVIDADES_IN                           OK
+ATIVIDADES.CAD_ATIVIDADES                          OK
+ATIVIDADES.CAD_ATIV_EVENTUAL                       OK
+ATIVIDADES.CAD_ATIV_PERIODICA                      OK
+ATIVIDADES.CAD_AUSENCIAS                           OK
+ATIVIDADES.CAD_MOTIV_AUSENCIA                      OK
+ATIVIDADES.COLABORADORES_IN                        OK
+ATIVIDADES.RELATORIOS                              OK
+ATIVIDADES.TABELA_PG_INICIAL                       OK
+ATIVIDADES.VIEW_DADOS_EDIT                         OK
+ATIVIDADES_IN.AREAS_RESPONSAVEIS                   OK
+ATIVIDADES_IN.ATIVIDADES_GERENCIADOR               OK
+ATIVIDADES_IN.ATIVIDADES_IN                        OK
+ATIVIDADES_IN.ATIVIDADES_REALIZADAS_DIARIA         OK
+ATIVIDADES_IN.ATIVIDADE_X_DIA_SEMANA               OK
+ATIVIDADES_IN.AUSENCIA                             OK
+ATIVIDADES_IN.DIAS_DA_SEMANA                       OK
+ATIVIDADES_IN.PERIODICIDADE                        OK
+ATIVIDADES_IN.STATUS                               OK
+BASE_RH_AMX.CARGO                                  OK
+BASE_RH_AMX.CENTRO_DE_CUSTO                        OK
+BASE_RH_AMX.CIDADE_AMX                             OK
+BASE_RH_AMX.COLABORADOR_AMX                        OK
+BASE_RH_AMX.DE_PARA_CARGO                          OK
+BASE_RH_AMX.DE_PARA_CARGO_II                       OK
+BASE_RH_AMX.DIRETORIA_1_NIVEL                      OK
+BASE_RH_AMX.DIRETORIA_2_NIVEL                      OK
+BASE_RH_AMX.EMPRESA                                OK
+BASE_RH_AMX.EMPRESA_CONTABIL                       OK
+BASE_RH_AMX.GENERO                                 OK
+BASE_RH_AMX.MOTIVO_AFASTAMENTO                     OK
+BASE_RH_AMX.MOTIVO_DESLIGAMENTO                    OK
+BASE_RH_AMX.NIVEL_ESCOLARIDADE                     OK
+BASE_RH_AMX.REGIONAL_AMX                           OK
+BASE_RH_AMX.TIPO_COLABORADOR                       OK
+BASE_RH_AMX.UNIDADE_NEGOCIO                        OK
+BI.ACESSO
+Warning  :
+status   : OK
+BI.ACESSO_BKP20230602                              OK
+BI.ACESSO_BKP_20220922                             OK
+BI.ACESSO_BKP_20230525                             OK
+BI.ACESSO_BKP_20230607                             OK
+BI.ACESSO_LOG                                      OK
+BI.ACESSO_TEMP                                     OK
+BI.ADMIN_PAINEL_ATUALIZACAO                        OK
+BI.ADRIANO_BACKUP_DE_PARA                          OK
+BI.AMX_FUNCIONARIOS                                OK
+BI.AREA_ATUACAO_LOCAL                              OK
+BI.ASSOCIACAO_RELATORIO_GRUPO_OBIEE                OK
+BI.ASSOCIACAO_USUARIO_TABLEAU
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+BI.ASSOCIACAO_USUARIO_TABLEAU_HISTORICO            OK
+BI.ASSOCIA_GRUPOS_AOS_RELATORIOS                   OK
+BI.ASSOCIA_GRUPOS_PORTAL_IN_AO_USUARIO             OK
+BI.ATRIBUTOS                                       OK
+BI.AUDIT_ACESSOS                                   OK
+BI.AUDIT_ACESSOS_SOX                               OK
+BI.AUDIT_ACESSO_FERRAMENTAS                        OK
+BI.AUDIT_ACESSO_FERRAMENTAS_PORTAL                 OK
+BI.AUDIT_ACESSO_OBIEE
+Warning  :
+status   : OK
+BI.AUDIT_ACESSO_PORTALGIS
+Warning  :
+status   : OK
+BI.AUDIT_ACESSO_POWERBI                            OK
+BI.AUDIT_ACESSO_QLIKVIEW
+Warning  :
+status   : OK
+BI.AUDIT_ACESSO_RELATORIO                          OK
+warning  :
+BI.AUDIT_ACESSO_RELATORIO_CONSOL                   OK
+BI.AUDIT_ACESSO_RELATORIO_CONSOL_AUX               OK
+BI.AUDIT_ACESSO_RELATORIO_CONSOL_DIRETORIA_NIVEL_1 OK
+BI.AUDIT_ACESSO_RELATORIO_CONSOL_OLD               OK
+BI.AUDIT_ACESSO_TABLEAU
+Warning  :
+status   : OK
+BI.AUDIT_ACESSO_TABLEAU_EMBEDDED                   OK
+BI.AUDIT_DADOS_DOWNLOAD
+Warning  :
+Warning  :
+status   : OK
+warning  :
+BI.AUDIT_DADOS_DOWNLOAD_SEMANA                     OK
+BI.AUDIT_EMAIL_ENVIADO                             OK
+BI.AUDIT_EMAIL_RELATORIO_LIDO                      OK
+BI.AUDIT_ENVIA_EMAIL_CONTROLE_INTERNO_IN           OK
+BI.AUDIT_LIMPA_REPOSITORIO                         OK
+BI.AUDIT_POST_DADOS_PORTAL                         OK
+BI.AUDIT_POST_DADOS_PORTAL_2019812                 OK
+BI.AUDIT_REPOSITORIOS_RELATORIOS_APAGADOS          OK
+BI.AUDIT_TROCA_PERMISSAO                           OK
+BI.AUDIT_TROCA_SENHA_USER                          OK
+BI.AUX_FUNCIONARIOS                                OK
+BI.BASE_ATIVA_UNIF_RH                              OK
+BI.BASE_RH_DUPLIC_TMP                              OK
+BI.BASE_RH_DUPLIC_TMP2                             OK
+BI.BASE_UNIFICADA_RH                               OK
+BI.BASE_UNIFICADA_RH_BKP                           OK
+BI.BASE_UNIFICADA_RH_BKP_2022_11                   OK
+BI.BKP_COLABORADOR_AMX                             OK
+BI.BKP_COLABORADOR_AMX_202306                      OK
+BI.BKP_TMP_COLAB_AMX                               OK
+BI.BLOCK_GEOIP                                     OK
+BI.CADASTRO_PESQUISA_SERV_CENTRAIS                 OK
+BI.CAMPANHA_SATISFACAO                             OK
+BI.CARGO                                           OK
+BI.CENTRO_CUSTO                                    OK
+BI.CIDADE_BR                                       OK
+BI.CIDADE_FOLHA                                    OK
+BI.CLASSIFICACAO_RELATORIO                         OK
+BI.CLASSIFICACAO_RELATORIO_FRANQUEADOR             OK
+BI.CLASSIFICACAO_RELATORIO_SETORES                 OK
+BI.COLNE_USUARIO                                   OK
+BI.CONSOLIDADO_NIVEL                               OK
+BI.CONTROLE_CASASTRO_PESQUISA                      OK
+BI.CONTROLE_SENHA                                  OK
+BI.COPIA_AUDIT_POST_DADOS_PORTAL_IN_0              OK
+BI.DADOS_FOLHA                                     OK
+BI.DADOS_RECURSOS_HUMANOS_X                        OK
+BI.DEPARTAMENTO                                    OK
+BI.DESCRICAO_ATIVIDADE                             OK
+BI.DE_PARA_DIRETORIA_10_2019                       OK
+BI.DE_PARA_GESTOR                                  OK
+BI.DE_PARA_GESTOR_GERENCIADOR_DE_EQUIPES           OK
+BI.DE_PARA_SETORES                                 OK
+BI.DISPONIBILIDADE_RELATORIOS                      OK
+BI.DOMICILIOS_BOOK                                 OK
+BI.DOWNLOADS_RELATORIOS                            OK
+BI.DS_CLUSTER                                      OK
+BI.DS_GRUPO_REGIONAL                               OK
+BI.DS_MUNICIPIO                                    OK
+BI.DS_MUNICIPIO_BKP_20220808                       OK
+BI.DS_REGIONAL                                     OK
+BI.DS_REGIONAL_CMV                                 OK
+BI.DS_REL_ESTRUT_ORGANIZACIONAL                    OK
+BI.DS_SEGMENTO_MUNICIPIO                           OK
+BI.DS_SUBCLUSTER                                   OK
+BI.ELI_BKP_ACESSO                                  OK
+BI.ELI_BKP_TMP_COLAB_AMX                           OK
+BI.ELI_TMP_DUPLIC_RH                               OK
+BI.ELI_TMP_DUPLIC_RH2                              OK
+BI.ELI_TMP_LOGINS_IN                               OK
+BI.EMPRESA_FUNCIONARIO_TERCEIRO                    OK
+BI.ESTADO_BR                                       OK
+BI.EXTRATO                                         OK
+BI.EXT_FUNCIONARIOS                                OK
+BI.E_MAIL                                          OK
+BI.E_MAIL_BKP_20230626                             OK
+BI.E_MAIL_BKP_20230626_TESTE                       OK
+BI.FAVORITOS
+Warning  :
+status   : OK
+BI.FAVORITOS_HISTORICO                             OK
+BI.FERRAMENTAS_PORTAL                              OK
+BI.FERRAMENTA_PERMISSAO_ADICIONAL                  OK
+BI.FUNCIONARIO
+Warning  :
+Warning  :
+status   : OK
+BI.FUNCIONARIO_HISTORICO                           OK
+BI.FUNCIONARIO_TERCEIRO                            OK
+BI.GA_DESATIVAR                                    OK
+BI.GRUPOS_PORTAL_IN                                OK
+BI.INFO_CONSOLIDADA_ODOMETRO                       OK
+BI.LICENCAS_TABLEAU                                OK
+BI.LOGINS_IN                                       OK
+BI.LOGINS_MIGRADOS                                 OK
+BI.LOOKUP_AUDIT_CATALOGO_FERRAMENTAS_1             OK
+BI.MALLING_NOTIFICA_RELATORIOS                     OK
+BI.MALLING_NOTIFICA_RELATORIOS_BKP_20220818        OK
+BI.MALLING_NOTIFICA_RELATORIOS_BKP_20230209        OK
+BI.MATRIZ_EXCECAO
+Warning  :
+Warning  :
+status   : OK
+BI.MATRIZ_EXCECAO_BKP_20230208                     OK
+BI.MATRIZ_EXCECAO_HISTORICO                        OK
+BI.MATRIZ_PERMISSAO_ACESSO_AMX                     OK
+BI.MATRIZ_PERMISSAO_ACESSO_AMX_bkp                 OK
+BI.MATRIZ_PERMISSIONAMENTO                         OK
+BI.MENU_COMPLETO_FERRAMENTAS_PORTAL_IN_0           OK
+BI.MENU_COMPLETO_FERRAMENTAS_PORTAL_IN_1           OK
+BI.MENU_EXCLUSIVO                                  OK
+BI.MENU_FERRAMENTAS                                OK
+BI.MENU_HTML                                       OK
+BI.MENU_PORTAL_S_FILTRO_IN_0                       OK
+BI.MENU_SUBMENU                                    OK
+BI.MODELO_CADASTRO                                 OK
+BI.MONITORAMENTO_PUBLICO_VIP                       OK
+BI.MONITORAMENTO_PUBLICO_VIP_BKP_20230713          OK
+BI.MONITORAMENTO_VOD                               OK
+BI.MOVIL_PAIS                                      OK
+BI.NET_CARGOS                                      OK
+BI.NET_CLUSTER                                     OK
+BI.NET_PRACAS                                      OK
+BI.NET_PRACAS_AREA                                 OK
+BI.NET_PRACAS_BKP_20210901                         OK
+BI.NET_PRACAS_BKP_20220117                         OK
+BI.NET_PRACAS_REGIONAL_2                           OK
+BI.NET_REGIONAL                                    OK
+BI.NET_USER_SISTEMAS_OFC                           OK
+BI.NIVEL_CARGO                                     OK
+BI.PERIODICIDADE_RELATORIOS                        OK
+BI.PERMISSAO_DE_PARA_PESQUISA                      OK
+BI.PERMISSAO_POSSIVEL_FERRAMENTAS                  OK
+BI.PERMISSAO_REPOSITORIOS                          OK
+BI.PERMISSAO_REPOSITORIOS_BKP_20210819             OK
+BI.PERMISSAO_REPOSITORIOS_BKP_20210819_NEW         OK
+BI.PERMISSAO_REPOSITORIOS_BKP_20210824             OK
+BI.PERMISSAO_REPOSITORIOS_BKP_20220323             OK
+BI.PERMISSAO_REPOSITORIOS_BKP_20220331             OK
+BI.PERMISSAO_REPOSITORIOS_NEW                      OK
+BI.PERMISSAO_REPOSITORIOS_Teste_20220329           OK
+BI.PERMISSAO_USER_FERRAMENTAS                      OK
+BI.PESQUISA_IDENTIFICADOR                          OK
+BI.PESQUISA_SATISFACAO                             OK
+BI.QUEM_EFETUA_LOGIN_PORTAL                        OK
+BI.QUEM_EFETUA_LOGIN_PORTAL_OLD                    OK
+warning  :
+BI.RANKING_HTML                                    OK
+BI.REDE_IP_NET                                     OK
+BI.RELATORIO_ATUALIZADO
+Warning  :
+status   : OK
+BI.RELATORIO_COM_PROBLEMA                          OK
+BI.RELATORIO_DOWNLOADS_PORTAL                      OK
+BI.SETORES                                         OK
+BI.SETOR_USER                                      OK
+BI.SLIDESHOW                                       OK
+BI.SUB_CLUSTER                                     OK
+BI.TECNICOS_FOLHA                                  OK
+BI.TEMP_CADASTRAL_PORTAL_IN_ORIGEM_CONTABIL        OK
+BI.TIPO_PERMISSAO                                  OK
+BI.TMP_LOGINS_MIGRADOS                             OK
+BI.TMP_LOGINS_MIGRADOS2                            OK
+BI.TOTALIZADOR_ACESSOS_PORTAL_IN_0                 OK
+BI.TOTALIZADOR_ACESSOS_PORTAL_IN_5                 OK
+BI.TOTALIZADOR_ACESSOS_PORTAL_IN_5_BKP             OK
+BI.TOTALIZADOR_ACESSOS_PORTAL_IN_6                 OK
+BI.TOTALIZADOR_ACESSOS_PORTAL_IN_6_BKP             OK
+BI.TOTALIZADOR_ACESSOS_PORTAL_IN_7                 OK
+BI.USER_ONLINE                                     OK
+BI.USUARIO_TABLEAU                                 OK
+BI.VW_RELATORIOS_IN_BKP_20220629                   OK
+BI.VW_RELATORIOS_IN_bkp                            OK
+BI.analise_acesso_user_eli                         OK
+BI.artigo                                          OK
+BI.bkp_ga_desativar                                OK
+BI.calendario_ano                                  OK
+BI.calendario_mes                                  OK
+BI.contents                                        OK
+BI.dba                                             OK
+BI.duplic_ge_desativar                             OK
+BI.eli_teste_cargos                                OK
+BI.eli_tmp_cidade_amx                              OK
+BI.eli_tmp_dir_2nivel                              OK
+BI.eli_tmp_emp_contabil                            OK
+BI.eli_tmp_empresa                                 OK
+BI.eli_tmp_genero                                  OK
+BI.eli_tmp_motivo_afast                            OK
+BI.eli_tmp_motivo_desl                             OK
+BI.eli_tmp_nivel_escola                            OK
+BI.eli_tmp_pme_users                               OK
+BI.eli_tmp_regional                                OK
+BI.eli_tmp_tp_colab                                OK
+BI.eli_tmp_unid_neg                                OK
+BI.eli_tmp_users                                   OK
+BI.eventHistory                                    OK
+BI.groups                                          OK
+BI.in_session_old                                  OK
+BI.menus                                           OK
+BI.menus_20210510                                  OK
+BI.menus_BKP_20220404                              OK
+BI.menus_BKP_20220629                              OK
+BI.menus_BKP_20220629_0                            OK
+BI.menus_DE_PARA                                   OK
+BI.menus_DE_PARA_2                                 OK
+BI.menus_DE_PARA_3                                 OK
+BI.menus_bkp_20220405                              OK
+BI.menus_bkp_20220405_teste                        OK
+BI.menus_bkp_20220406                              OK
+BI.post_dados
+Warning  :
+status   : OK
+BI.post_dados_31_out                               OK
+BI.repositorio_de_dados_novo
+Warning  :
+status   : OK
+BI.repositorio_de_dados_novo_20210510              OK
+BI.repositorio_de_dados_novo_bkp_20220915          OK
+BI.sections                                        OK
+BI.sub_categorias                                  OK
+BI.teste                                           OK
+BI.teste2                                          OK
+BI.tst_duplic_ga_desativar                         OK
+BI.users                                           OK
+BI.video_explicativo                               OK
+BI_USER.BAIRRO_MIDDLEWARE                          OK
+BI_USER.BI_CTRL_TRANSFORMACAO                      OK
+BI_USER.CIDADE_MIDDLEWARE                          OK
+BI_USER.LOGRADOURO_MIDDLEWARE                      OK
+BI_USER.NODE_MIDDLEWARE                            OK
+CADASTRO_VAGAS.AGENCIA                             OK
+CADASTRO_VAGAS.AREA_DO                             OK
+CADASTRO_VAGAS.AREA_DPTO                           OK
+CADASTRO_VAGAS.ATIVIDADE                           OK
+CADASTRO_VAGAS.CAD_COORD                           OK
+CADASTRO_VAGAS.CARGO                               OK
+CADASTRO_VAGAS.CENTRO_CUSTO                        OK
+CADASTRO_VAGAS.CIDADES_DO                          OK
+CADASTRO_VAGAS.GESTORES                            OK
+CADASTRO_VAGAS.GESTORES_LIXO                       OK
+CADASTRO_VAGAS.ID_ATIVIDADE_DO                     OK
+CADASTRO_VAGAS.LIXO_CENTRO_DE_CUSTO                OK
+CADASTRO_VAGAS.MOTIVO_CANCELAMENTO                 OK
+CADASTRO_VAGAS.NIVEL_CARGO                         OK
+CADASTRO_VAGAS.REGIONAL                            OK
+CADASTRO_VAGAS.SITUACAO_ORCAMENTO                  OK
+CADASTRO_VAGAS.STATUS_RPS                          OK
+CADASTRO_VAGAS.STATUS_VAGA                         OK
+CADASTRO_VAGAS.TABELA_BKP                          OK
+CADASTRO_VAGAS.TABELA_RP                           OK
+CADASTRO_VAGAS.TIPO_DE_VAGA                        OK
+CADASTRO_VAGAS.USERS                               OK
+CADASTRO_VAGAS.USER_ACESSO_CIDADE                  OK
+CADASTRO_VAGAS.VISUALIZA_BASE_VAGAS2               OK
+CADASTRO_VAGAS.VISUALIZA_BASE_VAGAS3               OK
+CARGA_CGM.BSSProduct                               OK
+CARGA_CGM.BSSProductToContentProduct               OK
+CARGA_CGM.ChannelMap                               OK
+CARGA_CGM.ChannelMapDetails                        OK
+CARGA_CGM.ChannelgroupGenre                        OK
+CARGA_CGM.ContentDeliveryPlatform                  OK
+CARGA_CGM.ContentDistributor                       OK
+CARGA_CGM.ContentProductCategory                   OK
+CARGA_CGM.ContentProductPrice                      OK
+CARGA_CGM.ContentSalesChannel                      OK
+CARGA_CGM.Content_Product                          OK
+CARGA_CGM.Genre                                    OK
+CARGA_CGM.LinearContentChannel                     OK
+CARGA_CGM.LinearContentChannelGroup                OK
+CARGA_CGM.LinearProductToChannelMapDetails         OK
+CARGA_CGM.Parent_Rating                            OK
+CARGA_CGM.Pricing_Anticipations                    OK
+CARGA_CGM.Programmer                               OK
+CARGA_CGM.Region                                   OK
+CARGA_CGM.SubscriptionLinearContentProduct         OK
+CARGA_CGM.TimeZone                                 OK
+CENTRAL_RELATORIOS.AREA                            OK
+CENTRAL_RELATORIOS.BUSINESS_AREAS                  OK
+CENTRAL_RELATORIOS.CLASSIFICACAO                   OK
+CENTRAL_RELATORIOS.DOMINIOS                        OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW                 OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW_BKP_04082023    OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW_BKP_202207111333 OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW_BKP_20220714    OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW_BKP_20221024    OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW_BKP_202230315   OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW_BKP_20230320    OK
+CENTRAL_RELATORIOS.DW_VALIDATE_NEW_BKP_TESTES      OK
+CENTRAL_RELATORIOS.FERIADOS                        OK
+CENTRAL_RELATORIOS.GRUPO                           OK
+CENTRAL_RELATORIOS.GRUPO_BKP_202209081458          OK
+CENTRAL_RELATORIOS.GRUPO_BKP_ANTES_ALTERACAO_ATIVO_E_ID OK
+CENTRAL_RELATORIOS.IBGE_CIDADE                     OK
+CENTRAL_RELATORIOS.IBGE_UF                         OK
+CENTRAL_RELATORIOS.RELATORIO                       OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20220629          OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202207111056      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202207131054      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202207151441      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202207181126      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202207191640      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202208071304      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202208071304_TESTE OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20220831_beforeAlterGroups OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202210170949      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20221024_UpdateBAandDominio OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20221129          OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20221216_1639     OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20221228          OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20222102          OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202230202         OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202230203         OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202230315         OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20230127          OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20230213          OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_202302151642      OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_20230217_SLA1     OK
+CENTRAL_RELATORIOS.RELATORIO_BKP_TESTE_SLA         OK
+CENTRAL_RELATORIOS.RELATORIO_FECH_PREVIA           OK
+CENTRAL_RELATORIOS.RELATORIO_bkp_20230505          OK
+CENTRAL_RELATORIOS.RESPONSAVEL                     OK
+CENTRAL_RELATORIOS.RESPONSAVEL_BKP_01082023        OK
+CENTRAL_RELATORIOS.RESPONSAVEL_BKP_20220509        OK
+CENTRAL_RELATORIOS.RESPONSAVEL_BKP_202207141218    OK
+CENTRAL_RELATORIOS.RESPONSAVEL_BKP_202207191734    OK
+CENTRAL_RELATORIOS.RESPONSAVEL_TESTE               OK
+CENTRAL_RELATORIOS.RESPONSAVEL_bck_20220525        OK
+CENTRAL_RELATORIOS.SLA                             OK
+CENTRAL_RELATORIOS.UNIDADE                         OK
+CENTRAL_RELATORIOS.UNIDADE_BKP_202209081454        OK
+CENTRAL_RELATORIOS.calendar                        OK
+CENTRAL_RELATORIOS.ints                            OK
+CERTIFICACAO.ADMIN_CERTIFICACAO                    OK
+CERTIFICACAO.ASSOCIACAO_MOTIVO_AUX                 OK
+CERTIFICACAO.ASSOCIACAO_PGP                        OK
+CERTIFICACAO.ASSOCIACAO_PGP_OLD_20210505           OK
+CERTIFICACAO.ASSOCICAO_MOTIVO                      OK
+CERTIFICACAO.ASSOCICAO_MOTIVO_OLD                  OK
+CERTIFICACAO.ASSOCICAO_MOTIVO_TEMP                 OK
+CERTIFICACAO.CAUSA_RAIZ                            OK
+CERTIFICACAO.CLASSIFICACAO                         OK
+CERTIFICACAO.CLASSIFICACAO_QUESTAO                 OK
+CERTIFICACAO.CONFORMIDADE                          OK
+CERTIFICACAO.CONSOLIDADO_UNIDADE_ORGANIZACIONAL    OK
+CERTIFICACAO.E2E                                   OK
+CERTIFICACAO.EVIDENCIA                             OK
+CERTIFICACAO.INTEGRACAO_CERTIFICACAO_FCA           OK
+CERTIFICACAO.INTEGRACAO_CERTIFICACAO_PESQUISA      OK
+CERTIFICACAO.LOCAL_VISITA                          OK
+CERTIFICACAO.MOTIVO_PROCESSO                       OK
+CERTIFICACAO.PERMISSAO                             OK
+CERTIFICACAO.PGP                                   OK
+CERTIFICACAO.PRODUCAO_VISITA                       OK
+CERTIFICACAO.QUESTAO                               OK
+CERTIFICACAO.RELATORIOS_EXTRAC_CERTIFICACAO        OK
+CERTIFICACAO.UNIDADE_ORGANIZACIONAL                OK
+CERTIFICACAO.VISITA                                OK
+CERTIFICACAO.VISITA_20210803_BKP                   OK
+CERTIFICACAO.VISITA_BKP_20210808                   OK
+CHECKLIST.ASSOCIACAO                               OK
+CHECKLIST.CHECKLIST                                OK
+CHECKLIST.CONFORMIDADE                             OK
+CHECKLIST.CONSOLIDADO_UNIDADE_ORGANIZACIONAL       OK
+CHECKLIST.DEPARTAMENTOS                            OK
+CHECKLIST.E2E                                      OK
+CHECKLIST.GERADOR_VISITA                           OK
+CHECKLIST.INTEGRACAO_CHECKLIST_FCA                 OK
+CHECKLIST.INTEGRACAO_CHECKLIST_QUIZ                OK
+CHECKLIST.INTERACAO_FCA_PARA_CHECKLIST             OK
+CHECKLIST.LOCAL                                    OK
+CHECKLIST.OBSERVACAO_VISITA                        OK
+CHECKLIST.PERMISSAO_CERTIFICACAO                   OK
+CHECKLIST.PERMISSAO_LOCAL                          OK
+CHECKLIST.PGP                                      OK
+CHECKLIST.QUESTAO                                  OK
+CHECKLIST.RELATORIO_CHECKLIST                      OK
+CHECKLIST.UNIDADE_ORGANIZACIONAL                   OK
+CIDADE_MOVIL.CIDADE                                OK
+CIDADE_MOVIL.ESTADO                                OK
+CIDADE_MOVIL.PAIS                                  OK
+CONTRATOS_EMPREITEIRAS.ASSOCIACAO_CIDADE           OK
+CONTRATOS_EMPREITEIRAS.ASSOCIACAO_SERVICO          OK
+CONTRATOS_EMPREITEIRAS.CIDADE                      OK
+CONTRATOS_EMPREITEIRAS.CONTRATO                    OK
+CONTRATOS_EMPREITEIRAS.FORNECEDOR                  OK
+CONTRATOS_EMPREITEIRAS.HISTORICO_ASSOCIACAO_CIDADE OK
+CONTRATOS_EMPREITEIRAS.HISTORICO_ASSOCIACAO_SERVICO OK
+CONTRATOS_EMPREITEIRAS.HISTORICO_CONTRATO          OK
+CONTRATOS_EMPREITEIRAS.HISTORICO_CONTRATO_BK       OK
+CONTRATOS_EMPREITEIRAS.LOG_ITEM                    OK
+CONTRATOS_EMPREITEIRAS.SERVICO                     OK
+CONTRATOS_EMPREITEIRAS.TABELA_TEMPO_PADRAO         OK
+CONTRATOS_EMPREITEIRAS.TIPO_SERVICO                OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_ASSOC_HIERARQUIA OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_ATIVIDADE_TERCEIRA OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_AUDIT_EXTRACAO   OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_CALENDARIO       OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_DIRETORIA_NIVEL_1 OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_DIRETORIA_NIVEL_2 OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_EMPRESA          OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_ESTADO           OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_EXCECAO          OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_FICHA_ATIVIDADES OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_PERMISSAO_ACESSO OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_TIPO_EXCECAO     OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_TIPO_PERMISSAO   OK
+CONTROLE_COLABORADOR_TERCEIRO.CTE_UNIDADE          OK
+FCA.AREAS                                          OK
+FCA.BKP_SUBATIVIDADE                               OK
+FCA.CAD_MOTIVOS                                    OK
+FCA.EVIDENCIA                                      OK
+FCA.EVIDENCIA_SUBATIVIDADE                         OK
+FCA.FCA                                            OK
+FCA.FCA_AJUSTE                                     OK
+FCA.FCA_BKP_20220805                               OK
+FCA.FCA_MUDAR_RESPONSAVEL                          OK
+FCA.FCA_QUESTAO                                    OK
+FCA.MOTIVOS_FCA                                    OK
+FCA.PERMISSAO_CANCELAMENTO                         OK
+FCA.PRIORIDADE                                     OK
+FCA.PROGRAMACAO                                    OK
+FCA.QUESTAO                                        OK
+FCA.STATUS                                         OK
+FCA.SUB_ATIVIDADE                                  OK
+GERENCIADOR_INDICADOR.GIN_ASSOCIACAO_INDICADOR_RELATORIO OK
+GERENCIADOR_INDICADOR.GIN_ASSOCIACAO_INDICADOR_RELATORIO_HISTORICO OK
+GERENCIADOR_INDICADOR.GIN_TAG                      OK
+GERENCIADOR_MENU.AGENTE_JOB                        OK
+GERENCIADOR_MENU.ASSOCIACAO_DESTINO_EXT            OK
+GERENCIADOR_MENU.ASSOCIACAO_DESTINO_EXT_HIST       OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_BASE       OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_BASE_HIST  OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_GRUPO_TABLEAU OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_GRUPO_TABLEAU_HIST OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_OWNER      OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_OWNER_HISTORICO OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_OWNER_HISTORICO_BKP OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_PERFIL_PORTAL_GIS OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_PERFIL_PORTAL_GIS_HIST OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_RESPONSAVEL OK
+GERENCIADOR_MENU.ASSOCIACAO_REPOSITORIO_RESPONSAVEL_HISTORICO OK
+GERENCIADOR_MENU.ASSOCIACAO_STATUS_TIPO_PERMISSAO  OK
+GERENCIADOR_MENU.ASSOCIACAO_USUARIO_RESPONSAVEL    OK
+GERENCIADOR_MENU.AUX_UPLOAD_NETUNO                 OK
+GERENCIADOR_MENU.CLASSIFICACAO                     OK
+GERENCIADOR_MENU.COLUNA_REPOSITORIO_EXTRACAO
+Warning  :
+Warning  :
+status   : OK
+GERENCIADOR_MENU.COLUNA_REPOSITORIO_EXTRACAOAS_BKP_20220405 OK
+GERENCIADOR_MENU.COLUNA_REPOSITORIO_EXTRACAO_20210218 OK
+GERENCIADOR_MENU.COLUNA_REPOSITORIO_EXTRACAO_HISTORICO OK
+GERENCIADOR_MENU.COLUNA_REPOSITORIO_EXTRACAO_HISTORICO_20210218 OK
+GERENCIADOR_MENU.DEPENDENCIA_STATUS                OK
+GERENCIADOR_MENU.DESTINO_EXTRACAO                  OK
+GERENCIADOR_MENU.DESTINO_EXTRACAO_BKP_20220504     OK
+GERENCIADOR_MENU.EMPRESA_RELATORIO                 OK
+GERENCIADOR_MENU.FILE_SERVER                       OK
+GERENCIADOR_MENU.FORMATO_DATE                      OK
+GERENCIADOR_MENU.FREQUENCIA_ATUALIZACAO            OK
+GERENCIADOR_MENU.INFOMACOES_ADICIONAIS_REPOSITORIO OK
+GERENCIADOR_MENU.INFOMACOES_ADICIONAIS_REPOSITORIO_HISTORICO OK
+GERENCIADOR_MENU.LISTA_REPOSITORIO_BASE_TEMP       OK
+GERENCIADOR_MENU.LOG_PUBLICACAO_EXTRACAO           OK
+GERENCIADOR_MENU.MATRIZ_PERMISSAO_ACESSO_AMX_HIST  OK
+GERENCIADOR_MENU.MATRIZ_PERMISSAO_ACESSO_AMX_TEMP  OK
+GERENCIADOR_MENU.MATRIZ_PERMISSAO_ACESSO_AMX_TEMP_bkp OK
+GERENCIADOR_MENU.MATRIZ_PERMISSIONAMENTO_HISTORICO OK
+GERENCIADOR_MENU.MATRIZ_PERMISSIONAMENTO_PORTAL_GIS OK
+GERENCIADOR_MENU.MATRIZ_PERMISSIONAMENTO_PORTAL_GIS_HISTORICO OK
+GERENCIADOR_MENU.MATRIZ_PERMISSIONAMENTO_PORTAL_GIS_HISTORICO_TEMP OK
+GERENCIADOR_MENU.MATRIZ_PERMISSIONAMENTO_PORTAL_GIS_TEMP OK
+GERENCIADOR_MENU.MATRIZ_PERMISSIONAMENTO_TEMP      OK
+GERENCIADOR_MENU.MENU_HISTORICO                    OK
+GERENCIADOR_MENU.ORIGEM_EXTRACAO                   OK
+GERENCIADOR_MENU.PERFIL_PORTAL_GIS                 OK
+GERENCIADOR_MENU.REPOSITORIO_HISTORICO             OK
+GERENCIADOR_MENU.RESPONSAVEL_IN                    OK
+GERENCIADOR_MENU.SERVIDOR_OBIEE                    OK
+GERENCIADOR_MENU.SERVIDOR_OBIEE_BKP_20220517       OK
+GERENCIADOR_MENU.SERVIDOR_OBIEE_BKP_20220902       OK
+GERENCIADOR_MENU.SERVIDOR_OBIEE_BKP_20220905       OK
+GERENCIADOR_MENU.SERVIDOR_OBIEE_BKP_20220906       OK
+GERENCIADOR_MENU.SLA                               OK
+GERENCIADOR_MENU.SLA_FECHAMENTO                    OK
+GERENCIADOR_MENU.STATUS                            OK
+GERENCIADOR_MENU.STATUS_PUBLICACAO                 OK
+GERENCIADOR_MENU.TEMP_1332_20200128182104          OK
+GERENCIADOR_MENU.TEMP_1344_20200128181931          OK
+GERENCIADOR_MENU.TEMP_1344_20200128181953          OK
+GERENCIADOR_MENU.TEMP_1344_20200128182037          OK
+GERENCIADOR_MENU.TEMP_1422_20210923182633          OK
+GERENCIADOR_MENU.TEMP_1422_20210923183237          OK
+GERENCIADOR_MENU.TEMP_1422_20210930174327          OK
+GERENCIADOR_MENU.TEMP_1422_20210930174413          OK
+GERENCIADOR_MENU.TEMP_1422_20210930174512          OK
+GERENCIADOR_MENU.TEMP_1422_20210930175007          OK
+GERENCIADOR_MENU.TEMP_1422_20210930175054          OK
+GERENCIADOR_MENU.TEMP_1422_20211109170723          OK
+GERENCIADOR_MENU.TEMP_1422_20211109170745          OK
+GERENCIADOR_MENU.TEMP_1422_20211109170818          OK
+GERENCIADOR_MENU.TEMP_1422_20211109171206          OK
+GERENCIADOR_MENU.TEMP_1422_20211109173821          OK
+GERENCIADOR_MENU.TEMP_1422_20230123191747          OK
+GERENCIADOR_MENU.TEMP_1422_20230124190403          OK
+GERENCIADOR_MENU.TEMP_1422_20230124190634          OK
+GERENCIADOR_MENU.TEMP_2497_20200309093404          OK
+GERENCIADOR_MENU.TEMP_2786_20191126164331          OK
+GERENCIADOR_MENU.TEMP_2786_20191126164351          OK
+GERENCIADOR_MENU.TEMP_2786_20191126164431          OK
+GERENCIADOR_MENU.TEMP_2786_20191126164632          OK
+GERENCIADOR_MENU.TEMP_2786_20191126165136          OK
+GERENCIADOR_MENU.TEMP_2786_20191126165406          OK
+GERENCIADOR_MENU.TEMP_2786_20191126165536          OK
+GERENCIADOR_MENU.TEMP_2786_20191126170135          OK
+GERENCIADOR_MENU.TEMP_2786_20191126170631          OK
+GERENCIADOR_MENU.TEMP_2786_20191126171034          OK
+GERENCIADOR_MENU.TEMP_2786_20191126173458          OK
+GERENCIADOR_MENU.TEMP_3464_20190701151232          OK
+GERENCIADOR_MENU.TEMP_3464_20190701151409          OK
+GERENCIADOR_MENU.TEMP_3464_20190906113931          OK
+GERENCIADOR_MENU.TEMP_3464_20190906114232          OK
+GERENCIADOR_MENU.TEMP_3464_20190906114732          OK
+GERENCIADOR_MENU.TEMP_3464_20190919123748          OK
+GERENCIADOR_MENU.TEMP_3464_20190919123837          OK
+GERENCIADOR_MENU.TEMP_3464_20190920092359          OK
+GERENCIADOR_MENU.TEMP_3464_20190920092540          OK
+GERENCIADOR_MENU.TEMP_3464_20191203125831          OK
+GERENCIADOR_MENU.TEMP_3464_20200102132546          OK
+GERENCIADOR_MENU.TEMP_3464_20200203164154          OK
+GERENCIADOR_MENU.TEMP_3464_20200302145606          OK
+GERENCIADOR_MENU.TEMP_3464_20200302150302          OK
+GERENCIADOR_MENU.TEMP_3464_20200302153856          OK
+GERENCIADOR_MENU.TEMP_3464_20200401160830          OK
+GERENCIADOR_MENU.TEMP_3464_20200504153346          OK
+GERENCIADOR_MENU.TEMP_3464_20200601162239          OK
+GERENCIADOR_MENU.TEMP_3464_20200601162432          OK
+GERENCIADOR_MENU.TEMP_3464_20200701142631          OK
+GERENCIADOR_MENU.TEMP_3464_20200803122956          OK
+GERENCIADOR_MENU.TEMP_3464_20200901132433          OK
+GERENCIADOR_MENU.TEMP_3464_20201001170558          OK
+GERENCIADOR_MENU.TEMP_3464_20201001172937          OK
+GERENCIADOR_MENU.TEMP_3464_20201001175053          OK
+GERENCIADOR_MENU.TEMP_3464_20201201182827          OK
+GERENCIADOR_MENU.TEMP_3464_20201201183045          OK
+GERENCIADOR_MENU.TEMP_3464_20210104170028          OK
+GERENCIADOR_MENU.TEMP_3464_20210104174113          OK
+GERENCIADOR_MENU.TEMP_3464_20210201133149          OK
+GERENCIADOR_MENU.TEMP_3464_20210301163203          OK
+GERENCIADOR_MENU.TEMP_3464_20210401124300          OK
+GERENCIADOR_MENU.TEMP_3464_20210503125027          OK
+GERENCIADOR_MENU.TEMP_3464_20210517153000          OK
+GERENCIADOR_MENU.TEMP_3464_20210526101002          OK
+GERENCIADOR_MENU.TEMP_3464_20210526101239          OK
+GERENCIADOR_MENU.TEMP_3464_20210526102235          OK
+GERENCIADOR_MENU.TEMP_3464_20210802105327          OK
+GERENCIADOR_MENU.TEMP_3464_20211001145917          OK
+GERENCIADOR_MENU.TEMP_3464_20211001155518          OK
+GERENCIADOR_MENU.TEMP_3464_20211101084551          OK
+GERENCIADOR_MENU.TEMP_3464_20211202090903          OK
+GERENCIADOR_MENU.TEMP_3464_20211202094348          OK
+GERENCIADOR_MENU.TEMP_3464_20220502124048          OK
+GERENCIADOR_MENU.TEMP_3464_20220502124712          OK
+GERENCIADOR_MENU.TEMP_3464_20220502124946          OK
+GERENCIADOR_MENU.TEMP_3464_20220601145254          OK
+GERENCIADOR_MENU.TEMP_3948_20191031142929          OK
+GERENCIADOR_MENU.TEMP_3948_20191104181637          OK
+GERENCIADOR_MENU.TEMP_3948_20191104182029          OK
+GERENCIADOR_MENU.TEMP_3948_20191104182159          OK
+GERENCIADOR_MENU.TEMP_3948_20191104182407          OK
+GERENCIADOR_MENU.TEMP_3948_20191105105548          OK
+GERENCIADOR_MENU.TEMP_3948_20191105105729          OK
+GERENCIADOR_MENU.TEMP_3948_20191105130741          OK
+GERENCIADOR_MENU.TEMP_3948_20191118171138          OK
+GERENCIADOR_MENU.TEMP_3948_20191119185329          OK
+GERENCIADOR_MENU.TEMP_3948_20191119185701          OK
+GERENCIADOR_MENU.TEMP_3948_20191119190031          OK
+GERENCIADOR_MENU.TEMP_3948_20191127121143          OK
+GERENCIADOR_MENU.TEMP_3948_20191127121502          OK
+GERENCIADOR_MENU.TEMP_3978_20200106161254          OK
+GERENCIADOR_MENU.TEMP_3978_20200106161338          OK
+GERENCIADOR_MENU.TEMP_3978_20210305112639          OK
+GERENCIADOR_MENU.TEMP_3978_20210305141712          OK
+GERENCIADOR_MENU.TEMP_3978_20210305141906          OK
+GERENCIADOR_MENU.TEMP_3978_20210305150318          OK
+GERENCIADOR_MENU.TEMP_3978_20210308100548          OK
+GERENCIADOR_MENU.TEMP_3978_20210308102438          OK
+GERENCIADOR_MENU.TEMP_3978_20210308102748          OK
+GERENCIADOR_MENU.TEMP_3978_20210308102935          OK
+GERENCIADOR_MENU.TEMP_3978_20210308103242          OK
+GERENCIADOR_MENU.TEMP_3978_20210308103703          OK
+GERENCIADOR_MENU.TEMP_3978_20210311112410          OK
+GERENCIADOR_MENU.TEMP_3978_20210315142142          OK
+GERENCIADOR_MENU.TEMP_3978_20210315142723          OK
+GERENCIADOR_MENU.TEMP_3978_20210407202027          OK
+GERENCIADOR_MENU.TEMP_3978_20210407203411          OK
+GERENCIADOR_MENU.TEMP_3978_20210408095304          OK
+GERENCIADOR_MENU.TEMP_3990_20230327190010          OK
+GERENCIADOR_MENU.TEMP_3998_20211025171158          OK
+GERENCIADOR_MENU.TEMP_3998_20211025171238          OK
+GERENCIADOR_MENU.TEMP_3998_20211025171444          OK
+GERENCIADOR_MENU.TEMP_3998_20211025171642          OK
+GERENCIADOR_MENU.TEMP_3998_20211025172359          OK
+GERENCIADOR_MENU.TEMP_3998_20211025173804          OK
+GERENCIADOR_MENU.TEMP_3998_20211025180903          OK
+GERENCIADOR_MENU.TEMP_3998_20211025181053          OK
+GERENCIADOR_MENU.TEMP_3998_20211025181614          OK
+GERENCIADOR_MENU.TEMP_3998_20211025181901          OK
+GERENCIADOR_MENU.TEMP_3998_20211025183847          OK
+GERENCIADOR_MENU.TEMP_3998_20211025185542          OK
+GERENCIADOR_MENU.TEMP_4339_20210624112040          OK
+GERENCIADOR_MENU.TEMP_4556_20210218180343          OK
+GERENCIADOR_MENU.TEMP_4556_20210218180353          OK
+GERENCIADOR_MENU.TEMP_4556_20210218180543          OK
+GERENCIADOR_MENU.TEMP_4556_20210218180551          OK
+GERENCIADOR_MENU.TEMP_4556_20210218180554          OK
+GERENCIADOR_MENU.TEMP_4556_20210218180555          OK
+GERENCIADOR_MENU.TEMP_4556_20210218180912          OK
+GERENCIADOR_MENU.TEMP_4556_20210218183150          OK
+GERENCIADOR_MENU.TEMP_4618_20210526090135          OK
+GERENCIADOR_MENU.TEMP_4618_20210526090301          OK
+GERENCIADOR_MENU.TEMP_4618_20210526090426          OK
+GERENCIADOR_MENU.TEMP_4618_20210526090729          OK
+GERENCIADOR_MENU.TEMP_4618_20210526090838          OK
+GERENCIADOR_MENU.TEMP_4618_20210602084116          OK
+GERENCIADOR_MENU.TEMP_4618_20210602084443          OK
+GERENCIADOR_MENU.TEMP_4618_20210602084852          OK
+GERENCIADOR_MENU.TEMP_4618_20210602085120          OK
+GERENCIADOR_MENU.TEMP_4618_20210602173648          OK
+GERENCIADOR_MENU.TEMP_4618_20210602173741          OK
+GERENCIADOR_MENU.TEMP_4618_20210602180103          OK
+GERENCIADOR_MENU.TEMP_4631_20220214135553          OK
+GERENCIADOR_MENU.TEMP_4631_20220214135616          OK
+GERENCIADOR_MENU.TEMP_4631_20220214145448          OK
+GERENCIADOR_MENU.TEMP_4631_20220215121313          OK
+GERENCIADOR_MENU.TEMP_4631_20220221113820          OK
+GERENCIADOR_MENU.TIPO_COLUNA                       OK
+GERENCIADOR_MENU.TIPO_REPOSITORIO_BASE             OK
+GERENCIADOR_MENU.TP_DESTINO_EXTRACAO               OK
+INVENTARIO_REDE.ATUALIZACAO_INVENTARIO             OK
+INVENTARIO_REDE.CABO                               OK
+INVENTARIO_REDE.CANAIS                             OK
+INVENTARIO_REDE.CARGA_MANUAL                       OK
+INVENTARIO_REDE.CARGA_SEGMENTACAO                  OK
+INVENTARIO_REDE.CODIFICACAO                        OK
+INVENTARIO_REDE.CONCESSIONARIA_ENERGIA             OK
+INVENTARIO_REDE.DATA_BASE                          OK
+INVENTARIO_REDE.EQUIPAMENTOS_ESPECIFICACOES        OK
+INVENTARIO_REDE.FABRICANTE_AMP_RE                  OK
+INVENTARIO_REDE.FABRICANTE_AMP_RI                  OK
+INVENTARIO_REDE.FABRICANTE_NODE                    OK
+INVENTARIO_REDE.FREQUENCIA_REDE                    OK
+INVENTARIO_REDE.GEODADOS                           OK
+INVENTARIO_REDE.HEADEND                            OK
+INVENTARIO_REDE.HEADEND_CIDADE                     OK
+INVENTARIO_REDE.HUB                                OK
+INVENTARIO_REDE.HUB_CIDADE                         OK
+INVENTARIO_REDE.IDENTIFICACAO_NODE                 OK
+INVENTARIO_REDE.INFORMACAO_REDE                    OK
+INVENTARIO_REDE.INFO_CONSOLIDADAS                  OK
+INVENTARIO_REDE.INFO_CONSOLIDADAS_FECHAMENTO_MES   OK
+INVENTARIO_REDE.INFO_ESTACAO                       OK
+INVENTARIO_REDE.INFO_ESTACAO_FECHAMENTO_MES        OK
+INVENTARIO_REDE.INVENTARIO_REDE_FECHAMENTO_MES     OK
+INVENTARIO_REDE.INVENTARIO_REDE_VIEW_MES           OK
+INVENTARIO_REDE.LOCAL_USUARIO                      OK
+INVENTARIO_REDE.MODELO_NODE                        OK
+INVENTARIO_REDE.NODE                               OK
+INVENTARIO_REDE.PRIMEIRA_CARGA2                    OK
+INVENTARIO_REDE.SEGMENTACAO                        OK
+INVENTARIO_REDE.TIPO_ALTERACAO                     OK
+INVENTARIO_REDE.TIPO_REDE                          OK
+IN_PORTAL_INFRA.ATUALIZACAO_INVENTARIO             OK
+IN_PORTAL_INFRA.AUX_CORRECAO_KM_CONSTRUIDO_LSC     OK
+IN_PORTAL_INFRA.AUX_IN_CHECKLIST_AMPLIFICADORES    OK
+IN_PORTAL_INFRA.AUX_IN_CHECKLIST_NODE              OK
+IN_PORTAL_INFRA.BAIRRO                             OK
+IN_PORTAL_INFRA.BKP_IN_CONCESSIONARIAS_EMPRESARIAL OK
+IN_PORTAL_INFRA.BKP_IN_INFO_POSTES_CIDADE          OK
+IN_PORTAL_INFRA.BKP_IN_INFO_POSTES_CONCESSIONARIAS_RESIDENCIAL OK
+IN_PORTAL_INFRA.BKP_IN_PROTOCOLOS                  OK
+IN_PORTAL_INFRA.BKP_IN_PROTOCOLOS_HISTORICO        OK
+IN_PORTAL_INFRA.CABO                               OK
+IN_PORTAL_INFRA.CANAIS                             OK
+IN_PORTAL_INFRA.CARGA_MANUAL                       OK
+IN_PORTAL_INFRA.CARGA_SEGMENTACAO                  OK
+IN_PORTAL_INFRA.CIDADE                             OK
+IN_PORTAL_INFRA.CODIFICACAO                        OK
+IN_PORTAL_INFRA.DATA_BASE                          OK
+IN_PORTAL_INFRA.DE_PARA_FALHA                      OK
+IN_PORTAL_INFRA.DE_PARA_FINAL_GERAL                OK
+IN_PORTAL_INFRA.DE_PARA_NODE_X                     OK
+IN_PORTAL_INFRA.ELI_TABELA_MIGRADOS                OK
+IN_PORTAL_INFRA.EQUIPAMENTOS_ESPECIFICACOES        OK
+IN_PORTAL_INFRA.FABRICANTE_AMP_RE                  OK
+IN_PORTAL_INFRA.FABRICANTE_AMP_RI                  OK
+IN_PORTAL_INFRA.FREQUENCIA_REDE                    OK
+IN_PORTAL_INFRA.GEODADOS                           OK
+IN_PORTAL_INFRA.HEADEND                            OK
+IN_PORTAL_INFRA.HEADEND_CIDADE                     OK
+IN_PORTAL_INFRA.HUB                                OK
+IN_PORTAL_INFRA.HUB_CIDADE                         OK
+IN_PORTAL_INFRA.IDENTIFICACAO_NODE                 OK
+IN_PORTAL_INFRA.INFORMACAO_REDE                    OK
+IN_PORTAL_INFRA.INFO_CONSOLIDADAS                  OK
+IN_PORTAL_INFRA.INFO_CONSOLIDADAS_FECHAMENTO_MES   OK
+IN_PORTAL_INFRA.INFO_ESTACAO                       OK
+IN_PORTAL_INFRA.INFO_ESTACAO_FECHAMENTO_MES        OK
+IN_PORTAL_INFRA.INVENTARIO_REDE_FECHAMENTO_MES     OK
+IN_PORTAL_INFRA.IN_AMPLIFICADORES
+Warning  :
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_AMPLIFICADORES_LOG              OK
+IN_PORTAL_INFRA.IN_AMPLIFICADORES_OLD_20210430     OK
+IN_PORTAL_INFRA.IN_AMPLIFICADORES_OLD_20210504     OK
+IN_PORTAL_INFRA.IN_AMPLIFICADORES_OLD_20210510     OK
+IN_PORTAL_INFRA.IN_BACKBONES                       OK
+IN_PORTAL_INFRA.IN_BACKBONES_AEREO                 OK
+IN_PORTAL_INFRA.IN_BACKBONES_SUBMARINO             OK
+IN_PORTAL_INFRA.IN_BACKBONES_SUBTERRANEO           OK
+IN_PORTAL_INFRA.IN_BACKBONE_CLASSIFICACAO          OK
+IN_PORTAL_INFRA.IN_BACKBONE_CONCESSIONARIA_AEREO   OK
+IN_PORTAL_INFRA.IN_BACKBONE_CONCESSIONARIA_SUBMARINO OK
+IN_PORTAL_INFRA.IN_BACKBONE_CONCESSIONARIA_SUBTERRANEO OK
+IN_PORTAL_INFRA.IN_BACKBONE_STATUS                 OK
+IN_PORTAL_INFRA.IN_BACKBONE_TRECHOS                OK
+IN_PORTAL_INFRA.IN_CABO                            OK
+IN_PORTAL_INFRA.IN_CABOS_EMPRESARIAL               OK
+IN_PORTAL_INFRA.IN_CANAL_AMPLIFICADORES            OK
+IN_PORTAL_INFRA.IN_CHECKLIST_ATIVOS
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_CHECKLIST_ATIVOS_DE_PARA        OK
+IN_PORTAL_INFRA.IN_CHECKLIST_ATIVOS_OLD_20210430   OK
+IN_PORTAL_INFRA.IN_CHECKLIST_ATIVOS_OLD_20210504   OK
+IN_PORTAL_INFRA.IN_CHECKLIST_ATIVOS_OLD_20210510   OK
+IN_PORTAL_INFRA.IN_CHECKLIST_FONTES
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_CHECKLIST_FONTES_NULL           OK
+IN_PORTAL_INFRA.IN_CHECKLIST_FONTES_OLD_20210430   OK
+IN_PORTAL_INFRA.IN_CHECKLIST_FONTES_OLD_20210504   OK
+IN_PORTAL_INFRA.IN_CHECKLIST_INSPECAO_VISUAL_DETALHE OK
+IN_PORTAL_INFRA.IN_CHECKLIST_INSPECAO_VISUAL_INFO_GERAL
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_CHECKLIST_LEAKAGE_DETALHE       OK
+IN_PORTAL_INFRA.IN_CHECKLIST_LEAKAGE_INFO_GERAL
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_CHECKLIST_LIMPEZA_RUIDO_DETALHE OK
+IN_PORTAL_INFRA.IN_CHECKLIST_LIMPEZA_RUIDO_INFO_GERAL OK
+IN_PORTAL_INFRA.IN_CHECKLIST_NODE
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_CHECKLIST_NODE_OLD_20210430     OK
+IN_PORTAL_INFRA.IN_CHECKLIST_NODE_OLD_20210504     OK
+IN_PORTAL_INFRA.IN_CHECKLIST_SEGMENTO              OK
+IN_PORTAL_INFRA.IN_CHECKLIST_SETOR                 OK
+IN_PORTAL_INFRA.IN_CIDADE_NODE_FISICO              OK
+IN_PORTAL_INFRA.IN_CIDADE_TOTAL_HP                 OK
+IN_PORTAL_INFRA.IN_CODIGO_FALHA                    OK
+IN_PORTAL_INFRA.IN_CODIGO_FALHA_OLD                OK
+IN_PORTAL_INFRA.IN_CODIGO_TRATATIVA                OK
+IN_PORTAL_INFRA.IN_CONCESSIONARIAS_EMPRESARIAL     OK
+IN_PORTAL_INFRA.IN_CONCESSIONARIA_DUTOS            OK
+IN_PORTAL_INFRA.IN_CONCESSIONARIA_ENERGIA          OK
+IN_PORTAL_INFRA.IN_DUTADO_ENTERRADO                OK
+IN_PORTAL_INFRA.IN_EMPRESARIAL_CONFIGURACOES       OK
+IN_PORTAL_INFRA.IN_ESTACAO                         OK
+IN_PORTAL_INFRA.IN_ESTACAO_CIDADE
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_ESTACAO_CIDADE_LOG              OK
+IN_PORTAL_INFRA.IN_ESTACOES_EMPRESARIAL            OK
+IN_PORTAL_INFRA.IN_ESTACOES_EMPRESARIAL_tmp        OK
+IN_PORTAL_INFRA.IN_FABRICANTE_AMPLIFICADORES       OK
+IN_PORTAL_INFRA.IN_FABRICANTE_FONTES               OK
+IN_PORTAL_INFRA.IN_FABRICANTE_GABINETES            OK
+IN_PORTAL_INFRA.IN_FABRICANTE_HUB_VIRTUAL          OK
+IN_PORTAL_INFRA.IN_FABRICANTE_NODE                 OK
+IN_PORTAL_INFRA.IN_FABRICANTE_TRAVAS               OK
+IN_PORTAL_INFRA.IN_FONTES
+Warning  :
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_FONTES_LOG                      OK
+IN_PORTAL_INFRA.IN_FONTES_NODE
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_FONTES_NODE_LOG                 OK
+IN_PORTAL_INFRA.IN_FONTES_OLD_20210430             OK
+IN_PORTAL_INFRA.IN_FONTES_OLD_20210504             OK
+IN_PORTAL_INFRA.IN_FREQUENCIA_DIRETO               OK
+IN_PORTAL_INFRA.IN_FREQUENCIA_REDE                 OK
+IN_PORTAL_INFRA.IN_FREQUENCIA_RETORNO              OK
+IN_PORTAL_INFRA.IN_FREQUENCIA_UPSTREAM             OK
+IN_PORTAL_INFRA.IN_HE_AR_CONDICIONADO              OK
+IN_PORTAL_INFRA.IN_HE_BATERIA_GERADOR              OK
+IN_PORTAL_INFRA.IN_HE_BATERIA_RETIFICADOR          OK
+IN_PORTAL_INFRA.IN_HE_BATERIA_UPS                  OK
+IN_PORTAL_INFRA.IN_HE_CARGO                        OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_RETIFICADOR
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_RETIFICADOR_DESCARGA
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_RETIFICADOR_DESCARGA_LOG OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_RETIFICADOR_EQUALIZACAO
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_RETIFICADOR_EQUALIZACAO_LOG OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_RETIFICADOR_LOG OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_UPS
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_UPS_DESCARGA
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_UPS_DESCARGA_LOG OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_UPS_EQUALIZACAO
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_UPS_EQUALIZACAO_LOG OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_BATERIA_UPS_LOG    OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_CONCESSIONARIA
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_CONCESSIONARIA_LOG OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_GMG
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_GMG_BATERIAS
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_GMG_BATERIAS_LOG   OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_GMG_LOG            OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_QUADRO_DISTRIBUICAO
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_QUADRO_DISTRIBUICAO_LOG OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_RETIFICADOR
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_RETIFICADOR_LOG    OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_UPS
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_CHECKLIST_UPS_LOG            OK
+IN_PORTAL_INFRA.IN_HE_CRONOGRAMA_PLANEJAMENTO      OK
+IN_PORTAL_INFRA.IN_HE_CRONOGRAMA_PLANEJAMENTO_TIPO_MANUTENCAO OK
+IN_PORTAL_INFRA.IN_HE_ENTRADA_ENERGIA              OK
+IN_PORTAL_INFRA.IN_HE_EQUIPAMENTO_AVARIADO         OK
+IN_PORTAL_INFRA.IN_HE_ESTACAO_CONTATO              OK
+IN_PORTAL_INFRA.IN_HE_ESTACAO_CONTATO_REL          OK
+IN_PORTAL_INFRA.IN_HE_ESTACAO_CRONOGRAMA           OK
+IN_PORTAL_INFRA.IN_HE_ESTACAO_CRONOGRAMA_TIPO      OK
+IN_PORTAL_INFRA.IN_HE_ESTACAO_INDISPONIBILIDADE_SINAL OK
+IN_PORTAL_INFRA.IN_HE_FATOR_COMPARACAO             OK
+IN_PORTAL_INFRA.IN_HE_FONTE_ALIMENTACAO            OK
+IN_PORTAL_INFRA.IN_HE_FORECAST_EQUIPAMENTO         OK
+IN_PORTAL_INFRA.IN_HE_FORECAST_INFRAESTRUTURA      OK
+IN_PORTAL_INFRA.IN_HE_GRUPO_GERADOR                OK
+IN_PORTAL_INFRA.IN_HE_ISOLACAO_EPR                 OK
+IN_PORTAL_INFRA.IN_HE_ISOLACAO_PVC                 OK
+IN_PORTAL_INFRA.IN_HE_MANUTENCAO_TERCEIRO          OK
+IN_PORTAL_INFRA.IN_HE_MARCA                        OK
+IN_PORTAL_INFRA.IN_HE_MARCA_EQUIPAMENTO            OK
+IN_PORTAL_INFRA.IN_HE_MODELO                       OK
+IN_PORTAL_INFRA.IN_HE_MODELOS_EMAIL                OK
+IN_PORTAL_INFRA.IN_HE_PARAM_BATERIA                OK
+IN_PORTAL_INFRA.IN_HE_PARAM_CHECKLIST              OK
+IN_PORTAL_INFRA.IN_HE_PERIODICIDADES               OK
+IN_PORTAL_INFRA.IN_HE_PERIODICIDADE_EQUIPAMENTO    OK
+IN_PORTAL_INFRA.IN_HE_POTENCIA                     OK
+IN_PORTAL_INFRA.IN_HE_QUADRO_DISTRIBUICAO          OK
+IN_PORTAL_INFRA.IN_HE_RETIFICADOR                  OK
+IN_PORTAL_INFRA.IN_HE_RST_CHECKLIST_QUADRO_DISTRIBUICAO
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_HE_RST_CHECKLIST_QUADRO_DISTRIBUICAO_LOG OK
+IN_PORTAL_INFRA.IN_HE_SDAI                         OK
+IN_PORTAL_INFRA.IN_HE_STATUS_EQUIPAMENTO           OK
+IN_PORTAL_INFRA.IN_HE_TENSAO_EQUIPAMENTO           OK
+IN_PORTAL_INFRA.IN_HE_TIPO_AR_CONDICIONADO         OK
+IN_PORTAL_INFRA.IN_HE_TIPO_BATERIA_GERADOR         OK
+IN_PORTAL_INFRA.IN_HE_TIPO_BATERIA_RETIFICADOR     OK
+IN_PORTAL_INFRA.IN_HE_TIPO_BATERIA_UPS             OK
+IN_PORTAL_INFRA.IN_HE_TIPO_CHECKLIST               OK
+IN_PORTAL_INFRA.IN_HE_TIPO_EQUIPAMENTO             OK
+IN_PORTAL_INFRA.IN_HE_TIPO_EQUIPAMENTO_MODEL       OK
+IN_PORTAL_INFRA.IN_HE_TIPO_FORECAST_INFRAESTRUTURA OK
+IN_PORTAL_INFRA.IN_HE_TIPO_GERADOR                 OK
+IN_PORTAL_INFRA.IN_HE_TIPO_MANUTENCAO              OK
+IN_PORTAL_INFRA.IN_HE_TIPO_POTENCIA                OK
+IN_PORTAL_INFRA.IN_HE_TIPO_UPS                     OK
+IN_PORTAL_INFRA.IN_HE_UPS                          OK
+IN_PORTAL_INFRA.IN_HUB_VIRTUAL                     OK
+IN_PORTAL_INFRA.IN_INFO_CONSOLIDADAS
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_INFO_CONSOLIDADAS_INFRA_HE      OK
+IN_PORTAL_INFRA.IN_INFO_CONSOLIDADAS_LOG           OK
+IN_PORTAL_INFRA.IN_INFO_POSTES_CIDADE              OK
+IN_PORTAL_INFRA.IN_INFO_POSTES_CONCESSIONARIAS_EMPRESARIAL OK
+IN_PORTAL_INFRA.IN_INFO_POSTES_CONCESSIONARIAS_RESIDENCIAL OK
+IN_PORTAL_INFRA.IN_INFRA_HE
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_INFRA_HE_LOG                    OK
+IN_PORTAL_INFRA.IN_INVENTARIO_PLATAFORMA           OK
+IN_PORTAL_INFRA.IN_INVENTARIO_PLATAFORMA_OLD       OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE                 OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_BKP_20210902    OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_BKP_20210907    OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_BKP_20220929    OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_DE_PARA         OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_LOG_OLD         OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_NEW             OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_NEW2            OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_OLD_20210430    OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_OLD_20210510    OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_TEMP            OK
+IN_PORTAL_INFRA.IN_INVENTARIO_REDE_XLS             OK
+IN_PORTAL_INFRA.IN_LOCAL_USUARIO                   OK
+IN_PORTAL_INFRA.IN_MODELO_AMPLIFICADORES           OK
+IN_PORTAL_INFRA.IN_MODELO_FONTES                   OK
+IN_PORTAL_INFRA.IN_MODELO_GABINETES                OK
+IN_PORTAL_INFRA.IN_MODELO_HUB_VIRTUAL              OK
+IN_PORTAL_INFRA.IN_MODELO_NODE                     OK
+IN_PORTAL_INFRA.IN_MODELO_TRAVAS                   OK
+IN_PORTAL_INFRA.IN_MODULOS_INFRA                   OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20210902      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20210907      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20210909      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20210914      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220110      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220112      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220114      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220118      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220121      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220419      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220422      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220509      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220620      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220627      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_20220725      OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_BKP_NEW           OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_LOG               OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_NEW2              OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_NEW3              OK
+IN_PORTAL_INFRA.IN_NODE_EXCLUIDO_OLD_20220314      OK
+IN_PORTAL_INFRA.IN_NODE_INATIVO
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+IN_PORTAL_INFRA.IN_NODE_INATIVO_LOG                OK
+IN_PORTAL_INFRA.IN_PARAMETROS                      OK
+IN_PORTAL_INFRA.IN_PERFIL_ACESSO                   OK
+IN_PORTAL_INFRA.IN_PERFIL_MODULO                   OK
+IN_PORTAL_INFRA.IN_PERFIL_USUARAIO                 OK
+IN_PORTAL_INFRA.IN_PLANEJAMENTO                    OK
+IN_PORTAL_INFRA.IN_PLANEJAMENTO_OPERADORA          OK
+IN_PORTAL_INFRA.IN_PLANEJAMENTO_OPERADORA_DETALHE  OK
+IN_PORTAL_INFRA.IN_PLANEJAMENTO_PARAM              OK
+IN_PORTAL_INFRA.IN_PROTOCOLOS                      OK
+IN_PORTAL_INFRA.IN_PROTOCOLOS_HISTORICO            OK
+IN_PORTAL_INFRA.IN_PROTOCOLO_PROJETOS              OK
+IN_PORTAL_INFRA.IN_PROTOCOLO_TIPOS                 OK
+IN_PORTAL_INFRA.IN_PROTOCOLO_UNIDADES              OK
+IN_PORTAL_INFRA.IN_REDE                            OK
+IN_PORTAL_INFRA.IN_REDES_METRO                     OK
+IN_PORTAL_INFRA.IN_REDES_METRO_AEREO               OK
+IN_PORTAL_INFRA.IN_REDES_METRO_SUBTERRANEO         OK
+IN_PORTAL_INFRA.IN_SEGUIMENTO                      OK
+IN_PORTAL_INFRA.IN_SETOR_CHECKLIST                 OK
+IN_PORTAL_INFRA.IN_SOFTWARE_DESENHO                OK
+IN_PORTAL_INFRA.IN_STATUS_CHECKLIST                OK
+IN_PORTAL_INFRA.IN_STATUS_CHECKLIST_TIPO           OK
+IN_PORTAL_INFRA.IN_TENSOES_NOMINAIS_PARAM          OK
+IN_PORTAL_INFRA.IN_TIPOS_CABO_EMPRESARIAL          OK
+IN_PORTAL_INFRA.IN_TIPOS_CONCESSIONARIA_EMPRESARIAL OK
+IN_PORTAL_INFRA.IN_TIPOS_ESTACAO_EMPRESARIAL       OK
+IN_PORTAL_INFRA.IN_TIPOS_INSTALACAO_AEREO          OK
+IN_PORTAL_INFRA.IN_TIPO_ALTERACAO                  OK
+IN_PORTAL_INFRA.IN_VALORES_FREQUENCIA              OK
+IN_PORTAL_INFRA.LOCAL_USUARIO                      OK
+IN_PORTAL_INFRA.LOGRADOURO                         OK
+IN_PORTAL_INFRA.LOGRADOURO_OLD_20210430            OK
+IN_PORTAL_INFRA.LOGRADOURO_OLD_20210504            OK
+IN_PORTAL_INFRA.NODES_CABEADO                      OK
+IN_PORTAL_INFRA.NODES_HOME_PASS                    OK
+IN_PORTAL_INFRA.NODE_NEW                           OK
+IN_PORTAL_INFRA.SEGMENTACAO                        OK
+IN_PORTAL_INFRA.TIPO_ALTERACAO                     OK
+IN_PORTAL_INFRA.TIPO_REDE                          OK
+IN_PORTAL_INFRA.TMP                                OK
+IN_PORTAL_INFRA.UPDATE_LOGRADOURO                  OK
+LINEUP.ALTERACAO_DISPLAY                           OK
+LINEUP.ALTERACAO_LINEUP                            OK
+LINEUP.ASSOCIACAO_CANAL                            OK
+LINEUP.ASSOCIACAO_CANAL_CIDADE_OBRIGATORIO         OK
+LINEUP.ASSOCIACAO_CANAL_CIDADE_OBRIGATORIO_HISTORICO OK
+LINEUP.ASSOCIACAO_CANAL_GENERO_CIDADE              OK
+LINEUP.ASSOCIACAO_CANAL_GENERO_CIDADE_HISTORICO    OK
+LINEUP.ASSOCIACAO_CANAL_HISTORICO
+error    :
+LINEUP.CANAL                                       OK
+LINEUP.CANAL_HITORICO                              OK
+LINEUP.CARGA_LINEUP_BLUETV_ANALOGICO               OK
+LINEUP.CARGA_LINEUP_BLUETV_DIGITAL                 OK
+LINEUP.CARGA_LINEUP_BLUETV_DIGITAL_LCS             OK
+LINEUP.CIDADE_LINEUP                               OK
+LINEUP.CIDADE_LINEUP_BKP_20210901                  OK
+LINEUP.CIDADE_LINEUP_BKP_20220117                  OK
+LINEUP.CLASSIFICACAO                               OK
+LINEUP.CONSOLIDADO_PORTFOLIO                       OK
+LINEUP.DATA_ULTIMA_ATUALIZACAO_HISTORICO           OK
+LINEUP.DEPARA_PROGRAMADORA                         OK
+LINEUP.DISPLAY                                     OK
+LINEUP.DISPLAY_HISTORICO                           OK
+LINEUP.EMPRESA_LINEUP                              OK
+LINEUP.EXT_LINEUP_PORTAL_IN                        OK
+LINEUP.GENERO                                      OK
+LINEUP.GENERO_TEMP                                 OK
+LINEUP.LEGADO                                      OK
+LINEUP.PORTFOLIO                                   OK
+LINEUP.SELECAO                                     OK
+LINEUP.SELECAO_HISTORICO                           OK
+LINEUP.TECNOLOGIA                                  OK
+LINEUP.TESTE                                       OK
+LINEUP.TIPO_ALTERACAO                              OK
+LINEUP.TIPO_CAMPO                                  OK
+LINEUP.TIPO_SELECAO                                OK
+MATRIZ.APROVACAO_SOLICITANTE                       OK
+MATRIZ.AREAS                                       OK
+MATRIZ.AREAS_CHECKLIST                             OK
+MATRIZ.BACKUP_PROCESSOS_NET                        OK
+MATRIZ.CENTRO_CUSTO                                OK
+MATRIZ.CHECKLIST_PRINCIPAL                         OK
+MATRIZ.CLASSIFICACAO                               OK
+MATRIZ.DE_PARA_CENTRALIZADO                        OK
+MATRIZ.DE_PARA_CONSULTORES                         OK
+MATRIZ.DE_PARA_USUARIOS_CIDADE_CLUSTER             OK
+MATRIZ.E2E                                         OK
+MATRIZ.E2_CAPITAO                                  OK
+MATRIZ.GERADOR_ID                                  OK
+MATRIZ.INTEGR_CHECKLIST_TODO                       OK
+MATRIZ.LIXO_TABELA_TODO_LIXO
+error    :
+MATRIZ.LIXO_TESTE
+error    :
+MATRIZ.MATRIZ_PRINCIPAL                            OK
+MATRIZ.NOME_NUMERO_PGP                             OK
+MATRIZ.NOTA_PROCESSO                               OK
+MATRIZ.PRIORIDADE                                  OK
+MATRIZ.PROCESSOS_NET                               OK
+MATRIZ.PROCESSOS_NET_BKP                           OK
+MATRIZ.STATUS                                      OK
+MATRIZ.SUB_AREA                                    OK
+METAMODELO.AGENTES                                 OK
+METAMODELO.AGENTES_HISTORICO                       OK
+METAMODELO.ANALISE                                 OK
+METAMODELO.ANALISE_HISTORICO                       OK
+METAMODELO.ASSOCIACAO_ANALISE_DIMENSAO             OK
+METAMODELO.ASSOCIACAO_ANALISE_DIMENSAO_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_ANALISE_INDICADOR            OK
+METAMODELO.ASSOCIACAO_ANALISE_INDICADOR_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_DASHBOARD_ANALISE            OK
+METAMODELO.ASSOCIACAO_DASHBOARD_ANALISE_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_DASHBOARD_REPOSITORIO        OK
+METAMODELO.ASSOCIACAO_DASHBOARD_REPOSITORIO_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_DIMENSAO_TABELA              OK
+METAMODELO.ASSOCIACAO_FLAG_INDICADOR               OK
+METAMODELO.ASSOCIACAO_INDICADOR_TABELA             OK
+METAMODELO.ASSOCIACAO_ORIGEM_DASHBOARD             OK
+METAMODELO.ASSOCIACAO_ORIGEM_DASHBOARD_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_DASHBOARD_TEMP
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_DIMENSAO              OK
+METAMODELO.ASSOCIACAO_ORIGEM_DIMENSAO_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_DIMENSAO_TEMP
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_INDICADOR             OK
+METAMODELO.ASSOCIACAO_ORIGEM_INDICADOR_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_INDICADOR_TEMP
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_INFO_GERENCIAL        OK
+METAMODELO.ASSOCIACAO_ORIGEM_INFO_GERENCIAL_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_INFO_GERENCIAL_TEMP
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_ORIGEM                OK
+METAMODELO.ASSOCIACAO_ORIGEM_ORIGEM_HISTORICO
+error    :
+METAMODELO.ASSOCIACAO_ORIGEM_ORIGEM_TEMP
+error    :
+METAMODELO.AUX_ANALISE                             OK
+METAMODELO.BANCOS                                  OK
+METAMODELO.BANCOS_ESQUEMAS                         OK
+METAMODELO.BANCOS_ESQUEMAS_HISTORICO               OK
+METAMODELO.BANCOS_HISTORICO                        OK
+METAMODELO.BANCO_DADOS                             OK
+METAMODELO.CARDAPIO_RELATORIO_OLD                  OK
+METAMODELO.DASHBOARD                               OK
+METAMODELO.DASHBOARD_HISTORICO                     OK
+METAMODELO.DIMENSAO                                OK
+METAMODELO.DIMENSAO_CATEGORIA                      OK
+METAMODELO.DIMENSAO_HISTORICO                      OK
+METAMODELO.EMPRESA                                 OK
+METAMODELO.ESQUEMAS                                OK
+METAMODELO.ESQUEMAS_HISTORICO                      OK
+METAMODELO.EXTRACAO                                OK
+METAMODELO.EXTRACAO_HISTORICO                      OK
+METAMODELO.FERRAMENTA_BI                           OK
+METAMODELO.FLAG_INDICADOR                          OK
+METAMODELO.FLAG_INDICADOR_HISTORICO                OK
+METAMODELO.FLAG_S_N                                OK
+METAMODELO.FORNECEDORES                            OK
+METAMODELO.FORNECEDORES_HISTORICO                  OK
+METAMODELO.FREQUENCIA_ATUALIZACAO                  OK
+METAMODELO.GERADOR_DDL_COLUNAS                     OK
+METAMODELO.GERADOR_DDL_CONSTRAINT                  OK
+METAMODELO.GERADOR_DDL_CONSTRAINT_FK               OK
+METAMODELO.GERADOR_DDL_OWNERS_SISTEMA              OK
+METAMODELO.GERADOR_DDL_PALAVRAS                    OK
+METAMODELO.GERADOR_DDL_PARTICIONAMENTO             OK
+METAMODELO.GERADOR_DDL_SCRIPT                      OK
+METAMODELO.GERADOR_DDL_STATUS                      OK
+METAMODELO.GERADOR_DDL_TABELAS                     OK
+METAMODELO.GERENCIAR_RECURSO                       OK
+METAMODELO.INDICADOR                               OK
+METAMODELO.INDICADOR_HISTORICO                     OK
+METAMODELO.INFO_GERENCIAL                          OK
+METAMODELO.INFO_GERENCIAL_HISTORICO
+error    :
+METAMODELO.JOBS                                    OK
+METAMODELO.JOBS_HISTORICO                          OK
+METAMODELO.LIXO_APAGAR_ASSOCIACAO_ORIGEM_DIMENSAO
+error    :
+METAMODELO.MENU                                    OK
+METAMODELO.MENU_HISTORICO_OLD                      OK
+METAMODELO.OBJETOS                                 OK
+METAMODELO.ORIGEM                                  OK
+METAMODELO.ORIGEM_HISTORICO
+error    :
+METAMODELO.ORIGEM_INDICADOR                        OK
+METAMODELO.ORIGEM_NOME                             OK
+METAMODELO.ORIGEM_NOME_HISTORICO
+error    :
+METAMODELO.OWNER_BANCO_DADOS                       OK
+METAMODELO.PROCESSO                                OK
+METAMODELO.RECURSO                                 OK
+METAMODELO.RELATORIO_METAMODELO                    OK
+METAMODELO.SCRIPT_SQL                              OK
+METAMODELO.SCRIPT_SQL_HISTORICO                    OK
+METAMODELO.STATUS                                  OK
+METAMODELO.TABELA                                  OK
+METAMODELO.TABELA_HISTORICO                        OK
+METAMODELO.TIPOS                                   OK
+METAMODELO.TIPOS_HISTORICO                         OK
+METAMODELO.TIPO_BANCO                              OK
+METAMODELO.TIPO_CAMPO                              OK
+METAMODELO.UNIDADE_MEDIDA                          OK
+METAMODELO.USER_ADMIN                              OK
+NETBICC.ACESSO                                     OK
+NETBICC.ANALISE                                    OK
+NETBICC.ATIVIDADE
+error    :
+NETBICC.ATUALIZACAO                                OK
+NETBICC.AVISOS_OBIEE                               OK
+NETBICC.AVISOS_OBIEE_HISTORICO                     OK
+NETBICC.BASELINE
+error    :
+NETBICC.DASHBOARD                                  OK
+NETBICC.DATAMAPPING                                OK
+NETBICC.DISPONIBILIDADE                            OK
+NETBICC.ETAPA                                      OK
+NETBICC.FORNECEDOR                                 OK
+NETBICC.FORNECEDOR_CONTATO                         OK
+NETBICC.GRUPO                                      OK
+NETBICC.INCIDENTES                                 OK
+NETBICC.INDICADOR                                  OK
+NETBICC.INDICADOR_HIST                             OK
+NETBICC.LICOESAPRENDIDAS                           OK
+NETBICC.LINKS                                      OK
+NETBICC.MANUTENCAO                                 OK
+NETBICC.MEDIDA                                     OK
+NETBICC.MENU                                       OK
+NETBICC.MUDANCA                                    OK
+NETBICC.PERFIL                                     OK
+NETBICC.PERMISSAO                                  OK
+NETBICC.PROCESSO                                   OK
+NETBICC.PROJETO
+error    :
+NETBICC.RECURSO                                    OK
+NETBICC.RECURSO_HIST                               OK
+NETBICC.RECURSO_TESTE
+error    :
+NETBICC.REGRA                                      OK
+NETBICC.STATUS                                     OK
+NETBICC.TIPO                                       OK
+NETBICC.USUARIO_na_view                            OK
+NETBICC.VISAO                                      OK
+NETBICC.VISAO_HIST                                 OK
+NETBICC.WORKPACKAGE                                OK
+PERMISSAO_ACESSO.APROVADORES_SOLICITACAO           OK
+PERMISSAO_ACESSO.ASSOCIACAO_GRUPO_APROVADOR        OK
+PERMISSAO_ACESSO.ASSOCIACAO_SOLICITACAO_RELATORIO  OK
+PERMISSAO_ACESSO.ASSOCIACAO_TP_SOLICITACAO_GRUPO_APROV OK
+PERMISSAO_ACESSO.GRUPO_APROVADOR                   OK
+PERMISSAO_ACESSO.SOLICITACAO                       OK
+PERMISSAO_ACESSO.STATUS_SOLICITACAO                OK
+PERMISSAO_ACESSO.TIPO_SOLICITACAO                  OK
+PIWIK.piwik_access                                 OK
+PIWIK.piwik_archive_blob_2011_01
+error    :
+PIWIK.piwik_archive_blob_2011_07
+error    :
+PIWIK.piwik_archive_blob_2011_08
+error    :
+PIWIK.piwik_archive_blob_2011_09
+error    :
+PIWIK.piwik_archive_blob_2011_10
+error    :
+PIWIK.piwik_archive_blob_2011_11
+error    :
+PIWIK.piwik_archive_blob_2011_12
+error    :
+PIWIK.piwik_archive_blob_2012_01
+error    :
+PIWIK.piwik_archive_blob_2012_02
+error    :
+PIWIK.piwik_archive_blob_2012_03
+error    :
+PIWIK.piwik_archive_blob_2012_04
+error    :
+PIWIK.piwik_archive_blob_2012_05
+error    :
+PIWIK.piwik_archive_blob_2012_06
+error    :
+PIWIK.piwik_archive_blob_2012_07
+error    :
+PIWIK.piwik_archive_blob_2012_08
+error    :
+PIWIK.piwik_archive_blob_2012_09
+error    :
+PIWIK.piwik_archive_blob_2012_10
+error    :
+PIWIK.piwik_archive_blob_2012_11
+error    :
+PIWIK.piwik_archive_blob_2012_12
+error    :
+PIWIK.piwik_archive_blob_2013_01
+error    :
+PIWIK.piwik_archive_blob_2013_02
+error    :
+PIWIK.piwik_archive_blob_2013_03
+error    :
+PIWIK.piwik_archive_blob_2013_04
+error    :
+PIWIK.piwik_archive_blob_2013_05
+error    :
+PIWIK.piwik_archive_blob_2013_06
+error    :
+PIWIK.piwik_archive_blob_2013_07
+error    :
+PIWIK.piwik_archive_blob_2013_08
+error    :
+PIWIK.piwik_archive_blob_2013_09
+error    :
+PIWIK.piwik_archive_blob_2013_10
+error    :
+PIWIK.piwik_archive_blob_2013_11
+error    :
+PIWIK.piwik_archive_blob_2013_12
+error    :
+PIWIK.piwik_archive_blob_2014_01
+error    :
+PIWIK.piwik_archive_blob_2014_02
+error    :
+PIWIK.piwik_archive_blob_2014_03
+error    :
+PIWIK.piwik_archive_blob_2014_04
+error    :
+PIWIK.piwik_archive_blob_2014_05
+error    :
+PIWIK.piwik_archive_blob_2014_06
+error    :
+PIWIK.piwik_archive_blob_2014_07
+error    :
+PIWIK.piwik_archive_blob_2014_08
+error    :
+PIWIK.piwik_archive_blob_2014_09                   OK
+PIWIK.piwik_archive_blob_2014_10                   OK
+PIWIK.piwik_archive_blob_2014_11                   OK
+PIWIK.piwik_archive_blob_2014_12                   OK
+PIWIK.piwik_archive_blob_2015_01                   OK
+PIWIK.piwik_archive_blob_2015_02                   OK
+PIWIK.piwik_archive_blob_2015_03                   OK
+PIWIK.piwik_archive_blob_2015_04                   OK
+PIWIK.piwik_archive_blob_2015_05                   OK
+PIWIK.piwik_archive_blob_2015_06                   OK
+PIWIK.piwik_archive_blob_2015_07                   OK
+PIWIK.piwik_archive_blob_2015_08                   OK
+PIWIK.piwik_archive_blob_2015_09                   OK
+PIWIK.piwik_archive_blob_2015_10                   OK
+PIWIK.piwik_archive_blob_2015_11                   OK
+PIWIK.piwik_archive_blob_2015_12                   OK
+PIWIK.piwik_archive_blob_2016_01                   OK
+PIWIK.piwik_archive_blob_2016_02                   OK
+PIWIK.piwik_archive_blob_2016_03                   OK
+PIWIK.piwik_archive_blob_2016_04                   OK
+PIWIK.piwik_archive_blob_2016_05                   OK
+PIWIK.piwik_archive_blob_2016_06                   OK
+PIWIK.piwik_archive_blob_2016_07                   OK
+PIWIK.piwik_archive_blob_2016_08                   OK
+PIWIK.piwik_archive_blob_2016_09                   OK
+PIWIK.piwik_archive_blob_2016_10                   OK
+PIWIK.piwik_archive_blob_2016_11                   OK
+PIWIK.piwik_archive_blob_2016_12                   OK
+PIWIK.piwik_archive_blob_2017_01                   OK
+PIWIK.piwik_archive_blob_2017_02                   OK
+PIWIK.piwik_archive_blob_2017_03                   OK
+PIWIK.piwik_archive_blob_2017_04                   OK
+PIWIK.piwik_archive_blob_2017_05                   OK
+PIWIK.piwik_archive_blob_2017_06                   OK
+PIWIK.piwik_archive_blob_2017_07                   OK
+PIWIK.piwik_archive_blob_2017_08                   OK
+PIWIK.piwik_archive_blob_2017_09                   OK
+PIWIK.piwik_archive_blob_2017_10                   OK
+PIWIK.piwik_archive_blob_2017_11                   OK
+PIWIK.piwik_archive_blob_2017_12                   OK
+PIWIK.piwik_archive_blob_2018_01                   OK
+PIWIK.piwik_archive_blob_2018_02                   OK
+PIWIK.piwik_archive_blob_2018_03                   OK
+PIWIK.piwik_archive_blob_2018_04                   OK
+PIWIK.piwik_archive_blob_2018_05                   OK
+PIWIK.piwik_archive_blob_2018_06                   OK
+PIWIK.piwik_archive_blob_2018_07                   OK
+PIWIK.piwik_archive_blob_2018_08                   OK
+PIWIK.piwik_archive_blob_2018_09                   OK
+PIWIK.piwik_archive_blob_2018_10                   OK
+PIWIK.piwik_archive_blob_2018_11                   OK
+PIWIK.piwik_archive_blob_2018_12                   OK
+PIWIK.piwik_archive_blob_2019_01                   OK
+PIWIK.piwik_archive_blob_2019_02                   OK
+PIWIK.piwik_archive_blob_2019_03                   OK
+PIWIK.piwik_archive_blob_2019_04                   OK
+PIWIK.piwik_archive_blob_2019_05                   OK
+PIWIK.piwik_archive_blob_2019_06                   OK
+PIWIK.piwik_archive_blob_2019_07                   OK
+PIWIK.piwik_archive_blob_2019_08                   OK
+PIWIK.piwik_archive_blob_2019_09                   OK
+PIWIK.piwik_archive_blob_2019_10                   OK
+PIWIK.piwik_archive_blob_2019_11                   OK
+PIWIK.piwik_archive_blob_2019_12                   OK
+PIWIK.piwik_archive_blob_2020_01                   OK
+PIWIK.piwik_archive_blob_2020_02                   OK
+PIWIK.piwik_archive_blob_2020_03                   OK
+PIWIK.piwik_archive_blob_2020_04                   OK
+PIWIK.piwik_archive_blob_2020_05                   OK
+PIWIK.piwik_archive_blob_2020_06                   OK
+PIWIK.piwik_archive_blob_2020_07                   OK
+PIWIK.piwik_archive_blob_2020_08                   OK
+PIWIK.piwik_archive_blob_2020_09                   OK
+PIWIK.piwik_archive_blob_2020_10                   OK
+PIWIK.piwik_archive_blob_2020_11                   OK
+PIWIK.piwik_archive_blob_2020_12                   OK
+PIWIK.piwik_archive_blob_2021_01                   OK
+PIWIK.piwik_archive_blob_2021_02                   OK
+PIWIK.piwik_archive_blob_2021_03                   OK
+PIWIK.piwik_archive_blob_2021_04                   OK
+PIWIK.piwik_archive_blob_2021_05                   OK
+PIWIK.piwik_archive_blob_2021_06                   OK
+PIWIK.piwik_archive_blob_2021_07                   OK
+PIWIK.piwik_archive_blob_2021_08                   OK
+PIWIK.piwik_archive_blob_2021_09                   OK
+PIWIK.piwik_archive_blob_2021_10                   OK
+PIWIK.piwik_archive_blob_2021_11                   OK
+PIWIK.piwik_archive_blob_2021_12                   OK
+PIWIK.piwik_archive_blob_2022_01                   OK
+PIWIK.piwik_archive_blob_2022_02                   OK
+PIWIK.piwik_archive_blob_2022_03                   OK
+PIWIK.piwik_archive_blob_2022_04                   OK
+PIWIK.piwik_archive_blob_2022_05                   OK
+PIWIK.piwik_archive_blob_2022_06                   OK
+PIWIK.piwik_archive_blob_2022_12                   OK
+PIWIK.piwik_archive_blob_2023_01                   OK
+PIWIK.piwik_archive_blob_2023_02                   OK
+PIWIK.piwik_archive_blob_2023_03                   OK
+PIWIK.piwik_archive_blob_2023_04                   OK
+PIWIK.piwik_archive_blob_2023_05                   OK
+PIWIK.piwik_archive_blob_2023_07                   OK
+PIWIK.piwik_archive_numeric_2011_01
+error    :
+PIWIK.piwik_archive_numeric_2011_07
+error    :
+PIWIK.piwik_archive_numeric_2011_08
+error    :
+PIWIK.piwik_archive_numeric_2011_09
+error    :
+PIWIK.piwik_archive_numeric_2011_10
+error    :
+PIWIK.piwik_archive_numeric_2011_11
+error    :
+PIWIK.piwik_archive_numeric_2011_12
+error    :
+PIWIK.piwik_archive_numeric_2012_01
+error    :
+PIWIK.piwik_archive_numeric_2012_02
+error    :
+PIWIK.piwik_archive_numeric_2012_03
+error    :
+PIWIK.piwik_archive_numeric_2012_04
+error    :
+PIWIK.piwik_archive_numeric_2012_05
+error    :
+PIWIK.piwik_archive_numeric_2012_06
+error    :
+PIWIK.piwik_archive_numeric_2012_07
+error    :
+PIWIK.piwik_archive_numeric_2012_08
+error    :
+PIWIK.piwik_archive_numeric_2012_09
+error    :
+PIWIK.piwik_archive_numeric_2012_10
+error    :
+PIWIK.piwik_archive_numeric_2012_11
+error    :
+PIWIK.piwik_archive_numeric_2012_12
+error    :
+PIWIK.piwik_archive_numeric_2013_01
+error    :
+PIWIK.piwik_archive_numeric_2013_02
+error    :
+PIWIK.piwik_archive_numeric_2013_03
+error    :
+PIWIK.piwik_archive_numeric_2013_04
+error    :
+PIWIK.piwik_archive_numeric_2013_05
+error    :
+PIWIK.piwik_archive_numeric_2013_06
+error    :
+PIWIK.piwik_archive_numeric_2013_07
+error    :
+PIWIK.piwik_archive_numeric_2013_08
+error    :
+PIWIK.piwik_archive_numeric_2013_09
+error    :
+PIWIK.piwik_archive_numeric_2013_10
+error    :
+PIWIK.piwik_archive_numeric_2013_11
+error    :
+PIWIK.piwik_archive_numeric_2013_12
+error    :
+PIWIK.piwik_archive_numeric_2014_01
+error    :
+PIWIK.piwik_archive_numeric_2014_02
+error    :
+PIWIK.piwik_archive_numeric_2014_03
+error    :
+PIWIK.piwik_archive_numeric_2014_04
+error    :
+PIWIK.piwik_archive_numeric_2014_05
+error    :
+PIWIK.piwik_archive_numeric_2014_06
+error    :
+PIWIK.piwik_archive_numeric_2014_07
+error    :
+PIWIK.piwik_archive_numeric_2014_08
+error    :
+PIWIK.piwik_archive_numeric_2014_09                OK
+PIWIK.piwik_archive_numeric_2014_10                OK
+PIWIK.piwik_archive_numeric_2014_11                OK
+PIWIK.piwik_archive_numeric_2014_12                OK
+PIWIK.piwik_archive_numeric_2015_01                OK
+PIWIK.piwik_archive_numeric_2015_02                OK
+PIWIK.piwik_archive_numeric_2015_03                OK
+PIWIK.piwik_archive_numeric_2015_04                OK
+PIWIK.piwik_archive_numeric_2015_05                OK
+PIWIK.piwik_archive_numeric_2015_06                OK
+PIWIK.piwik_archive_numeric_2015_07                OK
+PIWIK.piwik_archive_numeric_2015_08                OK
+PIWIK.piwik_archive_numeric_2015_09                OK
+PIWIK.piwik_archive_numeric_2015_10                OK
+PIWIK.piwik_archive_numeric_2015_11                OK
+PIWIK.piwik_archive_numeric_2015_12                OK
+PIWIK.piwik_archive_numeric_2016_01                OK
+PIWIK.piwik_archive_numeric_2016_02                OK
+PIWIK.piwik_archive_numeric_2016_03                OK
+PIWIK.piwik_archive_numeric_2016_04                OK
+PIWIK.piwik_archive_numeric_2016_05                OK
+PIWIK.piwik_archive_numeric_2016_06                OK
+PIWIK.piwik_archive_numeric_2016_07                OK
+PIWIK.piwik_archive_numeric_2016_08                OK
+PIWIK.piwik_archive_numeric_2016_09                OK
+PIWIK.piwik_archive_numeric_2016_10                OK
+PIWIK.piwik_archive_numeric_2016_11                OK
+PIWIK.piwik_archive_numeric_2016_12                OK
+PIWIK.piwik_archive_numeric_2017_01                OK
+PIWIK.piwik_archive_numeric_2017_02                OK
+PIWIK.piwik_archive_numeric_2017_03                OK
+PIWIK.piwik_archive_numeric_2017_04                OK
+PIWIK.piwik_archive_numeric_2017_05                OK
+PIWIK.piwik_archive_numeric_2017_06                OK
+PIWIK.piwik_archive_numeric_2017_07                OK
+PIWIK.piwik_archive_numeric_2017_08                OK
+PIWIK.piwik_archive_numeric_2017_09                OK
+PIWIK.piwik_archive_numeric_2017_10                OK
+PIWIK.piwik_archive_numeric_2017_11                OK
+PIWIK.piwik_archive_numeric_2017_12                OK
+PIWIK.piwik_archive_numeric_2018_01                OK
+PIWIK.piwik_archive_numeric_2018_02                OK
+PIWIK.piwik_archive_numeric_2018_03                OK
+PIWIK.piwik_archive_numeric_2018_04                OK
+PIWIK.piwik_archive_numeric_2018_05                OK
+PIWIK.piwik_archive_numeric_2018_06                OK
+PIWIK.piwik_archive_numeric_2018_07                OK
+PIWIK.piwik_archive_numeric_2018_08                OK
+PIWIK.piwik_archive_numeric_2018_09                OK
+PIWIK.piwik_archive_numeric_2018_10                OK
+PIWIK.piwik_archive_numeric_2018_11                OK
+PIWIK.piwik_archive_numeric_2018_12                OK
+PIWIK.piwik_archive_numeric_2019_01                OK
+PIWIK.piwik_archive_numeric_2019_02                OK
+PIWIK.piwik_archive_numeric_2019_03                OK
+PIWIK.piwik_archive_numeric_2019_04                OK
+PIWIK.piwik_archive_numeric_2019_05                OK
+PIWIK.piwik_archive_numeric_2019_06                OK
+PIWIK.piwik_archive_numeric_2019_07                OK
+PIWIK.piwik_archive_numeric_2019_08                OK
+PIWIK.piwik_archive_numeric_2019_09                OK
+PIWIK.piwik_archive_numeric_2019_10                OK
+PIWIK.piwik_archive_numeric_2019_11                OK
+PIWIK.piwik_archive_numeric_2019_12                OK
+PIWIK.piwik_archive_numeric_2020_01                OK
+PIWIK.piwik_archive_numeric_2020_02                OK
+PIWIK.piwik_archive_numeric_2020_03                OK
+PIWIK.piwik_archive_numeric_2020_04                OK
+PIWIK.piwik_archive_numeric_2020_05                OK
+PIWIK.piwik_archive_numeric_2020_06                OK
+PIWIK.piwik_archive_numeric_2020_07                OK
+PIWIK.piwik_archive_numeric_2020_08                OK
+PIWIK.piwik_archive_numeric_2020_09                OK
+PIWIK.piwik_archive_numeric_2020_10                OK
+PIWIK.piwik_archive_numeric_2020_11                OK
+PIWIK.piwik_archive_numeric_2020_12                OK
+PIWIK.piwik_archive_numeric_2021_01                OK
+PIWIK.piwik_archive_numeric_2021_02                OK
+PIWIK.piwik_archive_numeric_2021_03                OK
+PIWIK.piwik_archive_numeric_2021_04                OK
+PIWIK.piwik_archive_numeric_2021_05                OK
+PIWIK.piwik_archive_numeric_2021_06                OK
+PIWIK.piwik_archive_numeric_2021_07                OK
+PIWIK.piwik_archive_numeric_2021_08                OK
+PIWIK.piwik_archive_numeric_2021_09                OK
+PIWIK.piwik_archive_numeric_2021_10                OK
+PIWIK.piwik_archive_numeric_2021_11                OK
+PIWIK.piwik_archive_numeric_2021_12                OK
+PIWIK.piwik_archive_numeric_2022_01                OK
+PIWIK.piwik_archive_numeric_2022_02                OK
+PIWIK.piwik_archive_numeric_2022_03                OK
+PIWIK.piwik_archive_numeric_2022_04                OK
+PIWIK.piwik_archive_numeric_2022_05                OK
+PIWIK.piwik_archive_numeric_2022_06                OK
+PIWIK.piwik_archive_numeric_2022_07                OK
+PIWIK.piwik_archive_numeric_2022_08                OK
+PIWIK.piwik_archive_numeric_2022_09                OK
+PIWIK.piwik_archive_numeric_2022_10                OK
+PIWIK.piwik_archive_numeric_2022_11                OK
+PIWIK.piwik_archive_numeric_2022_12                OK
+PIWIK.piwik_archive_numeric_2023_01                OK
+PIWIK.piwik_archive_numeric_2023_02                OK
+PIWIK.piwik_archive_numeric_2023_03                OK
+PIWIK.piwik_archive_numeric_2023_04                OK
+PIWIK.piwik_archive_numeric_2023_05                OK
+PIWIK.piwik_archive_numeric_2023_06                OK
+PIWIK.piwik_archive_numeric_2023_07                OK
+PIWIK.piwik_chat                                   OK
+PIWIK.piwik_chat_automatic_message                 OK
+PIWIK.piwik_chat_history_admin                     OK
+PIWIK.piwik_chat_personnal_informations            OK
+PIWIK.piwik_goal                                   OK
+PIWIK.piwik_log_action                             OK
+PIWIK.piwik_log_conversion                         OK
+PIWIK.piwik_log_conversion_item                    OK
+PIWIK.piwik_log_link_visit_action                  OK
+PIWIK.piwik_log_profiling                          OK
+PIWIK.piwik_log_visit                              OK
+PIWIK.piwik_option                                 OK
+PIWIK.piwik_plugin_setting                         OK
+PIWIK.piwik_privacy_logdata_anonymizations         OK
+PIWIK.piwik_report                                 OK
+PIWIK.piwik_report_subscriptions                   OK
+PIWIK.piwik_segment
+error    :
+PIWIK.piwik_sequence                               OK
+PIWIK.piwik_session                                OK
+PIWIK.piwik_site                                   OK
+PIWIK.piwik_site_setting                           OK
+PIWIK.piwik_site_url                               OK
+PIWIK.piwik_user                                   OK
+PIWIK.piwik_user_dashboard                         OK
+PIWIK.piwik_user_language                          OK
+POC.POC_CONTROLE_PCP                               OK
+PORTAL_COMISSIONAMENTO.ASSOCIACAO_PERFIL_USUARIO
+Warning  :
+Warning  :
+status   : OK
+PORTAL_COMISSIONAMENTO.ASSOCIACAO_PERFIL_USUARIO_HISTORICO OK
+PORTAL_COMISSIONAMENTO.DEPARA_INDICADOR_ESPECIAL   OK
+PORTAL_COMISSIONAMENTO.LAYOUT_EXTRATO_ONILNE       OK
+PORTAL_COMISSIONAMENTO.PERFIL_COMISSIONAMENTO      OK
+PORTAL_COMISSIONAMENTO.TIPO_EXTRATO_ONLINE         OK
+PORTAL_DISPONIBILIDADE.AREAS                       OK
+PORTAL_DISPONIBILIDADE.AREAS_BKP_20220922          OK
+PORTAL_DISPONIBILIDADE.AREAS_bck                   OK
+PORTAL_DISPONIBILIDADE.AREAS_teste                 OK
+PORTAL_DISPONIBILIDADE.AREAS_tmp                   OK
+PORTAL_DISPONIBILIDADE.ATUALIZACOES                OK
+PORTAL_DISPONIBILIDADE.CIDADES                     OK
+PORTAL_DISPONIBILIDADE.CIDADES_bkp                 OK
+PORTAL_DISPONIBILIDADE.CIDADES_tmp                 OK
+PORTAL_DISPONIBILIDADE.CLASSES                     OK
+PORTAL_DISPONIBILIDADE.CLASSES_bck                 OK
+PORTAL_DISPONIBILIDADE.CLASSES_tmp                 OK
+PORTAL_DISPONIBILIDADE.CLUSTERS                    OK
+PORTAL_DISPONIBILIDADE.CONFIGURACAO                OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED            OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED_BCK_20220711 OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED_BCK_20220823 OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED_TMP2_BCK_20220711 OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED_bck        OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED_bck_20220516 OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED_bkp_20221020 OK
+PORTAL_DISPONIBILIDADE.COTAS_NORMALIZED_tmp_bck_teste OK
+PORTAL_DISPONIBILIDADE.DE_PARA_CLUSTERS            OK
+PORTAL_DISPONIBILIDADE.EMPRESA                     OK
+PORTAL_DISPONIBILIDADE.EMPRESA_bck                 OK
+PORTAL_DISPONIBILIDADE.GERENTES                    OK
+PORTAL_DISPONIBILIDADE.GERENTES_CIDADE             OK
+PORTAL_DISPONIBILIDADE.GRUPOS                      OK
+PORTAL_DISPONIBILIDADE.GRUPO_DETALHES              OK
+PORTAL_DISPONIBILIDADE.LEAD_TIME                   OK
+PORTAL_DISPONIBILIDADE.LEAD_TIME_IBGE              OK
+PORTAL_DISPONIBILIDADE.LEAD_TIME_IBGE_bck          OK
+PORTAL_DISPONIBILIDADE.LEAD_TIME_bck               OK
+PORTAL_DISPONIBILIDADE.PERIODOS                    OK
+PORTAL_DISPONIBILIDADE.PERIODOS_INICIO             OK
+PORTAL_DISPONIBILIDADE.PERIODOS_INICIO_bck         OK
+PORTAL_DISPONIBILIDADE.PERIODOS_bck                OK
+PORTAL_DISPONIBILIDADE.PRODUTOS                    OK
+PORTAL_DISPONIBILIDADE.PRODUTOS_bck                OK
+PORTAL_DISPONIBILIDADE.SUBCLUSTERS                 OK
+PORTAL_DISPONIBILIDADE.TESTE_ERROR                 OK
+PORTAL_DISPONIBILIDADE.TESTE_NEW                   OK
+PORTAL_DISPONIBILIDADE.TESTE_OLD                   OK
+PORTAL_DISPONIBILIDADE.TIPOS                       OK
+PORTAL_DISPONIBILIDADE.TIPOS_bck                   OK
+PORTAL_IN.ASSOCIACAO_NOTIFICACAO_USUARIO           OK
+PORTAL_IN.AUDIT_ACESSO_PORTAL_NOVO                 OK
+PORTAL_IN.AUDIT_CLEAN_UP_CI_SESSIONS               OK
+PORTAL_IN.BASE_AUTORITATIVA_PORTAL_IN              OK
+PORTAL_IN.BASE_AUTORITATIVA_PORTAL_IN_BKP_20210827 OK
+PORTAL_IN.COM_ASSOCIACAO_USUARIO_COMUNICADO        OK
+PORTAL_IN.COM_ASSOCIACAO_USUARIO_COMUNICADO_20230314 OK
+PORTAL_IN.COM_CATEGORIA                            OK
+PORTAL_IN.COM_COMUNICADO                           OK
+PORTAL_IN.COM_COMUNICADO_20230314                  OK
+PORTAL_IN.COM_COMUNICADO_BKP                       OK
+PORTAL_IN.COM_COMUNICADO_BKP_20200818              OK
+PORTAL_IN.COM_COMUNICADO_NEW                       OK
+PORTAL_IN.COM_COMUNICADO_VISUALIZADO               OK
+PORTAL_IN.COM_COMUNICADO_VISUALIZADO_20230314      OK
+PORTAL_IN.COM_CONFIGURACOES                        OK
+PORTAL_IN.COM_NOTIFICACAO                          OK
+PORTAL_IN.COM_NOTIFICACAO_20230314                 OK
+PORTAL_IN.COM_RELATORIO                            OK
+PORTAL_IN.COM_RELATORIO_20230314                   OK
+PORTAL_IN.COM_TITULO_NOTIFICACAO                   OK
+PORTAL_IN.CPI_ASSOCIACAO_RELATORIO_PERFIL_INTERESSE OK
+PORTAL_IN.CPI_PERFIL_INTERESSE                     OK
+PORTAL_IN.ELI_BKP_ACESSO_18309322844               OK
+PORTAL_IN.LANGUAGE                                 OK
+PORTAL_IN.LISTA_ASSUNTO_CONTATO                    OK
+PORTAL_IN.LOG_BUSCA                                OK
+PORTAL_IN.MENUS                                    OK
+PORTAL_IN.MENUS_OLD                                OK
+PORTAL_IN.NOTIFICACAO                              OK
+PORTAL_IN.PRI_ASSOCIACAO_RELATORIO_CATEGORIA_USUARIO OK
+PORTAL_IN.PRI_CATEGORIA_USUARIO_PORTAL_PRIME       OK
+PORTAL_IN.PRI_SELECIONAR_PERFIL                    OK
+PORTAL_IN.PRI_TEMP_CHECK_PERFIL_USUARIO            OK
+PORTAL_IN.SimpleSAMLphp_kvstore                    OK
+PORTAL_IN.SimpleSAMLphp_tableVersion               OK
+PORTAL_IN.TEMP_20180815121150000000                OK
+PORTAL_IN.TEMP_20201113204440000000                OK
+PORTAL_IN.TEMP_20230626180407000000                OK
+PORTAL_IN.TEMP_20230713190338000000                OK
+PORTAL_IN.TEMP_20230724114117000000                OK
+PORTAL_IN.TEMP_20230724122101000000                OK
+PORTAL_IN.TEMP_20230727150958000000                OK
+PORTAL_IN.TEMP_20230801120440000000                OK
+PORTAL_IN.TEMP_MENU_20180620153801000000           OK
+PORTAL_IN.TEMP_MENU_20180620161342000000           OK
+PORTAL_IN.TEMP_MENU_20180620162029000000           OK
+PORTAL_IN.TEMP_MENU_20180620170648000000           OK
+PORTAL_IN.TEMP_MENU_20180620171814000000           OK
+PORTAL_IN.TEMP_MENU_20180621103443000000           OK
+PORTAL_IN.TEMP_MENU_20180621154950000000           OK
+PORTAL_IN.TEMP_MENU_20180621171314000000           OK
+PORTAL_IN.TEMP_MENU_20180627112732000000           OK
+PORTAL_IN.TEMP_MENU_20180717095245000000           OK
+PORTAL_IN.TEMP_MENU_20180717105631000000           OK
+PORTAL_IN.TEMP_MENU_20180718120127000000           OK
+PORTAL_IN.TEMP_MENU_20180727105423000000           OK
+PORTAL_IN.TEMP_MENU_20180727105821000000           OK
+PORTAL_IN.TEMP_MENU_20180730160232000000           OK
+PORTAL_IN.TEMP_MENU_20180731093757000000           OK
+PORTAL_IN.TEMP_MENU_20180731140204000000           OK
+PORTAL_IN.TEMP_MENU_20180801100302000000           OK
+PORTAL_IN.TEMP_MENU_20180808165049000000           OK
+PORTAL_IN.TEMP_MENU_20180820104635000000           OK
+PORTAL_IN.TEMP_MENU_20180905191934000000           OK
+PORTAL_IN.TEMP_MENU_20180905192247000000           OK
+PORTAL_IN.TEMP_MENU_20181001171206000000           OK
+PORTAL_IN.TEMP_MENU_20181025170254000000           OK
+PORTAL_IN.TEMP_MENU_20181030104951000000           OK
+PORTAL_IN.TEMP_MENU_20181126141245000000           OK
+PORTAL_IN.TEMP_MENU_20190320171416000000           OK
+PORTAL_IN.TEMP_MENU_20190510084701000000           OK
+PORTAL_IN.TEMP_MENU_20190524125424000000           OK
+PORTAL_IN.TEMP_MENU_20190726120048000000           OK
+PORTAL_IN.TEMP_MENU_20191011191559000000           OK
+PORTAL_IN.TEMP_MENU_20191015112010000000           OK
+PORTAL_IN.TEMP_MENU_20191121113440000000           OK
+PORTAL_IN.TEMP_MENU_20200306175534000000           OK
+PORTAL_IN.TEMP_MENU_20200408150556000000           OK
+PORTAL_IN.TEMP_MENU_20200511111607000000           OK
+PORTAL_IN.TEMP_MENU_20200511111704000000           OK
+PORTAL_IN.TEMP_MENU_20200717151527000000           OK
+PORTAL_IN.TEMP_MENU_20200731115901000000           OK
+PORTAL_IN.TEMP_MENU_20201112173050000000           OK
+PORTAL_IN.TEMP_MENU_20201112173106000000           OK
+PORTAL_IN.TEMP_MENU_20201112173221000000           OK
+PORTAL_IN.TEMP_MENU_20201112173316000000           OK
+PORTAL_IN.TEMP_MENU_20201113164657000000           OK
+PORTAL_IN.TEMP_MENU_20201113164748000000           OK
+PORTAL_IN.TEMP_MENU_20201210175943000000           OK
+PORTAL_IN.TEMP_MENU_20210114150554000000           OK
+PORTAL_IN.TEMP_MENU_20210119105801000000           OK
+PORTAL_IN.TEMP_MENU_20210204131702000000           OK
+PORTAL_IN.TEMP_MENU_20210205172517000000           OK
+PORTAL_IN.TEMP_MENU_20210405151547000000           OK
+PORTAL_IN.TEMP_MENU_20210726134123000000           OK
+PORTAL_IN.TEMP_MENU_20210824021349000000           OK
+PORTAL_IN.TEMP_MENU_20210920115214000000           OK
+PORTAL_IN.TEMP_MENU_20210930093850000000           OK
+PORTAL_IN.TEMP_MENU_20211008113508000000           OK
+PORTAL_IN.TEMP_MENU_20211019121902000000           OK
+PORTAL_IN.TEMP_MENU_20211220104238000000           OK
+PORTAL_IN.TEMP_MENU_20211220104257000000           OK
+PORTAL_IN.TEMP_MENU_20211220155853000000           OK
+PORTAL_IN.TEMP_MENU_20211221163524000000           OK
+PORTAL_IN.TEMP_MENU_20211221170946000000           OK
+PORTAL_IN.TEMP_MENU_20220601155809000000           OK
+PORTAL_IN.TEMP_MENU_20220705181304000000           OK
+PORTAL_IN.TEMP_MENU_20220706112119000000           OK
+PORTAL_IN.TEMP_MENU_20220712134928000000           OK
+PORTAL_IN.TEMP_MENU_20220905162104000000           OK
+PORTAL_IN.TEMP_MENU_20220905162108000000           OK
+PORTAL_IN.TEMP_MENU_20220905162210000000           OK
+PORTAL_IN.TEMP_MENU_20220905162225000000           OK
+PORTAL_IN.TEMP_MENU_20221004151952000000           OK
+PORTAL_IN.TEMP_MENU_20221025161703000000           OK
+PORTAL_IN.TEMP_MENU_20221028182133000000           OK
+PORTAL_IN.TEMP_MENU_20221101124623000000           OK
+PORTAL_IN.TEMP_MENU_20221122151746000000           OK
+PORTAL_IN.TEMP_MENU_20221124101920000000           OK
+PORTAL_IN.TEMP_MENU_20221129190853000000           OK
+PORTAL_IN.TEMP_MENU_20230127114738000000           OK
+PORTAL_IN.TEMP_MENU_20230317094039000000           OK
+PORTAL_IN.TEMP_MENU_20230321153917000000           OK
+PORTAL_IN.TEMP_MENU_20230414173623000000           OK
+PORTAL_IN.TEMP_MENU_20230425160635000000           OK
+PORTAL_IN.TEMP_MENU_20230426093644000000           OK
+PORTAL_IN.TEMP_MENU_20230505175744000000           OK
+PORTAL_IN.TEMP_MENU_20230522115053000000           OK
+PORTAL_IN.TEMP_MENU_20230626150817000000           OK
+PORTAL_IN.TEMP_MENU_20230627155848000000           OK
+PORTAL_IN.TIPO_NOTIFICACAO                         OK
+PORTAL_IN.VISUALIZAR_RELATORIO
+Warning  :
+status   : OK
+PORTAL_IN.ci_sessions                              OK
+PORTAL_PRIME.AREA_NEGOCIO                          OK
+PORTAL_PRIME.CARGO_GENERICO                        OK
+PORTAL_PRIME.EMPRESA_CROSS                         OK
+PORTAL_PRIME.FUNCIONARIO_CROSS                     OK
+PROCESSO_CARGA_CGM.COMPONENTES_PREMIUM             OK
+PROCESSO_CARGA_CGM.COMPONENTES_VALIDOS             OK
+PROCESSO_CARGA_CGM.DE_LINEUP30DIAS                 OK
+PROCESSO_CARGA_CGM.LINEUP30DIAS                    OK
+PROCESSO_CARGA_CGM.PREENCHIMENTO_INFO_CANAIS       OK
+PROCESSO_CARGA_CGM.TABELA_PRECO_PRODUTO            OK
+PROCESSO_CARGA_CGM.TODO_COMPONENTES                OK
+QUIZ.DE_PARA_RELATORIO_VIDAL                       OK
+QUIZ.GERADOR_QUIZ                                  OK
+QUIZ.NOTAS_POSSIVEIS_QUIZ                          OK
+QUIZ.PRODUCAO_QUIZ                                 OK
+QUIZ.QUESTOES_QUIZ                                 OK
+STAGE.2021-04-01_BAIRRO_OLD                        OK
+STAGE.2021-04-01_CIDADE_OLD                        OK
+STAGE.2021-04-01_LOGRADOURO_OLD                    OK
+STAGE.2021-04-01_NODE_OLD                          OK
+STAGE.2021-04-02_BAIRRO_OLD                        OK
+STAGE.2021-04-02_CIDADE_OLD                        OK
+STAGE.2021-04-02_LOGRADOURO_OLD                    OK
+STAGE.2021-04-02_NODE_OLD                          OK
+STAGE.2021-04-03_BAIRRO_OLD                        OK
+STAGE.2021-04-03_CIDADE_OLD                        OK
+STAGE.2021-04-03_LOGRADOURO_OLD                    OK
+STAGE.2021-04-03_NODE_OLD                          OK
+STAGE.2021-04-04_BAIRRO_OLD                        OK
+STAGE.2021-04-04_CIDADE_OLD                        OK
+STAGE.2021-04-04_LOGRADOURO_OLD                    OK
+STAGE.2021-04-04_NODE_OLD                          OK
+STAGE.2021-04-05_BAIRRO_OLD                        OK
+STAGE.2021-04-05_CIDADE_OLD                        OK
+STAGE.2021-04-05_LOGRADOURO_OLD                    OK
+STAGE.2021-04-05_NODE_OLD                          OK
+STAGE.2021-04-06_BAIRRO_OLD                        OK
+STAGE.2021-04-06_CIDADE_OLD                        OK
+STAGE.2021-04-06_LOGRADOURO_OLD                    OK
+STAGE.2021-04-06_NODE_OLD                          OK
+STAGE.2021-04-07_BAIRRO_OLD                        OK
+STAGE.2021-04-07_CIDADE_OLD                        OK
+STAGE.2021-04-07_LOGRADOURO_OLD                    OK
+STAGE.2021-04-07_NODE_OLD                          OK
+STAGE.2021-04-08_BAIRRO_OLD                        OK
+STAGE.2021-04-08_CIDADE_OLD                        OK
+STAGE.2021-04-08_LOGRADOURO_OLD                    OK
+STAGE.2021-04-08_NODE_OLD                          OK
+STAGE.2021-04-09_BAIRRO_OLD                        OK
+STAGE.2021-04-09_CIDADE_OLD                        OK
+STAGE.2021-04-09_LOGRADOURO_OLD                    OK
+STAGE.2021-04-09_NODE_OLD                          OK
+STAGE.2021-04-10_BAIRRO_OLD                        OK
+STAGE.2021-04-10_CIDADE_OLD                        OK
+STAGE.2021-04-10_LOGRADOURO_OLD                    OK
+STAGE.2021-04-10_NODE_OLD                          OK
+STAGE.2021-04-11_BAIRRO_OLD                        OK
+STAGE.2021-04-11_CIDADE_OLD                        OK
+STAGE.2021-04-11_LOGRADOURO_OLD                    OK
+STAGE.2021-04-11_NODE_OLD                          OK
+STAGE.2021-04-12_BAIRRO_OLD                        OK
+STAGE.2021-04-12_CIDADE_OLD                        OK
+STAGE.2021-04-12_LOGRADOURO_OLD                    OK
+STAGE.2021-04-12_NODE_OLD                          OK
+STAGE.2021-04-13_BAIRRO_OLD                        OK
+STAGE.2021-04-13_CIDADE_OLD                        OK
+STAGE.2021-04-13_LOGRADOURO_OLD                    OK
+STAGE.2021-04-13_NODE_OLD                          OK
+STAGE.2021-04-14_BAIRRO_OLD                        OK
+STAGE.2021-04-14_CIDADE_OLD                        OK
+STAGE.2021-04-14_LOGRADOURO_OLD                    OK
+STAGE.2021-04-14_NODE_OLD                          OK
+STAGE.2021-04-15_BAIRRO_OLD                        OK
+STAGE.2021-04-15_CIDADE_OLD                        OK
+STAGE.2021-04-15_LOGRADOURO_OLD                    OK
+STAGE.2021-04-15_NODE_OLD                          OK
+STAGE.2021-04-16_BAIRRO_OLD                        OK
+STAGE.2021-04-16_CIDADE_OLD                        OK
+STAGE.2021-04-16_LOGRADOURO_OLD                    OK
+STAGE.2021-04-16_NODE_OLD                          OK
+STAGE.2021-04-17_BAIRRO_OLD                        OK
+STAGE.2021-04-17_CIDADE_OLD                        OK
+STAGE.2021-04-17_LOGRADOURO_OLD                    OK
+STAGE.2021-04-17_NODE_OLD                          OK
+STAGE.2021-04-18_BAIRRO_OLD                        OK
+STAGE.2021-04-18_CIDADE_OLD                        OK
+STAGE.2021-04-18_LOGRADOURO_OLD                    OK
+STAGE.2021-04-18_NODE_OLD                          OK
+STAGE.2021-04-19_BAIRRO_OLD                        OK
+STAGE.2021-04-19_CIDADE_OLD                        OK
+STAGE.2021-04-19_LOGRADOURO_OLD                    OK
+STAGE.2021-04-19_NODE_OLD                          OK
+STAGE.2021-04-20_BAIRRO_OLD                        OK
+STAGE.2021-04-20_CIDADE_OLD                        OK
+STAGE.2021-04-20_LOGRADOURO_OLD                    OK
+STAGE.2021-04-20_NODE_OLD                          OK
+STAGE.2021-04-21_BAIRRO_OLD                        OK
+STAGE.2021-04-21_CIDADE_OLD                        OK
+STAGE.2021-04-21_LOGRADOURO_OLD                    OK
+STAGE.2021-04-21_NODE_OLD                          OK
+STAGE.2021-04-22_BAIRRO_OLD                        OK
+STAGE.2021-04-22_CIDADE_OLD                        OK
+STAGE.2021-04-22_LOGRADOURO_OLD                    OK
+STAGE.2021-04-22_NODE_OLD                          OK
+STAGE.2021-04-23_BAIRRO_OLD                        OK
+STAGE.2021-04-23_CIDADE_OLD                        OK
+STAGE.2021-04-23_LOGRADOURO_OLD                    OK
+STAGE.2021-04-23_NODE_OLD                          OK
+STAGE.2021-04-24_BAIRRO_OLD                        OK
+STAGE.2021-04-24_CIDADE_OLD                        OK
+STAGE.2021-04-24_LOGRADOURO_OLD                    OK
+STAGE.2021-04-24_NODE_OLD                          OK
+STAGE.2021-04-25_BAIRRO_OLD                        OK
+STAGE.2021-04-25_CIDADE_OLD                        OK
+STAGE.2021-04-25_LOGRADOURO_OLD                    OK
+STAGE.2021-04-25_NODE_OLD                          OK
+STAGE.2021-04-26_BAIRRO_OLD                        OK
+STAGE.2021-04-26_CIDADE_OLD                        OK
+STAGE.2021-04-26_LOGRADOURO_OLD                    OK
+STAGE.2021-04-26_NODE_OLD                          OK
+STAGE.2021-04-27_BAIRRO_OLD                        OK
+STAGE.2021-04-27_CIDADE_OLD                        OK
+STAGE.2021-04-27_LOGRADOURO_OLD                    OK
+STAGE.2021-04-27_NODE_OLD                          OK
+STAGE.2021-04-28_BAIRRO_OLD                        OK
+STAGE.2021-04-28_CIDADE_OLD                        OK
+STAGE.2021-04-28_LOGRADOURO_OLD                    OK
+STAGE.2021-04-28_NODE_OLD                          OK
+STAGE.2021-04-29_BAIRRO_OLD                        OK
+STAGE.2021-04-29_CIDADE_OLD                        OK
+STAGE.2021-04-29_LOGRADOURO_OLD                    OK
+STAGE.2021-04-29_NODE_OLD                          OK
+STAGE.2021-04-30_BAIRRO_OLD                        OK
+STAGE.2021-04-30_CIDADE_OLD                        OK
+STAGE.2021-04-30_LOGRADOURO_OLD                    OK
+STAGE.2021-04-30_NODE_OLD                          OK
+STAGE.BAIRRO                                       OK
+STAGE.BAIRRO_BKP_20221005                          OK
+STAGE.BAIRRO_BKP_20221223                          OK
+STAGE.BAIRRO_DE_PARA                               OK
+STAGE.BAIRRO_DE_PARA_2                             OK
+STAGE.BAIRRO_OLD_20210625                          OK
+STAGE.BAIRRO_OLD_20210626                          OK
+STAGE.BAIRRO_OLD_20210627                          OK
+STAGE.BAIRRO_OLD_20210628                          OK
+STAGE.BAIRRO_OLD_20210629                          OK
+STAGE.BAIRRO_OLD_20210714                          OK
+STAGE.BAIRRO_OLD_20210715                          OK
+STAGE.BAIRRO_OLD_20210716                          OK
+STAGE.BAIRRO_OLD_20210717                          OK
+STAGE.BAIRRO_OLD_20210718                          OK
+STAGE.BAIRRO_OLD_20210719                          OK
+STAGE.BAIRRO_OLD_20210720                          OK
+STAGE.BAIRRO_OLD_20210813                          OK
+STAGE.BAIRRO_OLD_20211006                          OK
+STAGE.BAIRRO_OLD_20211007                          OK
+STAGE.BAIRRO_OLD_20211008                          OK
+STAGE.BAIRRO_OLD_20211009                          OK
+STAGE.BAIRRO_OLD_20211010                          OK
+STAGE.BAIRRO_OLD_20211026                          OK
+STAGE.BAIRRO_OLD_20211027                          OK
+STAGE.BAIRRO_OLD_20211028                          OK
+STAGE.BAIRRO_OLD_20211029                          OK
+STAGE.BAIRRO_OLD_20211030                          OK
+STAGE.BAIRRO_OLD_20211031                          OK
+STAGE.BAIRRO_OLD_20211101                          OK
+STAGE.BAIRRO_OLD_20211125                          OK
+STAGE.BAIRRO_OLD_20211126                          OK
+STAGE.BAIRRO_OLD_20211127                          OK
+STAGE.BAIRRO_OLD_20211128                          OK
+STAGE.BAIRRO_OLD_20211129                          OK
+STAGE.BAIRRO_OLD_20211130                          OK
+STAGE.BAIRRO_OLD_20211201                          OK
+STAGE.BAIRRO_OLD_20211224                          OK
+STAGE.BAIRRO_OLD_20211225                          OK
+STAGE.BAIRRO_OLD_20220526                          OK
+STAGE.BAIRRO_OLD_20220527                          OK
+STAGE.BAIRRO_OLD_20220528                          OK
+STAGE.BAIRRO_OLD_20220714                          OK
+STAGE.BAIRRO_OLD_20220715                          OK
+STAGE.BAIRRO_OLD_20220716                          OK
+STAGE.BAIRRO_OLD_20220717                          OK
+STAGE.BAIRRO_OLD_20220718                          OK
+STAGE.BAIRRO_OLD_20220719                          OK
+STAGE.BAIRRO_OLD_20220720                          OK
+STAGE.BAIRRO_V2                                    OK
+STAGE.BI_CTRL_TRANSFORMACAO                        OK
+STAGE.CAT_OPER_AREA_DESPACHO                       OK
+STAGE.CIDADE                                       OK
+STAGE.CIDADE_BKP_20220920                          OK
+STAGE.CIDADE_BKP_20221005                          OK
+STAGE.CIDADE_BKP_20221223                          OK
+STAGE.CIDADE_OLD_20210714                          OK
+STAGE.CIDADE_OLD_20210715                          OK
+STAGE.CIDADE_OLD_20210716                          OK
+STAGE.CIDADE_OLD_20210717                          OK
+STAGE.CIDADE_OLD_20210718                          OK
+STAGE.CIDADE_OLD_20210719                          OK
+STAGE.CIDADE_OLD_20210720                          OK
+STAGE.CIDADE_OLD_20210813                          OK
+STAGE.CIDADE_OLD_20211006                          OK
+STAGE.CIDADE_OLD_20211007                          OK
+STAGE.CIDADE_OLD_20211008                          OK
+STAGE.CIDADE_OLD_20211009                          OK
+STAGE.CIDADE_OLD_20211010                          OK
+STAGE.CIDADE_OLD_20211102                          OK
+STAGE.CIDADE_OLD_20211126                          OK
+STAGE.CIDADE_OLD_20211127                          OK
+STAGE.CIDADE_OLD_20211128                          OK
+STAGE.CIDADE_OLD_20211129                          OK
+STAGE.CIDADE_OLD_20211130                          OK
+STAGE.CIDADE_OLD_20211201                          OK
+STAGE.CIDADE_OLD_20211202                          OK
+STAGE.CIDADE_OLD_20211224                          OK
+STAGE.CIDADE_OLD_20211225                          OK
+STAGE.CIDADE_OLD_20220714                          OK
+STAGE.CIDADE_OLD_20220715                          OK
+STAGE.CIDADE_OLD_20220716                          OK
+STAGE.CIDADE_OLD_20220717                          OK
+STAGE.CIDADE_OLD_20220718                          OK
+STAGE.CIDADE_OLD_20220719                          OK
+STAGE.CIDADE_OLD_20220720                          OK
+STAGE.CIDADE_V2                                    OK
+STAGE.COTAS_NORMALIZED_tmp                         OK
+STAGE.E$_BAIRRO
+error    :
+STAGE.E$_CAT_OPER_AREA_DESPACHO
+error    :
+STAGE.E$_CIDADE
+error    :
+STAGE.E$_LOGRADOURO
+error    :
+STAGE.E$_NODE
+error    :
+STAGE.IN_NODE_EXCLUIDOS_OLD_20210521               OK
+STAGE.IN_NODE_EXCLUIDO_DE_PARA                     OK
+STAGE.LOGRADOURO                                   OK
+STAGE.LOGRADOURO_BKP_20220920                      OK
+STAGE.LOGRADOURO_BKP_20221005                      OK
+STAGE.LOGRADOURO_BKP_20221010                      OK
+STAGE.LOGRADOURO_BKP_20221223                      OK
+STAGE.LOGRADOURO_DUPLICIDADE                       OK
+STAGE.LOGRADOURO_OLD_20210517                      OK
+STAGE.LOGRADOURO_OLD_20210714                      OK
+STAGE.LOGRADOURO_OLD_20210715                      OK
+STAGE.LOGRADOURO_OLD_20210716                      OK
+STAGE.LOGRADOURO_OLD_20210717                      OK
+STAGE.LOGRADOURO_OLD_20210718                      OK
+STAGE.LOGRADOURO_OLD_20210719                      OK
+STAGE.LOGRADOURO_OLD_20210720                      OK
+STAGE.LOGRADOURO_OLD_20210813                      OK
+STAGE.LOGRADOURO_OLD_20210828                      OK
+STAGE.LOGRADOURO_OLD_20210916                      OK
+STAGE.LOGRADOURO_OLD_20211002                      OK
+STAGE.LOGRADOURO_OLD_20211004                      OK
+STAGE.LOGRADOURO_OLD_20211006                      OK
+STAGE.LOGRADOURO_OLD_20211007                      OK
+STAGE.LOGRADOURO_OLD_20211008                      OK
+STAGE.LOGRADOURO_OLD_20211010                      OK
+STAGE.LOGRADOURO_OLD_20211102                      OK
+STAGE.LOGRADOURO_OLD_20211107                      OK
+STAGE.LOGRADOURO_OLD_20211126                      OK
+STAGE.LOGRADOURO_OLD_20211127                      OK
+STAGE.LOGRADOURO_OLD_20211128                      OK
+STAGE.LOGRADOURO_OLD_20211129                      OK
+STAGE.LOGRADOURO_OLD_20211130                      OK
+STAGE.LOGRADOURO_OLD_20211201                      OK
+STAGE.LOGRADOURO_OLD_20211202                      OK
+STAGE.LOGRADOURO_OLD_20211224                      OK
+STAGE.LOGRADOURO_OLD_20211225                      OK
+STAGE.LOGRADOURO_OLD_20220402                      OK
+STAGE.LOGRADOURO_OLD_20220505                      OK
+STAGE.LOGRADOURO_OLD_20220519                      OK
+STAGE.LOGRADOURO_OLD_20220521                      OK
+STAGE.LOGRADOURO_OLD_20220529                      OK
+STAGE.LOGRADOURO_OLD_20220623                      OK
+STAGE.LOGRADOURO_OLD_20220702                      OK
+STAGE.LOGRADOURO_OLD_20220704                      OK
+STAGE.LOGRADOURO_OLD_20220714                      OK
+STAGE.LOGRADOURO_OLD_20220715                      OK
+STAGE.LOGRADOURO_OLD_20220716                      OK
+STAGE.LOGRADOURO_OLD_20220717                      OK
+STAGE.LOGRADOURO_OLD_20220718                      OK
+STAGE.LOGRADOURO_OLD_20220719                      OK
+STAGE.LOGRADOURO_OLD_20220720                      OK
+STAGE.LOGRADOURO_V2                                OK
+STAGE.MIDDLEWARE_LOG                               OK
+STAGE.NODE                                         OK
+STAGE.NODE_BKP_20210902                            OK
+STAGE.NODE_BKP_20210907                            OK
+STAGE.NODE_BKP_20220419                            OK
+STAGE.NODE_BKP_20220422                            OK
+STAGE.NODE_BKP_20220509                            OK
+STAGE.NODE_BKP_20220620                            OK
+STAGE.NODE_BKP_20220627                            OK
+STAGE.NODE_BKP_20220725                            OK
+STAGE.NODE_BKP_20220920                            OK
+STAGE.NODE_BKP_20221005                            OK
+STAGE.NODE_BKP_20230113                            OK
+STAGE.NODE_NEW                                     OK
+STAGE.NODE_NEW2                                    OK
+STAGE.NODE_OLD_20210625                            OK
+STAGE.NODE_OLD_20210626                            OK
+STAGE.NODE_OLD_20210627                            OK
+STAGE.NODE_OLD_20210628                            OK
+STAGE.NODE_OLD_20210629                            OK
+STAGE.NODE_OLD_20210714                            OK
+STAGE.NODE_OLD_20210715                            OK
+STAGE.NODE_OLD_20210716                            OK
+STAGE.NODE_OLD_20210717                            OK
+STAGE.NODE_OLD_20210718                            OK
+STAGE.NODE_OLD_20210719                            OK
+STAGE.NODE_OLD_20210720                            OK
+STAGE.NODE_OLD_20210813                            OK
+STAGE.NODE_OLD_20210823                            OK
+STAGE.NODE_OLD_20210828                            OK
+STAGE.NODE_OLD_20210916                            OK
+STAGE.NODE_OLD_20211001                            OK
+STAGE.NODE_OLD_20211004                            OK
+STAGE.NODE_OLD_20211006                            OK
+STAGE.NODE_OLD_20211007                            OK
+STAGE.NODE_OLD_20211009                            OK
+STAGE.NODE_OLD_20211010                            OK
+STAGE.NODE_OLD_20211026                            OK
+STAGE.NODE_OLD_20211027                            OK
+STAGE.NODE_OLD_20211028                            OK
+STAGE.NODE_OLD_20211029                            OK
+STAGE.NODE_OLD_20211030                            OK
+STAGE.NODE_OLD_20211031                            OK
+STAGE.NODE_OLD_20211101                            OK
+STAGE.NODE_OLD_20211125                            OK
+STAGE.NODE_OLD_20211126                            OK
+STAGE.NODE_OLD_20211127                            OK
+STAGE.NODE_OLD_20211128                            OK
+STAGE.NODE_OLD_20211129                            OK
+STAGE.NODE_OLD_20211130                            OK
+STAGE.NODE_OLD_20211201                            OK
+STAGE.NODE_OLD_20211224                            OK
+STAGE.NODE_OLD_20211225                            OK
+STAGE.NODE_OLD_20220402                            OK
+STAGE.NODE_OLD_20220521                            OK
+STAGE.NODE_OLD_20220526                            OK
+STAGE.NODE_OLD_20220527                            OK
+STAGE.NODE_OLD_20220623                            OK
+STAGE.NODE_OLD_20220702                            OK
+STAGE.NODE_OLD_20220704                            OK
+STAGE.NODE_OLD_20220714                            OK
+STAGE.NODE_OLD_20220715                            OK
+STAGE.NODE_OLD_20220716                            OK
+STAGE.NODE_OLD_20220717                            OK
+STAGE.NODE_OLD_20220718                            OK
+STAGE.NODE_OLD_20220719                            OK
+STAGE.NODE_OLD_20220720                            OK
+STAGE.NODE_V2                                      OK
+STAGE.PERMISSAO_REPOSITORIOS_BKP_20220323          OK
+STAGE.PORTAL_DISPONIBLIDADE.COTAS_NORMALIZED_TST   OK
+STAGE.SNP_CHECK_TAB
+error    :
+STAGE.STG_ENDERECO                                 OK
+STAGE.STG_HP_IMOVEL                                OK
+STAGE.STG_IMOVEL                                   OK
+STAGE.STG_IMOVEL_PRODUTO                           OK
+STAGE.STG_LOGRADOURO                               OK
+STAGE.STG_NODE_BKP                                 OK
+STAGE.STG_SITUACAO_SOLICITACAO                     OK
+STAGE.STG_TIPO_IMOVEL                              OK
+STAGE.WRK_MOTIVO_BLOQUEIO_ISP
+error    :
+STAGE.WRK_MOTIVO_SITUACAO_HP_ISP
+error    :
+STAGE.WRK_SITUACAO_COMERCIAL_ISP
+error    :
+STAGE.WRK_SITUACAO_IMOVEL_ISP
+error    :
+TABLEAU_RESOURCE.ATUALIZACAO_TWBX                  OK
+TABLEAU_RESOURCE.LICENCAS_DISPONIVEIS              OK
+TABLEAU_RESOURCE.PUBLICO_ESPECIFICO_TABLEAU        OK
+TABLEAU_RESOURCE.PUBLICO_VIP_TABLEAU               OK
+TABLEAU_RESOURCE.datasources                       OK
+TABLEAU_RESOURCE.sites                             OK
+TABLEAU_RESOURCE.workbooks                         OK
+TEMPORARIO.#Tableau_104_sid_028C8411_1_Group       OK
+TEMPORARIO.#Tableau_19_sid_02D6E38B_4_Group        OK
+TEMPORARIO.#Tableau_23_sid_02919DAF_1_Group        OK
+TEMPORARIO.#Tableau_24_sid_02D70535_1_Group        OK
+TEMPORARIO.#Tableau_25_sid_0295C800_1_Group        OK
+TEMPORARIO.#Tableau_38_sid_02903D24_1_Group        OK
+TEMPORARIO.#Tableau_43_sid_02911DCD_1_Group        OK
+TEMPORARIO.#Tableau_44_sid_03546407_4_Group        OK
+TEMPORARIO.#Tableau_63_sid_056137A0_4_Group        OK
+TEMPORARIO.#Tableau_76_sid_028C2E15_4_Group        OK
+TEMPORARIO.BANCOS_USERS_TEMP                       OK
+TEMPORARIO.BANCOS_USERS_TEMP_I                     OK
+TEMPORARIO.BANCOS_USERS_TERCEIROS                  OK
+TEMPORARIO.BANCOS_USERS_TERCEIROS_TEMP             OK
+TEMPORARIO.BANCO_USERS_PROPRIO                     OK
+TEMPORARIO.CONSUMIDOR_CONSTRUTOR                   OK
+TEMPORARIO.DE_PARA_NIVEL_2                         OK
+TEMPORARIO.DWH_USERS                               OK
+TEMPORARIO.DWH_USERS_TEMP                          OK
+TEMPORARIO.EXT_ACESSO_DWH_LOGIN_CLARO              OK
+TEMPORARIO.EXT_BANCOS_PROPRIOS                     OK
+TEMPORARIO.EXT_BANCOS_TERCEIRO                     OK
+TEMPORARIO.EXT_IW_BASE_COMPLETA                    OK
+TEMPORARIO.EXT_IW_BASE_COMPLETO                    OK
+TEMPORARIO.EXT_IW_COMPLETO                         OK
+TEMPORARIO.EXT_LAKE_1                              OK
+TEMPORARIO.EXT_TER_PRO_CLARO_DWH                   OK
+TEMPORARIO.EXT_USERS_DATA_LAKE                     OK
+TEMPORARIO.EXT_USERS_IW                            OK
+TEMPORARIO.IW_USERS                                OK
+TEMPORARIO.LAKE_USERS                              OK
+TEMPORARIO.LAKE_USERS_TEMP_PROP                    OK
+TEMPORARIO.LAKE_USERS_TEMP_TERC                    OK
+TEMPORARIO.MONITORAMENTO_PUBLICO_VIP               OK
+TEMPORARIO.PORTAL_USERS                            OK
+TEMPORARIO.PORTAL_USERS_TEMP                       OK
+TEMPORARIO.PUBLICO_HUB_DADOS                       OK
+TEMPORARIO.RH_E_LOGIN                              OK
+TEMPORARIO.TOTALIZADOR_ACESSOS_260_DIAS            OK
+TEMPORARIO.TOTALIZADOR_ACESSOS_260_DIAS_CARGO      OK
+TEMPORARIO.VISITOR_PIWIK_LOG                       OK
+WIKI.WIKIarchive                                   OK
+WIKI.WIKIbot_passwords                             OK
+WIKI.WIKIcategory                                  OK
+WIKI.WIKIcategorylinks                             OK
+WIKI.WIKIchange_tag                                OK
+WIKI.WIKIexternallinks                             OK
+WIKI.WIKIfilearchive                               OK
+WIKI.WIKIhitcounter                                OK
+WIKI.WIKIimage                                     OK
+WIKI.WIKIimagelinks                                OK
+WIKI.WIKIinterwiki                                 OK
+WIKI.WIKIipblocks                                  OK
+WIKI.WIKIiwlinks                                   OK
+WIKI.WIKIjob                                       OK
+WIKI.WIKIl10n_cache                                OK
+WIKI.WIKIlanglinks                                 OK
+WIKI.WIKIlog_search                                OK
+WIKI.WIKIlogging                                   OK
+WIKI.WIKImodule_deps                               OK
+WIKI.WIKImsg_resource                              OK
+WIKI.WIKImsg_resource_links                        OK
+WIKI.WIKIobjectcache                               OK
+WIKI.WIKIoldimage                                  OK
+WIKI.WIKIpage                                      OK
+WIKI.WIKIpage_props                                OK
+WIKI.WIKIpage_restrictions                         OK
+WIKI.WIKIpagelinks                                 OK
+WIKI.WIKIprotected_titles                          OK
+WIKI.WIKIquerycache                                OK
+WIKI.WIKIquerycache_info                           OK
+WIKI.WIKIquerycachetwo                             OK
+WIKI.WIKIrecentchanges                             OK
+WIKI.WIKIredirect                                  OK
+WIKI.WIKIrevision                                  OK
+WIKI.WIKIsearchindex                               OK
+WIKI.WIKIsite_identifiers                          OK
+WIKI.WIKIsite_stats                                OK
+WIKI.WIKIsites                                     OK
+WIKI.WIKItag_summary                               OK
+WIKI.WIKItemplatelinks                             OK
+WIKI.WIKItext                                      OK
+WIKI.WIKItranscache                                OK
+WIKI.WIKIupdatelog                                 OK
+WIKI.WIKIuploadstash                               OK
+WIKI.WIKIuser                                      OK
+WIKI.WIKIuser_former_groups                        OK
+WIKI.WIKIuser_groups                               OK
+WIKI.WIKIuser_newtalk                              OK
+WIKI.WIKIuser_properties                           OK
+WIKI.WIKIvalid_tag                                 OK
+WIKI.WIKIwatchlist                                 OK
+WORKFLOW.ARQUIVO_SOLICITACAO_RELATORIO_EXCECAO     OK
+WORKFLOW.ASSOCIACAO_SOLICITACAO_CADASTRO_MENU      OK
+WORKFLOW.ASSOCIACAO_SOLICITACAO_GRUPO_APROVADOR    OK
+WORKFLOW.ASSOCIACAO_SOLICITACAO_RELATORIO_EXCECAO  OK
+WORKFLOW.ASSOCIACAO_USUARIO_GRUPO_APROVADOR
+Warning  :
+status   : OK
+WORKFLOW.ASSOCIACAO_USUARIO_GRUPO_APROVADOR_HISTORICO OK
+WORKFLOW.GRUPO_APROVADOR
+Warning  :
+Warning  :
+status   : OK
+WORKFLOW.GRUPO_APROVADOR_HISTORICO                 OK
+WORKFLOW.SOLICITACAO                               OK
+WORKFLOW.STATUS_SOLICITACAO                        OK
+WORKFLOW.TIPO_WORKFLOW                             OK
+WORKFLOW.WORKFLOW
+Warning  :
+Warning  :
+status   : OK
+WORKFLOW.WORKFLOW_HISTORICO                        OK
+cr_debug.breakpoints                               OK
+cr_debug.callstack                                 OK
+cr_debug.debuggings                                OK
+cr_debug.info                                      OK
+cr_debug.watches                                   OK
+dbarris.associacao_gerente_cidade                  OK
+dbarris.associacao_gerente_cidade2                 OK
+dbarris.associacao_leadtime_cidade                 OK
+dbarris.associacao_leadtime_cidade2                OK
+dbarris.cotas                                      OK
+dbarris.cotas2                                     OK
+dbarris.cotas_claro                                OK
+dbarris.cotas_claro_aux                            OK
+dbarris.estrutura_organizacional_cop               OK
+dbarris.gerente                                    OK
+dbarris.grupo_classes                              OK
+dbarris.in_areas                                   OK
+dbarris.in_areas2                                  OK
+dbarris.in_classes                                 OK
+dbarris.in_classes2                                OK
+dbarris.in_cotas_claro                             OK
+dbarris.in_cotas_claro2                            OK
+dbarris.in_cotas_net                               OK
+dbarris.in_cotas_net2                              OK
+dbarris.in_grupo_detalhes                          OK
+dbarris.in_grupos                                  OK
+dbarris.in_periodoinicios                          OK
+dbarris.in_periodoinicios2                         OK
+dbarris.in_periodos                                OK
+dbarris.in_periodos2                               OK
+dbarris.in_tipo_agenda                             OK
+dbarris.in_tipos                                   OK
+dbarris.in_tipos2                                  OK
+dbarris.leadtime                                   OK
+dbarris.master_cidades                             OK
+dbarris.master_cidades_old                         OK
+dbarris.status_processo
+error    :
+dbarris.ultima_atualizacao                         OK
+infra.EXT_MGED_PROPOSTAS
+error    :
+infra.EXT_MGED_SOLICS
+error    :
+infra.EXT_MONBRI_PROPOSTAS
+error    :
+infra.OP_NODES_AREA                                OK
+infra.at1_dados                                    OK
+infra.cat_check_list                               OK
+infra.cat_configuracoes                            OK
+infra.cat_periodo_preventiva                       OK
+infra.cat_tipo_ativo                               OK
+infra.cat_tipo_check_list                          OK
+infra.check_list_ativos                            OK
+infra.check_list_fontes                            OK
+infra.check_list_ups                               OK
+infra.check_list_ups_bat                           OK
+infra.con_address                                  OK
+infra.con_address_nickname                         OK
+infra.con_address_type                             OK
+infra.con_city                                     OK
+infra.con_neighborhood                             OK
+infra.con_neighborhood_region                      OK
+infra.con_operadora                                OK
+infra.con_region                                   OK
+infra.con_telephone_number                         OK
+infra.con_telephone_type                           OK
+infra.con_uf                                       OK
+infra.forecast_grupos                              OK
+infra.forecast_indicadores                         OK
+infra.forecast_log_preenchimento                   OK
+infra.forecast_valores                             OK
+infra.forecast_valores_r                           OK
+infra.forecast_valores_r_bkp                       OK
+infra.ged_enderecos                                OK
+infra.ged_log_solic                                OK
+infra.ged_ocorrencias                              OK
+infra.ged_propostas                                OK
+infra.ged_rel_ocorrencias                          OK
+infra.ged_situacao                                 OK
+infra.ged_solicitacoes
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+infra.ged_solicitacoes_log                         OK
+infra.ged_tbl_baixas                               OK
+infra.ged_usuarios
+error    :
+infra.headends                                     OK
+infra.log_agendamentos                             OK
+infra.log_vt_tmp_user                              OK
+infra.log_vt_usuarios                              OK
+infra.logvt_usuarios
+error    :
+infra.op_clusters                                  OK
+infra.op_grupos                                    OK
+infra.op_headends                                  OK
+infra.op_headends_geradores                        OK
+infra.op_headends_nobreaks                         OK
+infra.op_headends_retificadores                    OK
+infra.op_nodes                                     OK
+infra.op_nodes_ativos                              OK
+infra.op_nodes_fontes                              OK
+infra.op_operadoras                                OK
+infra.portalbri_amplif                             OK
+infra.portalbri_fontes                             OK
+infra.portalbri_nodes                              OK
+infra.rel_enderecos_dispositivos                   OK
+infra.rel_menus                                    OK
+infra.rel_telas                                    OK
+infra.rel_usuarios                                 OK
+infra.rel_usuarios2                                OK
+infra.rel_usuarios3                                OK
+infra.sch_preventivas
+Warning  :
+Warning  :
+status   : OK
+infra.tec_cargos                                   OK
+infra.tec_operadoras                               OK
+infra.tec_resposaveis                              OK
+infra.tec_resptec                                  OK
+infra.tec_tecnicos                                 OK
+infra.tmp_area                                     OK
+infra.tmp_fone                                     OK
+infra.tmp_n_area                                   OK
+infra.tmp_reg_log                                  OK
+infra.tmp_rel_forecast_ind                         OK
+infra.tmp_rel_usuarios                             OK
+infra.usr_login                                    OK
+infra.usr_perfil                                   OK
+qualiprojectdb.cad_areas_matriciais                OK
+qualiprojectdb.cad_audit                           OK
+qualiprojectdb.cad_empresas                        OK
+qualiprojectdb.cad_fontes_dados                    OK
+qualiprojectdb.cad_gut_escala                      OK
+qualiprojectdb.cad_indicadores                     OK
+qualiprojectdb.cad_indicadores_icg                 OK
+qualiprojectdb.cad_motivos                         OK
+qualiprojectdb.cad_operacoes                       OK
+qualiprojectdb.cad_regionais                       OK
+qualiprojectdb.cad_status                          OK
+qualiprojectdb.cad_status_acao                     OK
+qualiprojectdb.cad_tipo_projeto                    OK
+qualiprojectdb.cad_unidades_negocio                OK
+qualiprojectdb.comite_area                         OK
+qualiprojectdb.comite_classe                       OK
+qualiprojectdb.comite_funcao                       OK
+qualiprojectdb.gantt_links                         OK
+qualiprojectdb.pessoas                             OK
+qualiprojectdb.projetos                            OK
+qualiprojectdb.projetos_acoes                      OK
+qualiprojectdb.projetos_acoes_plano                OK
+qualiprojectdb.projetos_acoes_prioriza             OK
+qualiprojectdb.projetos_causas                     OK
+qualiprojectdb.projetos_comite                     OK
+qualiprojectdb.projetos_dados_historico            OK
+qualiprojectdb.projetos_ganhos                     OK
+qualiprojectdb.projetos_ganhos_retornos            OK
+qualiprojectdb.projetos_gut                        OK
+qualiprojectdb.projetos_investimentos              OK
+qualiprojectdb.projetos_pareto                     OK
+qualiprojectdb.projetos_pareto_dados               OK
+qualiprojectdb.projetos_perenizacao                OK
+qualiprojectdb.projetos_processos                  OK
+qualiprojectdb.projetos_workout                    OK
+qualiprojectdb.projetos_workout_perguntas          OK
+qualiprojectdb.usuarios_log                        OK
+qualiprojectdb.usuarios_uggroups                   OK
+qualiprojectdb.usuarios_ugmembers                  OK
+qualiprojectdb.usuarios_ugrights                   OK
+sakila.aluguel                                     OK
+sakila.ator                                        OK
+sakila.categoria                                   OK
+sakila.cidade                                      OK
+sakila.cliente                                     OK
+sakila.endereco                                    OK
+sakila.filme                                       OK
+sakila.filme_ator                                  OK
+sakila.filme_categoria                             OK
+sakila.filme_texto                                 OK
+sakila.funcionario                                 OK
+sakila.idioma                                      OK
+sakila.inventario                                  OK
+sakila.loja                                        OK
+sakila.pagamento                                   OK
+sakila.pais                                        OK
+sgpn.ARQUIVOS_UPLOAD                               OK
+sgpn.FERIADOS                                      OK
+sgpn.IMOVEL_COMPLEMENTOS                           OK
+sgpn.IMOVEL_ENDERECO                               OK
+sgpn.LOG_SOLICITACOES                              OK
+sgpn.LOG_VISTORIAS                                 OK
+sgpn.LOG_VISTORIAS_SITUACAO                        OK
+sgpn.PROPOSTAS                                     OK
+sgpn.REL_GRUPOS                                    OK
+sgpn.REL_MENUS                                     OK
+sgpn.REL_OCORRENCIAS                               OK
+sgpn.REL_PERFIL                                    OK
+sgpn.REL_SITUACAO                                  OK
+sgpn.REL_VISTORIAS                                 OK
+sgpn.SOLICITACOES_FECHAMENTOS                      OK
+sgpn.SOLICITACOES_OK                               OK
+sgpn.SOLICITACOES_PEN
+Warning  :
+Warning  :
+Warning  :
+status   : OK
+sgpn.TMP_EXT_BAIXAS                                OK
+sgpn.TMP_EXT_OUTROS                                OK
+sgpn.TMP_EXT_PROPOSTAS                             OK
+sgpn.TMP_EXT_SOLICS                                OK
+sgpn.USUARIOS                                      OK
+sgpn.VISTORIAS                                     OK
+sgpn.sgpn_vistoria_avulsa                          OK
+sys.sys_config                                     OK
+
+Repairing tables
+LINEUP.ASSOCIACAO_CANAL_HISTORICO
+note     :
+MATRIZ.LIXO_TABELA_TODO_LIXO
+Note     :
+status   : OK
+MATRIZ.LIXO_TESTE
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ANALISE_DIMENSAO_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ANALISE_INDICADOR_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_DASHBOARD_ANALISE_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_DASHBOARD_REPOSITORIO_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_DASHBOARD_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_DASHBOARD_TEMP
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_DIMENSAO_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_DIMENSAO_TEMP
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_INDICADOR_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_INDICADOR_TEMP
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_INFO_GERENCIAL_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_INFO_GERENCIAL_TEMP
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_ORIGEM_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ASSOCIACAO_ORIGEM_ORIGEM_TEMP
+Note     :
+status   : OK
+METAMODELO.INFO_GERENCIAL_HISTORICO
+Note     :
+status   : OK
+METAMODELO.LIXO_APAGAR_ASSOCIACAO_ORIGEM_DIMENSAO
+Note     :
+status   : OK
+METAMODELO.ORIGEM_HISTORICO
+Note     :
+status   : OK
+METAMODELO.ORIGEM_NOME_HISTORICO
+Note     :
+status   : OK
+NETBICC.ATIVIDADE
+Note     :
+status   : OK
+NETBICC.BASELINE
+Note     :
+status   : OK
+NETBICC.PROJETO
+Note     :
+status   : OK
+NETBICC.RECURSO_TESTE
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2011_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2011_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2011_08
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2011_09
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2011_10
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2011_11
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2011_12
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_02
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_03
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_04
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_05
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_06
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_08
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_09
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_10
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_11
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2012_12
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_02
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_03
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_04
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_05
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_06
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_08
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_09
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_10
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_11
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2013_12
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_02
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_03
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_04
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_05
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_06
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_blob_2014_08
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2011_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2011_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2011_08
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2011_09
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2011_10
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2011_11
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2011_12
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_02
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_03
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_04
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_05
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_06
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_08
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_09
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_10
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_11
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2012_12
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_02
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_03
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_04
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_05
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_06
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_08
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_09
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_10
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_11
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2013_12
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_01
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_02
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_03
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_04
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_05
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_06
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_07
+Note     :
+status   : OK
+PIWIK.piwik_archive_numeric_2014_08
+Note     :
+status   : OK
+PIWIK.piwik_segment
+Note     :
+status   : OK
+STAGE.E$_BAIRRO
+Note     :
+status   : OK
+STAGE.E$_CAT_OPER_AREA_DESPACHO
+Note     :
+status   : OK
+STAGE.E$_CIDADE
+Note     :
+status   : OK
+STAGE.E$_LOGRADOURO
+Note     :
+status   : OK
+STAGE.E$_NODE
+Note     :
+status   : OK
+STAGE.SNP_CHECK_TAB
+Note     :
+status   : OK
+STAGE.WRK_MOTIVO_BLOQUEIO_ISP
+Note     :
+status   : OK
+STAGE.WRK_MOTIVO_SITUACAO_HP_ISP
+Note     :
+status   : OK
+STAGE.WRK_SITUACAO_COMERCIAL_ISP
+Note     :
+status   : OK
+STAGE.WRK_SITUACAO_IMOVEL_ISP
+Note     :
+status   : OK
+dbarris.status_processo
+Note     :
+status   : OK
+infra.EXT_MGED_PROPOSTAS
+Note     :
+status   : OK
+infra.EXT_MGED_SOLICS
+Note     :
+status   : OK
+infra.EXT_MONBRI_PROPOSTAS
+Note     :
+status   : OK
+infra.ged_usuarios
+Note     :
+status   : OK
+infra.logvt_usuarios
+Note     :
+status   : OK
+Upgrade process completed successfully.
+Checking if update is needed.
+[mysql@net002prdlnx821 bin]$

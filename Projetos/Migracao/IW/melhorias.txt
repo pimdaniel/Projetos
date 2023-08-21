@@ -31,7 +31,7 @@
     o `iwprd_crm`.`fp_cotacao`  :: 3.845.958   ::  ALTER TABLE iwprd_crm.fp_cotacao FORCE;
     o `iwprd_crm`.`fp_cotacao_consolidado`                       ALTER TABLE  `iwprd_crm`.`fp_cotacao_consolidado` FORCE;
     o `iwprd_crm`.`fp_portabilidade`                             ALTER TABLE `iwprd_crm`.`fp_portabilidade`  FORCE;
-    o `iwprd_fin`.`rut_consolida_mobile`                         ALTER TABLE `iwprd_fin`.`rut_consolida_mobile` FORCE;
+    o `iwprd_fin`.`rut_consolida_mobile`                         ALTER TABLE `iwprd_fin`.`rut_consolida_mobile` FORCE;                  ok
     o `iwprd_fin`.`rut_consolida_sap`                            ALTER TABLE `iwprd_fin`.`rut_consolida_sap` FORCE;
     o `iwprd_prd`.`prd_registro_deposito_historico`              ALTER TABLE `iwprd_prd`.`prd_registro_deposito_historico` FORCE;
     o `iwprd_prd`.`prd_registro_transacao`                       ALTER TABLE `iwprd_prd`.`prd_registro_transacao` FORCE;
@@ -77,3 +77,7 @@
 
 
 
+
+ALTER TABLE iwtmp_hem.iw_vendedor_stage FORCE;
+
+ANALYZE TABLE iwtmp_hem.iw_vendedor_stage;
