@@ -103,11 +103,11 @@ curl -v telnet://10.29.3.89:3306
 Claro@12345
 curl -v telnet://10.29.3.89:3306
 
-#####My.cnf
+#####My.cnf10.29.3.89
 
 # ----------------------------------------------------------------------
 # MySQL Server Configuration File
-# SERVIDOR : net002prdlnx849 - 10.29.3.89
+# SERVIDOR : net002prdlnx849 - 
 #
 # Criado por : Daniel Pimenta
 # Data: 30/09/2022

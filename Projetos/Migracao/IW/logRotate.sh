@@ -1,25 +1,28 @@
 
 
 # Diretorio de cada arquivo que sera feito o ROTATE
-   LOG_DIR=/mysql/log.d
-   LOG_DIR_ROT=/mysql/log.d/logRotate
+   LOG_DIR=/iw/log.d
+   SLOW_DIR=/iw/log.d
   
-   #Nome dos arquivos de ROTATE
-   ERR=log_error.log
-   SLOW=slow.log
+# Diretorio de destino 
+   LOG_DIR_ROT=/iw/log.d/logRotate
+  
+# Nome dos arquivos de ROTATE
+   ERR=mysqld.log
+   SLOW=brux0395-slow.log
  
  
    DATA=`date +"%Y%m%d"`
  
- 
-  mv $LOG_DIR/$SLOW $LOG_DIR_ROT/$SLOW-$DATA.log.old
+# Slow log
+  mv $SLOW_DIR/$SLOW $LOG_DIR_ROT/$SLOW-$DATA.log.old
   gzip  $LOG_DIR_ROT/$SLOW-$DATA.log.old
  
+
+# Log de error
   mv $LOG_DIR/$ERR $LOG_DIR_ROT/$ERR-$DATA.log.old
   gzip  $LOG_DIR_ROT/$ERR-$DATA.log.old
  
  
-  /mysql/app.d/mysql/bin/mysqladmin --login-path=root --socket=/mysql/mysql.sock flush-logs
+  /usr/local/mysql/bin/mysqladmin --login-path=root  flush-logs
 
-
- 

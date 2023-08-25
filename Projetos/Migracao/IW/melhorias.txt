@@ -76,8 +76,6 @@
 
 
 
+mysql --login-path=root -e"ALTER TABLE iwtmp_hem.iw_vendedor_stage FORCE;"
 
-
-ALTER TABLE iwtmp_hem.iw_vendedor_stage FORCE;
-
-ANALYZE TABLE iwtmp_hem.iw_vendedor_stage;
+mysql --login-path=root -e"ANALYZE TABLE iwtmp_hem.iw_vendedor_stage;"

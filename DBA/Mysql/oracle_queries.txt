@@ -37,3 +37,16 @@ select TIME_FORMAT(SEC_TO_TIME(VARIABLE_VALUE ),'%Hh %im')  as Uptime from infor
 
 
 select id,user,state,time,info from information_schema.PROCESSLIST where time > 120 and state like '%lock%' order by time  \G;
+
+
+
+ mysql_config_editor print --all
+
+
+
+
+
+ #########################  Atalhos LINUX #################################################
+
+ | /bin/gzip >> ${DIRECTORY_HOME}/mysqldump_brux0166_`date +"%Y%m%d_%H%M%S"`.sql.gz
+

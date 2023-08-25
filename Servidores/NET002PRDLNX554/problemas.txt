@@ -245,7 +245,7 @@ COLLATION_CONNECTION: utf8mb4_general_ci
 
 :: Eventos schedulados no servidor ::
 
-root@localhost [information_schema]> select DEFINER,EVENT_SCHEMA,EVENT_NAME from events;
+root@localhost [information_schema]> select DEFINER,EVENT_SCHEMA,EVENT_NAME from information_schema.events;
 
 +--------------+----------------------------+---------------------+----------------+----------------+
 | EVENT_SCHEMA | EVENT_NAME                 | STARTS              | INTERVAL_VALUE | INTERVAL_FIELD |
@@ -275,3 +275,7 @@ repair table  mysql.event;
 
 
 select backup_id,start_time,end_time,exit_state,compression_level,last_error from mysql.backup_history where year(start_time) = '2023' order by start_time;
+
+
+
+
