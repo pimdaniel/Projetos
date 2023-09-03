@@ -43,10 +43,29 @@ select id,user,state,time,info from information_schema.PROCESSLIST where time > 
  mysql_config_editor print --all
 
 
+############################# Processos #################################################
+
+select concat('kill ',id) as mata  from information_schema.PROCESSLIST where state = '';
+
+select user,state,info from information_schema.PROCESSLIST where state = 'System lock' ;
+
+
+select user,state,info from information_schema.PROCESSLIST where id = 628373829;
+
 
 
 
  #########################  Atalhos LINUX #################################################
 
- | /bin/gzip >> ${DIRECTORY_HOME}/mysqldump_brux0166_`date +"%Y%m%d_%H%M%S"`.sql.gz
+
+# ZIPAR
+
+ | /bin/gzip >> ${DIRECTORY_HOME}/mysqldump_brux0166_`date +"%Y%m%d_%H%M%S"`.sql.gz     
+
+
+ 
+
+
+
+
 
