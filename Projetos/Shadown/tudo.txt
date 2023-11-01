@@ -101,7 +101,7 @@ curl -v telnet://10.29.3.89:3306
 
 
 Claro@12345
-curl -v telnet://10.29.3.89:3306
+curl -v telnet://10.29.3.89:3306      [ LAPA ]
 
 #####My.cnf10.29.3.89
 

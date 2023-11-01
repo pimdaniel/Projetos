@@ -1,0 +1,41 @@
+
+
+ 
+
+
+ +----------------------+----------------------------+
+| user                 | host                       |
++----------------------+----------------------------+
+| OPS$DP_CONTROLEDANOS | %                          |
+| OPS$DP_CXLOGTOTAL    | %                          |
+| OPS$DP_FCAEMP        | %                          |
+| OPS$DP_SGAT          | %                          |
+| OPS$DP_SISNET        | %                          |
+| cop_rel              | %                          |
+| dbmon                | %                          |
+| opss$crkbdrcl        | %                          |
+| pma                  | %                          |
+| root                 | %                          |
+| rootx                | %                          |
+| ura                  | %                          |
+| usr_acess_ad         | %                          |
+| usr_acess_sp_ad      | %                          |
+| usr_cat              | %                          |
+| usr_change_agtec     | %                          |
+| usr_dev_cop          | %                          |
+| usr_dev_toa          | %                          |
+| usr_ext_dwh          | %                          |
+| usr_procedure        | %                          |
+| usr_prod_cop         | %                          |
+| usr_sel_cfg          | %                          |
+| usr_sharepoint       | %                          |
+| usr_sp_acess_ad      | %                          |
+| usr_ver              | %                          |
+| mysql.infoschema     | localhost                  |
+| mysql.session        | localhost                  |
+| mysql.sys            | localhost                  |
+| mysqlbackup          | localhost                  |
+| root                 | localhost                  |
+| usr_dev_cop          | net002prdlnx849.dcing.corp |
+| usr_dev_cop1         | net002prdlnx849.dcing.corp |
++----------------------+----------------------------+

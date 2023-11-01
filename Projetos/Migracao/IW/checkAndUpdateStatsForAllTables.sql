@@ -1,3 +1,6 @@
+
+DELIMITER //
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CheckAndUpdateStatsForAllTables2`(IN dbName VARCHAR(255))
 BEGIN
     DECLARE tableName VARCHAR(255);
@@ -43,3 +46,5 @@ BEGIN
     CLOSE tableCursor;
 
 END
+//
+DELIMITER ;

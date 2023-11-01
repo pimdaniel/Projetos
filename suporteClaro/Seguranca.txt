@@ -11,3 +11,6 @@ Senha#01
 
 
 mysql_config_editor set --login-path=shellbackup --user=mysqlbackup --password 
+
+
+mysql_config_editor set --login-path=admin --user=root --password

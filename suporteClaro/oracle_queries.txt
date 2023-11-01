@@ -10,7 +10,7 @@ SELECT   ROUND(187904819200 / 4 / 1073741824, 2) AS recommended_log_file_size_qu
 
 select   concat(@@version_compile_os, " ", @@version_compile_machine) as OS_Version;
 
-select       @@port as port
+select @@port as port
 
 system lscpu
 
@@ -43,24 +43,83 @@ select id,user,state,time,info from information_schema.PROCESSLIST where time > 
  mysql_config_editor print --all
 
 
-############################# Processos #################################################
+############################# Processos Mysql  #################################################
 
 select concat('kill ',id) as mata  from information_schema.PROCESSLIST where state = '';
 
-select user,state,info from information_schema.PROCESSLIST where state = 'System lock' ;
+select user,state,info from information_schema.PROCESSLIST where state like '%lock%';
+
+select user,state,info from information_schema.PROCESSLIST where time > 200;
+
+select user,state,info from information_schema.PROCESSLIST where id = 5875666;
 
 
-select user,state,info from information_schema.PROCESSLIST where id = 628373829;
+ # LOCKS
+select ENGINE,ENGINE_LOCK_ID,ENGINE_TRANSACTION_ID,THREAD_ID,LOCK_TYPE,LOCK_MODE,LOCK_STATUS,LOCK_DATA from performance_schema.data_locks;
+
+
+select PROCESSLIST_ID,PROCESSLIST_USER,PROCESSLIST_HOST,PROCESSLIST_DB ENGINE,LOCK_MODE,LOCK_STATUS,LOCK_TYPE,PROCESSLIST_COMMAND,P.info
+from performance_schema.data_locks DL inner join  performance_schema.threads T on DL.THREAD_ID =  T.THREAD_ID 
+                                      inner join  information_schema.PROCESSLIST P ON P.id = T.PROCESSLIST_ID
+limit 40;
+
+
+
+select distinct PROCESSLIST_ID,PROCESSLIST_USER,PROCESSLIST_HOST,PROCESSLIST_DB ENGINE,LOCK_MODE,LOCK_STATUS,LOCK_TYPE,PROCESSLIST_COMMAND,P.info from performance_schema.data_locks DL inner join  performance_schema.threads T on DL.THREAD_ID =  T.THREAD_ID   inner join  information_schema.PROCESSLIST P ON P.id = T.PROCESSLIST_ID \G;
 
 
 
 
- #########################  Atalhos LINUX #################################################
+
+#LOG
+  select * from  performance_schema.error_log order by LOGGED  desc limit 50;
+
+#HitRate 
+
+select 100 - ( 100 * innodb_pages_read /innodb_buffer_pool_read_requests ) as HitRate
+from  (
+select sum(innodb_buffer_pool_read_requests) as  innodb_buffer_pool_read_requests, sum(innodb_pages_read) as  innodb_pages_read
+from (
+select Variable_value as innodb_buffer_pool_read_requests , 0 as innodb_pages_read from sys.metrics where Variable_name in ('Innodb_buffer_pool_read_requests') union select 0 as innodb_buffer_pool_read_requests , Variable_value as innodb_pages_read from sys.metrics where Variable_name in ('innodb_pages_read')
+) as HitRate1
+) as HitRate2;
+ 
+
+# UPTIME
+ select TIME_FORMAT(SEC_TO_TIME(VARIABLE_VALUE ),'%Hh %im')  as Uptime 
+from information_schema.GLOBAL_STATUS 
+where VARIABLE_NAME='Uptime'
+
+
+#Log
+
+show global variables like 'innodb_log_files_in_group';  innodb_log_files_in_group  3  
+
+show global variables like 'innodb_log_file_size';  innodb_log_file_size  8589934592 
++----------------------+------------+
+
+
+#########################   My CNF ######################################################
+
+ # executa comando neste aquivo na inicializacao do Mysql
+init-file=/mysql/conf.d/initSql.sql
+
+
+
+############################ Backup MEB ##################################################
+
+select start_time,end_time,backup_type,backup_format,exit_state from mysql.backup_history order by start_time desc limit 5;
+
+#########################  Atalhos LINUX #################################################
 
 
 # ZIPAR
 
- | /bin/gzip >> ${DIRECTORY_HOME}/mysqldump_brux0166_`date +"%Y%m%d_%H%M%S"`.sql.gz     
+gzip brux0762-slow_bkp.log | mv brux0762-slow_bkp.log.gz /mysql/scritp/tmp
+ |
+$_mysqldump -c --user=$user --password=$pass $db $tb | /bin/gzip > $BACKUP
+
+ 
 
 
  

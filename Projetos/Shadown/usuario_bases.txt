@@ -1,0 +1,147 @@
+
+
+expense: 
+
+
+create database db_admin_expense;
+create database db_planorc;
+create database db_infra_am_expense;
+create database calendar;
+
+
+mysql --login-path=root db_admin_expense < dump-db_admin-Expense202310051051.sql
+mysql --login-path=root calendar  <  dump-calendar-202310051046.sql
+mysql --login-path=admin db_infra_am_expense  <  dump-db_infra_am-Expense202310051122.sql
+mysql --login-path=root db_planorc <  dump-db_planorc-202310051048.sql
+
+
+
+create user 'usr_dev_expense'@'%'  IDENTIFIED BY 'E0x0PeSSv';
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON db_admin_expense.* to 'usr_dev_expense'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON db_planorc.* to 'usr_dev_expense'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON db_infra_am_expense.* to 'usr_dev_expense'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON calendar.* to 'usr_dev_expense'@'%';
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+kronus : 
+
+
+create database db_admin_kronus;
+create database db_infra_am_kronus;
+create database db_kronus;
+
+
+mysql --login-path=root  db_admin_kronus < dump-db_admin-kronus202310051051.sql
+
+mysql --login-path=root  db_infra_am_kronus <  dump-db_infra_am-kronus202310051122.sql
+
+sed -i 's/db_admin/db_admin_kronus/g'  dump-db_kronus-202310051050.sql
+
+mysql --login-path=root  db_kronus < dump-db_kronus-202310051050.sql
+
+create user 'usr_dev_kronus'@'%'  IDENTIFIED BY 'Kr@nn!s';
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON db_admin_kronus.* to 'usr_dev_kronus'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON db_infra_am_kronus.* to 'usr_dev_kronus'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON db_kronus.* to 'usr_dev_kronus'@'%';
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SGO: bd_frota_spo
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Agenda de Manobras: bd_pmo
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+NetHP: net_hp
+
+create user 'usr_dev_nethp'@'%'  IDENTIFIED BY 'N0nTHp#';
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON net_hp.* to 'usr_dev_nethp'@'%'; 
+
+ 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ CAT : 
+
+ db_adm_cat_mdu
+ db_admin_75
+ db_admin_cat_ged
+ db_admin_cat_teste
+ db_admin_mdu
+ db_admin_scm
+ db_caixas_fibra
+ db_cat_ged
+ db_g5
+ db_mdu
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SGP:
+
+ `db_app`
+ `db_form`
+ `db_sgp`
+ `db_sgp_rep`
+ `db_integracao`
+ `db_cockpit` 
+ `db_sgp_rel`
+
+
+sed -i 's/DEFAULT curdate()/DEFAULT (CURRENT_DATE) /g'
+sed -i 's/NO_AUTO_CREATE_USER//' 
+set GLOBAL log_bin_trust_function_creators = ON;
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+SPD :
+
+Dump_Novo.sql
+
+
+erros:
+      ERROR 1231 (42000) at line 3931285: Variable 'sql_mode' can't be set to the value of 'NO_AUTO_CREATE_USER'
+
+sed -i 's/NO_AUTO_CREATE_USER//' Dump_Novo.sql
+
+
+create user 'usr_dev_spd'@'%'  IDENTIFIED BY 'S#p00D01'; 
+
+show grants for 'usr_dev_spd'@'%';
+
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON `0800_banco`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `abastecimentos`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `ativos_bd`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `banco_acesso`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `banco_manut`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `controle_clm`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `controle_materiais`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `controle_sla`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `controle_smp`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `epis`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `ferramenta_spd`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `ferramentas`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `good_card`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `km`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `materiais_ferramentas`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `multas_java`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `outros`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `portal_spd`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `projetojava`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `sinistros_banco_java`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `telefonia`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `uniformes`.* to 'usr_dev_spd'@'%';
+GRANT SELECT,INSERT,DELETE,UPDATE ON `zona_azul_banco`.* to 'usr_dev_spd'@'%';
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------

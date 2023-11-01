@@ -1,0 +1,207 @@
+
+
+
+/mysql/app.d
+scp mysql@10.88.134.60:/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64.tar.gz /mysql/jwatter/IW/
+
+Informações dos servidores:
+--------------------------------
+
+Info dos Ambientes:
+
+DEV
+
+clstsgslx0104 - 10.88.134.61 (APP) :: clstsgslx0104.COMPUTE.CLOUD.CORP.CLAROBR
+
+clstsgslx0105 - 10.88.134.60 (BD)  :: clstsgslx0105.COMPUTE.CLOUD.CORP.CLAROBR
+ 
+
+PRD
+
+clstsgslx4261 - 10.88.132.215 (APP) :: clstsgslx4261.COMPUTE.CLOUD.CORP.CLAROBR
+clstsgslx4262 - 10.88.132.214 (BD)  :: clstsgslx4262.COMPUTE.CLOUD.CORP.CLAROBR - Claro@12345  [ Sem mysql instalado ]
+ 
+
+Homolog
+
+clstsgslx4565 - 10.88.136.66 (APP) :: clstsgslx4565.COMPUTE.CLOUD.CORP.CLAROBR
+clstsgslx4566 - 10.88.136.67 (BD) ::  clstsgslx4566.COMPUTE.CLOUD.CORP.CLAROBR   { backup mysqlShell e MEB configurado }
+
+  
+/mysql			100G 
+/mysql/data		500G [Verificar com a aplicação o tamanho necessário]
+/mysql/log		100G 
+/mysql/backup	500G 
+
+
+ 
+
+---------------------------
+ DEV
+
+clstsgslx0105 - c (BD)   { mysql:Claro@1234}  ssh mysql@10.88.134.60
+clstsgslx0105.COMPUTE.CLOUD.CORP.CLAROBR
+
+ Homolog
+
+clstsgslx4566 - 10.88.136.67 (BD)
+clstsgslx4565.COMPUTE.CLOUD.CORP.CLAROBR
+
+
+--------------------------------------------------------------------------
+#Filesystems 
+
+	/mysql			(100Gb)
+	/mysql/data		( Responsavel pela aplicação precisa mensurar uma estimativa inicial )
+	/mysql/log		(100Gb)
+	/mysql/backup	(200GB)
+--------------------------------------------------------------------------
+
+
+
+#Diretorios de configurações
+	
+	mkdir -p /mysql/conf.d/mysqld
+	mkdir -p /mysql/app.d
+
+#Direotrios de Dados
+	mkdir -p /mysql/data/databases   #datadir
+	mkdir -p /mysql/data/innodb/log
+	mkdir -p /mysql/data/tmpdir
+	mkdir -p /mysql/data/binario_log
+
+# Diretorios de Backup
+
+	mkdir /mysql/backup/dump
+	mkdir -p /mysql/backup/hotbackup
+	mkdir -p /mysql/backup/scripts
+
+
+rm -rf /mysql/data/databases/*
+rm /mysql/data/innodb/ibdata1 ibdata2
+rm -r \#innodb_redo/
+rm /mysql/data/binario_log/*
+clstsgslx4566
+
+ 
+--------------------------------------------------
+#Copia do Binario
+
+	<brux01279>	 scp p34103924_580_Linux-x86-64.zip  mysql@<NOME_DO_SERVIDOR>:/mysql/app.d  
+	r
+	tar -xf mysql-commercial-8.0.31-el7-x86_64.tar.gz
+	
+#### Criacao dos link simbolicos
+
+	ln -sv   /mysql/conf.d/mysqld/my.cnf   /etc/my.cnf
+	ln -s /mysql/app.d/mysql-commercial-8.0.31-el7-x86_64  mysql   
+	
+	
+	cd /usr/local
+	ln -s /mysql/app.d/mysql-commercial-8.0.31-el7-x86_64 mysql 
+	
+	ln -fs /usr/local/mysql /mysql/app.d/mysql  [link para o binario apontar para o diretorio default do mysql para linux]
+
+
+#BUG
+	ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5  
+ 	ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5     
+
+
+
+## Comando para subir o mysql pela primeira vez { obs: --initialize } PEGAR A SENHA DO ROOT NO LOG
+./mysqld_safe  --defaults-file=/mysql/conf.d/mysqld/my.cnf --initialize --user=mysql  --basedir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64 --datadir=/mysql/data/databases --log-error=/mysql/log/log_error.log  &
+
+cat   /mysql/log/log_error.log	  [ Para pegar a senha de root ] 
+ 
+
+## Iniciar  o mysql para poder alterar a senha do root
+./mysql/app.d/mysql-commercial-8.0.31-el7-x86_64/bin/mysqld_safe --defaults-file=/mysql/conf.d/mysqld/my.cnf    --user=mysql    --basedir=/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64 --log-error=/mysql/log/log_error.log --datadir=/mysql/data/databases  &
+ 
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#007';
+
+vi  /home/mysql/.bash_profile
+ adicionar no final do arquivo:  export PATH=$PATH:/mysql/app.d/mysql/bin
+ 
+ 
+ ls -ln /usr/lib64/ | grep libtinfo.so.6.1
+ 
+ 
+-------------------------------------------------
+[client]
+ 
+socket=/mysql/mysql.sock
+
+[mysql]
+
+socket=/mysql/mysql.sock
+
+
+[mysqldump]
+ 
+socket=/mysql/mysql.sock
+
+[mysqld_safe]
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+log-error=/mysql/log/mysqld_safe.log
+
+[mysqld]
+ 
+socket=/mysql/mysql.sock
+pid-file=/mysql/mysql.pid
+datadir=/mysql/data/databases
+tmpdir=/mysql/data/tmpdir
+ 
+slow_query_log_file = /mysql/log/slow.log    
+ 
+log-error=/mysql/log/mysqld.log                                                     
+
+log_bin=/mysql/data/binario_log/<NOME_DO_SERVIDOR>-log-bin
+log_bin_index=/mysql/data/binario_log/<NOME_DO_SERVIDOR>-log-bin-index
+
+innodb_data_file_path = /mysql/data/innodb/ibdata1:100M;/mysql/data/innodb/ibdata2:100M:autoextend
+innodb_log_group_home_dir = /mysql/data/innodb/log
+              
+1 Second = 1000000000000 Picosecond
+∴ 1.42797647143546E+17 Picosecond = 142797.647143546 Second
+Source : https://www.unitsconverters.com/en/Picosecond-To-Second/Unittounit-6370-91			  
+
+142797
+13131
+ 
+ fp_cotacao_consolidado
+
+usuario : admsgp
+senha: SgP@s3rv3rCl@r0
+
+
+
+CREATE USER 'admsgp'@'%' IDENTIFIED BY 'SgP@s3rv3rCl@r0';
+
+create database db_app;
+create database db_sgp;
+create database db_integracao;
+create database db_cockpit;
+create database db_form;
+create database db_rep;
+create database db_rel;
+create database db_sgp_rep;
+create database db_sgp_rel;
+
+GRANT ALL PRIVILEGES  on  db_app.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_sgp.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_integracao.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_cockpit.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_form.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_rep.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_rel.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_sgp_rep.*   to admsgp@'%';
+GRANT ALL PRIVILEGES  on  db_sgp_rel.*   to admsgp@'%'; 
+ 
+ 
+ 
+ ALTER DATABASE [tempdb] ADD FILE   (NAME = N'tempd20', FILENAME = N'Q:\TEMPDB\tempde20.ndf' , SIZE = 10GB , FILEGROWTH = 100);
+ ALTER DATABASE [tempdb] ADD FILE      (NAME = N'tempd21', FILENAME = N'Q:\TEMPDB\tempde21.ndf' , SIZE = 10GB , FILEGROWTH = 100);
+ ALTER DATABASE [tempdb] ADD FILE      (NAME = N'tempd22', FILENAME = N'Q:\TEMPDB\tempde22.ndf' , SIZE = 10GB , FILEGROWTH = 100);

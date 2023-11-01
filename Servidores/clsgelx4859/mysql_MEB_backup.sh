@@ -1,0 +1,2 @@
+
+/mysql/backup/mysql-commercial-backup-8.0.26-el7-x86_64/bin/mysqlbackup  --login-path=shellbackup  --protocol=tcp --backup-dir=/mysql/backup/clsgelx4859 --compress-method=lz4 --backup_innodb_data_file_path='ibdata1:12M:autoextend'  --with-timestamp backup-and-apply-log
