@@ -40,14 +40,14 @@ Antes de iniciar o banco no destino.
 # Comando para iniciar o banco MySQL em ambos os hosts
 /iw/scripts/mysql.server start
 
-# Comando para configurar a réplica(BRUX0762):
+# Comando para configurar a réplica(BRUX0762):  172.28.165.236
 mysql> 
 CHANGE MASTER TO MASTER_HOST = '10.18.52.174',
 MASTER_PORT = 3306,
 MASTER_USER = 'replicator',
 MASTER_PASSWORD = 'esS1RaT0zf3!ra',
-MASTER_LOG_FILE = '<Informação mostrada no comando acima>', 
-MASTER_LOG_POS = <Informação mostrada no comando acima>;
+MASTER_LOG_FILE = 'brux0395.087062', 
+MASTER_LOG_POS = 157;
 
 # Comando para iniciar a réplica(BRUX0762):
 mysql> start slave;
@@ -56,3 +56,59 @@ mysql> start slave;
 mysql> show master status\G
 SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST
 
+
+#############################################
+
+1)Pegar as informacoes no Master
+
+        show master status \G;
+
+
+
+
+RESET SLAVE;
+CHANGE MASTER TO MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=98;
+
+
+
+
+#######################
+
+SELECT 
+    channel_name AS Channel_Name,
+    smi.host AS Master_Host,
+    smi.user_name AS Master_User,
+    smi.port AS Master_Port,
+    smi.master_log_name AS Master_Log_File,
+    smi.master_log_pos AS Read_Master_Log_Pos,
+    ssi.master_log_pos AS Exec_Master_Log_Pos,
+    rcs.service_state AS Slave_IO_Running,
+    rss.service_state AS Slave_SQL_Running,
+    t.processlist_time AS Seconds_Behind_Master,
+    rcs.last_error_number AS Last_IO_Errno,
+    rcs.last_error_message AS Last_IO_Error,
+    rss.last_error_number AS Last_SQL_Errno,
+    rss.last_error_message AS Last_SQL_Error,
+    tc.processlist_state AS  Slave_IO_State,
+    t.processlist_state AS  Slave_SQL_Running_State
+
+FROM
+    mysql.slave_master_info smi       
+        JOIN    mysql.slave_relay_log_info ssi USING (channel_name)   
+        JOIN     performance_schema.replication_connection_status rcs USING (channel_name)
+        LEFT JOIN     performance_schema.replication_applier_status_by_worker rss USING (channel_name)
+        LEFT JOIN     performance_schema.threads t ON (rss.thread_id = t.thread_id)
+        LEFT JOIN     performance_schema.threads tc ON (rcs.thread_id = tc.thread_id)
+\G;
+
+
+
+SELECT DISTINCT t.processlist_time AS Seconds_Behind_Master   
+FROM
+    mysql.slave_master_info smi       
+        JOIN    mysql.slave_relay_log_info ssi USING (channel_name)   
+        JOIN     performance_schema.replication_connection_status rcs USING (channel_name)
+        LEFT JOIN     performance_schema.replication_applier_status_by_worker rss USING (channel_name)
+        LEFT JOIN     performance_schema.threads t ON (rss.thread_id = t.thread_id)
+        LEFT JOIN     performance_schema.threads tc ON (rcs.thread_id = tc.thread_id)
+\G;
