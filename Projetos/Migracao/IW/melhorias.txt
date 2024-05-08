@@ -7,8 +7,10 @@
     Valor atual: 120259084288  -- 112G
     Valor novo : 187904819200  -- 175G
 
+-> set global innodb_buffer_pool_size =175G
 
-2) Aumentar o innodb_log_file_size  :: Impacto baixo
+
+2) Aumentar o innodb_log_file_size  :: Impacto baixo  [ read only]
 
     Valor atual: 8589934592   --  8G
     Valor novo : 93415538688  -- 87G
@@ -19,16 +21,18 @@
  Valor atual : 32768 -- 32k  
  Valor novo : 65536  -- 64k            OBS: -> usar index nas consultas
 
+-> set global join_buffer_size = ;
 
 4) Aumentar o table_open_cache
 
  Valor atual : 25600  -- 25k  
  Valor novo :  51200  -- 50k            OBS: -> usar index nas consultas
 
+ -> set global table_open_cache = 50k;
 
  5) Desfragmentar as tabelas 
  
-    o `iwprd_crm`.`fp_cotacao`  :: 3.845.958   ::  ALTER TABLE iwprd_crm.fp_cotacao FORCE;
+    o `iwprd_crm`.`fp_cotacao`  :: 3.845.958   ::                ALTER TABLE iwprd_crm.fp_cotacao FORCE;
     o `iwprd_crm`.`fp_cotacao_consolidado`                       ALTER TABLE  `iwprd_crm`.`fp_cotacao_consolidado` FORCE;
     o `iwprd_crm`.`fp_portabilidade`                             ALTER TABLE `iwprd_crm`.`fp_portabilidade`  FORCE;
     o `iwprd_fin`.`rut_consolida_mobile`                         ALTER TABLE `iwprd_fin`.`rut_consolida_mobile` FORCE;                  ok
@@ -41,6 +45,35 @@
     o `iwtmp_fin`.`inad_fatura`                                  ALTER TABLE `iwtmp_fin`.`inad_fatura` FORCE;
 
 
+:: Ordem :: 
+insert into iwprd_dbhis.schema_growth_history(da
+
+
+
+
+
+
+
+o `iwprd_wfw`.`wfi_tarefa_matricula`;           [7.817.577]                 OK
+o `iwprd_crm`.`fp_cotacao_consolidado`          [11.238.203]                OK
+o `iwprd_prd`.`prd_registro_deposito_historico` [14.587.997]                OK
+o `iwprd_crm`.`fp_cotacao`                      [4.019.385]                 OK
+o `iwprd_crm`.`fp_portabilidade`                [3.766.961]                 OK
+o `iwprd_fin`.`rut_consolida_sap`               [4.673.572]                 OK
+o `iwtmp_fin`.`inad_fatura`                                                 OK
+o `iwprd_fin`.`rut_consolida_mobile`                                        OK
+o `iwprd_wrp`.`bi_status_plataforma_ofensores_suspensos` [3.246.196]        OK
+o `iwprd_wrp`.`bi_transacoes_total_status_instituicao` [1.840.765]          OK
+o `iwprd_prd`.`prd_registro_transacao`                                      OK
+
+
+
+SELECT 
+    table_name AS `Table`, 
+    round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` 
+FROM information_schema.TABLES 
+WHERE table_schema = "$DB_NAME"
+    AND table_name = "$TABLE_NAME";
 
 
 6) Verificar tabelas com estatisticas desatualizadas
@@ -55,6 +88,8 @@
     CALL CheckAndUpdateStatsForAllTables('iwprd_com')
     CALL CheckAndUpdateStatsForAllTables('iwprd_fin')
     CALL CheckAndUpdateStatsForAllTables('iwprd_hem')
+
+mysql -uroot -p -N -e"CALL mysql.CheckAndUpdateStatsForAllTables3('iwprd_hem')" > 
 
 7) Implementar Rotate slowlog e logerror
 
@@ -79,3 +114,87 @@
 mysql --login-path=root -e"ALTER TABLE iwtmp_hem.iw_vendedor_stage FORCE;"
 
 mysql --login-path=root -e"ANALYZE TABLE iwtmp_hem.iw_vendedor_stage;"
+
+
+
+
+### Verificar
+
+@@tmp_table_size - 536870912 - 512M
+
+temptable_max_mmap  1073741824 
+temptable_max_ram   1073741824 
+
+
+
+select @@tmp_table_size,
+
+
+max_heap_size 
+temp_table_size
+
+OPTIMIZE TABLE iwprd_wfw.wfi_fila;
+
+
+show status like 'Creat%';
+
+SELECT * FROM INFORMATION_SCHEMA.INNODB_LOCK_WAITS;
+
+
+SELECT   VARIABLE_VALUE AS Uptime_seconds,   NOW() AS "Now",   NOW() - INTERVAL VARIABLE_VALUE SECOND AS "Up since",   DATEDIFF(NOW(), NOW() - INTERVAL VARIABLE_VALUE SECOND) AS "Uptime_days" FROM performance_schema.session_status WHERE VARIABLE_NAME = 'Uptime';
+
+
+
+##############################
+
+
+
+Dia 01 
+
+ALTER TABLE `iwprd_crm`.`fp_cotacao` FORCE; 
+ALTER TABLE `iwprd_crm`.`fp_portabilidade` FORCE;
+ALTER TABLE `iwprd_crm`.`fp_cotacao_consolidado` FORCE;
+
+
+--ALTER TABLE `iwprd_wvd`.`psc_pesquisa_retorno_sms` FORCE;
+--ALTER TABLE `iwprd_wvd`.`snh_atendimento_hist` FORCE;
+--ALTER TABLE `iwprd_wvd`.`snh_controle_atendente_pausa` FORCE;
+--ALTER TABLE `iwprd_wvd`.`snh_atendimento_sms` FORCE;
+-- ALTER TABLE `iwprd_wfw`.`wfi_tarefa_aprovacao` FORCE;
+                                                                ALTER TABLE `iwprd_wfw`.`wfi_historico` FORCE;
+--ALTER TABLE `iwprd_wfw`.`wfi_frm_form_tarefa` FORCE;
+- ALTER TABLE `iwprd_fin`.`inad_fatura` FORCE;
+--ALTER TABLE `iwprd_fin`.`inad_fatura_linha` FORCE;
+--ALTER TABLE `iwprd_wfw`.`wfi_tarefa` FORCE;
+--ALTER TABLE `iwprd_sys`.`extracao_sql_job FORCE;
+
+
+Dia 02
+
+ALTER TABLE `iwprd_wfw`.`wfi_usrgrupo_tarefa` FORCE;
+--ALTER TABLE `iwprd_wfw`.`wfi_tarefa_matricula` FORCE;
+ALTER TABLE `iwprd_wfw`.`wfi_tarefa_his` FORCE;
+ALTER TABLE `iwprd_vnd`.`ciclo_detalhe_diario` FORCE;
+ALTER TABLE `iwprd_vnd`.`ciclo_pdv_diario` FORCE;
+--ALTER TABLE `iwprd_vnd`.`dim_atd_digital_resposta` FORCE;
+ALTER TABLE `iwprd_sys`.`claroweb_log` FORCE;
+--ALTER TABLE `iwprd_sys`.`syslog` FORCE;
+--ALTER TABLE `iwprd_prd`.`prd_registro_transacao` FORCE;
+ALTER TABLE `iwprd_gen`.`rvi_carteira_analitica` FORCE;
+ALTER TABLE `iwprd_gen`.`relatorio_iss_analitico` FORCE;
+ALTER TABLE `iwprd_fin`.`inadimplencia_primeira_fatura` FORCE;
+ 
+Dia 03
+
+ALTER TABLE  `iwprd_prd`.`frm_solicitacao_troca_carteira` FORCE;
+ALTER TABLE  `iwprd_hem`.`profissional` FORCE;
+ALTER TABLE  `iwprd_hem`.`log_tabela_his` FORCE;
+ALTER TABLE  `iwprd_hem`.`log_ad_oim` FORCE;
+ALTER TABLE  `iwprd_hem`.`iwcadastro_sincronismo` FORCE;
+ALTER TABLE  `iwprd_gen`.`sgt_atestacao_log` FORCE;
+ALTER TABLE  `iwprd_gen`.`sgt_profissional_legado` FORCE;
+ALTER TABLE  `iwprd_gen`.`sgt_profissional` FORCE;
+ALTER TABLE  `iwprd_gen`.`crc_frm_decisao_credito` FORCE;
+ALTER TABLE  `iwprd_gen`.`sgt_profissional_idm` FORCE;
+ALTER TABLE  `iwprd_gen`.`sgt_solicitacao` FORCE;
+ALTER TABLE  `iwprd_gen`.`frm_ged_inspecao_pf` FORCE;

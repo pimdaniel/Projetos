@@ -4,7 +4,10 @@
 SELECT SUBSTRING_INDEX(USER(), '@', -1) AS ip,      @@hostname as hostname,        @@port as port,        DATABASE() as current_database,        @@version as version,        concat(@@version_compile_os, " ", @@version_compile_machine) as OS_Version;
 
 
-SELECT   @@innodb_buffer_pool_size AS buffer_pool_size,   ROUND(@@innodb_buffer_pool_size / 4) AS recommended_log_file_size_quarter,   ROUND(@@innodb_buffer_pool_size / 2) AS recommended_log_file_size_half;
+SELECT @@innodb_buffer_pool_size AS buffer_pool_size,   ROUND(@@innodb_buffer_pool_size / 4) AS recommended_log_file_size_quarter,   ROUND(@@innodb_buffer_pool_size / 2) AS recommended_log_file_size_half,@@innodb_log_file_size;
+
+select ,
+
 
 SELECT   ROUND(187904819200 / 4 / 1073741824, 2) AS recommended_log_file_size_quarter_gb,   ROUND(187904819200 / 2 / 1073741824, 2) AS recommended_log_file_size_half_gb;
 
@@ -17,7 +20,7 @@ system lscpu
 
 SELECT ROUTINE_SCHEMA, ROUTINE_NAME, SQL_MODE FROM INFORMATION_SCHEMA.ROUTINES;
 
-SELECT table_schema "DB Name",         ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
+SELECT table_schema "DB Name",ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
 
 SELECT table_schema "DB Name",ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
 
@@ -38,9 +41,17 @@ select TIME_FORMAT(SEC_TO_TIME(VARIABLE_VALUE ),'%Hh %im')  as Uptime from infor
 
 select id,user,state,time,info from information_schema.PROCESSLIST where time > 120 and state like '%lock%' order by time  \G;
 
+select id,user,state,time,info from information_schema.PROCESSLIST where state = 'executing' order by time  \G;
+
+select id,user,state,time from information_schema.PROCESSLIST where time > 600 and state like '%lock%' order by time  \G;
+
+
 
 
  mysql_config_editor print --all
+
+
+select id,time from information_schema.PROCESSLIST where info like '%WHERE T.COD_FILA_ATUAL = 292%' and time > 1000;
 
 
 ############################# Processos Mysql  #################################################
@@ -49,13 +60,37 @@ select concat('kill ',id) as mata  from information_schema.PROCESSLIST where sta
 
 select user,state,info from information_schema.PROCESSLIST where state like '%lock%';
 
-select user,state,info from information_schema.PROCESSLIST where time > 200;
+select id,user,state,time,info from information_schema.PROCESSLIST where time > 120 \G;
+select id,user,state,time,info from information_schema.PROCESSLIST where user <> 'replicator' and time > 120 and state is not null order by time \G;
+
+select id,user,state,time,info from information_schema.PROCESSLIST where state not like '%lock%';
+
+select id,user,state,time from information_schema.PROCESSLIST where time > 120 and state is not null \G;
+
+
+
+select id,user,state,time,info from information_schema.PROCESSLIST where user = 'mysqlbackup';
+
+
+select user,state from information_schema.PROCESSLIST group by user,state;
 
 select user,state,info from information_schema.PROCESSLIST where id = 5875666;
 
 
  # LOCKS
 select ENGINE,ENGINE_LOCK_ID,ENGINE_TRANSACTION_ID,THREAD_ID,LOCK_TYPE,LOCK_MODE,LOCK_STATUS,LOCK_DATA from performance_schema.data_locks;
+
+
+# Processos \ Memory
+
+select  P.id,P.user,P.state,P.time,M.current_count_used,current_allocated,total_allocated,substring(1,50,P.info) as query  from sys.memory_by_thread_by_current_bytes M inner join performance_schema.threads T on T.THREAD_ID = M.thread_id  inner join information_schema.PROCESSLIST
+P on P.id = T.PROCESSLIST_ID;
+
+
+
+
+SELECT SESSION_ID, SPACE, PATH, TABLE_SCHEMA, TABLE_NAME, SIZE, DATA_LENGTH, INDEX_LENGTH, ENGINE, PURPOSE FROM information_schema.GLOBAL_TEMPORARY_TABLES LEFT JOIN information_schema.INNODB_TEMP_TABLE_INFO USING(NAME) LEFT JOIN INFORMATION_SCHEMA.INNODB_SESSION_TEMP_TABLESPACES USING(SPACE) \G;
+
 
 
 select PROCESSLIST_ID,PROCESSLIST_USER,PROCESSLIST_HOST,PROCESSLIST_DB ENGINE,LOCK_MODE,LOCK_STATUS,LOCK_TYPE,PROCESSLIST_COMMAND,P.info
@@ -68,6 +103,7 @@ limit 40;
 select distinct PROCESSLIST_ID,PROCESSLIST_USER,PROCESSLIST_HOST,PROCESSLIST_DB ENGINE,LOCK_MODE,LOCK_STATUS,LOCK_TYPE,PROCESSLIST_COMMAND,P.info from performance_schema.data_locks DL inner join  performance_schema.threads T on DL.THREAD_ID =  T.THREAD_ID   inner join  information_schema.PROCESSLIST P ON P.id = T.PROCESSLIST_ID \G;
 
 
+select * from sys.memory_by_thread_by_current_bytes;
 
 
 
@@ -88,7 +124,15 @@ select Variable_value as innodb_buffer_pool_read_requests , 0 as innodb_pages_re
 # UPTIME
  select TIME_FORMAT(SEC_TO_TIME(VARIABLE_VALUE ),'%Hh %im')  as Uptime 
 from information_schema.GLOBAL_STATUS 
-where VARIABLE_NAME='Uptime'
+where VARIABLE_NAME='Uptime';
+
+SELECT
+  VARIABLE_VALUE AS Uptime_seconds,
+  NOW() AS "Now",
+  NOW() - INTERVAL VARIABLE_VALUE SECOND AS "Up since",
+  DATEDIFF(NOW(), NOW() - INTERVAL VARIABLE_VALUE SECOND) AS "Uptime_days"
+FROM performance_schema.session_status
+WHERE VARIABLE_NAME = 'Uptime';
 
 
 #Log
@@ -99,6 +143,16 @@ show global variables like 'innodb_log_file_size';  innodb_log_file_size  858993
 +----------------------+------------+
 
 
+
+SELECT CCSA.character_set_name FROM information_schema.`TABLES` T,
+       information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` CCSA
+WHERE CCSA.collation_name = T.table_collation
+  AND T.table_schema = "db_reconline";
+  AND T.table_name = "tablename";
+
+
+
+
 #########################   My CNF ######################################################
 
  # executa comando neste aquivo na inicializacao do Mysql
@@ -107,24 +161,60 @@ init-file=/mysql/conf.d/initSql.sql
 
 
 ############################ Backup MEB ##################################################
-
 select start_time,end_time,backup_type,backup_format,exit_state from mysql.backup_history order by start_time desc limit 5;
 
 #########################  Atalhos LINUX #################################################
-
-
 # ZIPAR
 
 gzip brux0762-slow_bkp.log | mv brux0762-slow_bkp.log.gz /mysql/scritp/tmp
  |
 $_mysqldump -c --user=$user --password=$pass $db $tb | /bin/gzip > $BACKUP
 
- 
+############################ Backup MEB ##################################################
+
+mysqldumpslow -t 3 -s l /app/mysql/query-slow_NET002PRDLNX554.log
+
+
+
+mysqldumpslow -t 3 -s l /mysql/data/slow.log
 
 
  
 
+### Inicializacao do backup_innodb_data_file_path
+
+init-file=/iw/conf.d/mysqld/inisql.sql
+
+
+### Fragmentacao
+
+iwtmp_vnd.clio_ciclo_detalhe_mensal
 
 
 
 
+
+mysql --login-path=root -e"show engine innodb status; \G;" > engine01.txt
+mysql --login-path=root -e"show full processlist; \G;" > Full05.txt
+
+
+SELECT
+TABLE_SCHEMA, TABLE_NAME, CONCAT(ROUND(data_length / ( 1024 * 1024 ), 2), 'MB') DATA,
+CONCAT(ROUND(data_free  / ( 1024 * 1024 ), 2), 'MB')FREE
+              from information_schema.TABLES
+			       where TABLE_SCHEMA
+				    IN ('iwtmp_vnd') and Data_free < 0;
+
+
+SELECT COUNT(*) 
+FROM information_schema.statistics
+WHERE table_schema = 'iwprd_crm'
+  AND table_name = 'fp_cotacao_consolidado'
+  AND non_unique = 1;
+
+
+
+
+
+
+show global status like '%tmp%';

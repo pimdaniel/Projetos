@@ -1,0 +1,82 @@
+# Rotaciona tabelas de log
+59 23 * * *  /iw/scripts/iwrotation
+
+# Apaga backup velho
+01 1 * * *  /iw/scripts/limpabackupvelho 1>/dev/null 2>/dev/null
+
+# Verifica se terminaram
+01 6-7 * * *  /iw/scripts/checkbackup 1>/dev/null 2>/dev/null
+
+# Verifica se existem queries muito demoradas em execução
+#* * * * *  /iw/scripts/checkquerytime 1>/dev/null 2>/dev/null
+##* * * * *  /iw/scripts/checkquerytime-v2 >>/iw/log.d/iw/checkquerytime-v2.log
+
+
+# Rotinas de ANALYZE e OPTIMIZE
+30 22 * * * /iw/scripts/refreshSQL 1>/dev/null 2>/dev/null
+
+## Parado o processo de Analyze para deixar o backup terminar.
+## aguardando OPTIMIZE das tabelas
+##                                      2014-09-18 Roberto F Batista
+59 22 * * * /iw/scripts/iwanalyze innodb 1>/dev/null 2>/dev/null
+#59 22 * * * /iw/scripts/iwanalyze myisam 1>/dev/null 2>/dev/null
+##00 23 * * * /iw/scripts/cleanlog 1>/dev/null 2>/dev/null
+
+## Limpa diretorio Temporario Exportcsv
+*/59   *   *   *   *     /iw/scripts/limpaexportcsv
+
+## Compacta log audit - SIC
+59 23 * * * /mysql/auditlog/scripts/compacta_log_audit.sh
+
+## Backup Producao - Brux0395
+# MySQLEnterpriseBackup
+# 10 00 * * *  /mysql/backup/brux0395/Master/iwBakFull.sh 1>/mysql/backup/brux0395/Master/iwBakFull.txt 2>/mysql/backup/brux0395/Master/iwBakFull_err.log
+
+# MySQLShellBackup -> Toda meia noite e trinta - comentato com a subida de versao
+
+  # 30 0 * * *  /iw/scripts/backupMyQLShell.sh 1>/iw/log.d/iw/mysqlsh_backup_brux0395_out.log 2>/iw/log.d/iw/mysqlsh_backup_brux0395_err.log
+  # 10 0 * * 0  /iw/scripts/iwbackup brux0395 1>>/iw/log.d/iw/backup_brux0395_out.log 2>>/iw/log.d/iw/backup_brux0395_err.log
+  #10 0 * * 1-6  /iw/scripts/iwbackup_sem_vnd brux0395 1>>/iw/log.d/iw/backup_brux0395_out.log 2>>/iw/log.d/iw/backup_brux0395_err.log
+
+
+# Backup Mysql Shell Parado 13-01-2024
+#30 00 * * *  /iw/scripts/backupMyQLShell80.sh 1>/iw/log.d/iw/mysqlsh_backup_brux0395-80_out.log 2>/iw/log.d/iw/mysqlsh_backup_brux0395-80_err.log
+
+
+# Backup MEB mysql 8
+20 00 * * *  /iw/scripts/backupMEB.sh 1>/iw/log.d/iw/backupMEB.sh_brux0395_out.log 2>/iw/log.d/iw/backupMEB.sh_brux0395_err.log
+
+
+## LOG ROTATE
+00 03 * * 0 /iw/scripts/logRotate.sh
+
+
+## Backup Producao - brux0176
+00 22 * * *  /iw/scripts/iwbackup brux0176 1>>/iw/log.d/iw/backup_brux0176_out.log 2>>/iw/log.d/iw/backup_brux0176_err.log
+
+## Backup Producao - brux0166
+00 23 * * *  /iw/scripts/iwbackup brux0166 1>>/iw/log.d/iw/backup_brux0166_out.log 2>>/iw/log.d/iw/backup_brux0166_err.log
+
+## Envio de tabelas e da estrutura do IW para o ambiente de Homologacao
+#59 07 * * 6   /iw/scripts/coleta_dado_hml.sh
+
+#*/5  *   *   *   /iw/scripts/arquivos_monitoramento/script_monitoramente_ambiente.sh
+
+
+## Resume Backup 00 06 * * *
+00 06 * * * /iw/scripts/iwresumebackup.sh > /iw/scripts/iwresumebackup.log
+
+
+## Mata Backup
+#01 07 * * 1-6 /iw/scripts/iwmatabackup.sh 1>>/tmp/iwmatabackup.log1 2>>/tmp/iwmatabackup.log2
+
+# Ajusta permissao
+*/5 * * * * chmod 664 /mysql/exports/*.csv
+
+
+#Performace vendedor stage
+07 11 * * * /iw/scripts/vendedor_stage_perf.sh 1>/iw/scripts/vendedor_stage_perf_log.txt 2>/iw/scripts/vendedor_stage_perf_log.txt
+
+
+#Performace fp_cotacao_consolidado
+05 23 * * * /iw/scripts/fp_cotacao_consolidado.sh 1>/iw/scripts/fp_cotacao_consolidado_log.txt 2>/iw/scripts/fp_cotacao_consolidado_log2.t

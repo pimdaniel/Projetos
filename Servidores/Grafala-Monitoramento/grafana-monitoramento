@@ -8,12 +8,11 @@ Servidor:
 Grafana BD Campinas  - zbgrdblx01    - 10.88.4.142
 
 
-ln -s /mysql/app.d/mysql  /usr/local/mysql
 
 
 # ----------------------------------------------------------------------
 # MySQL Server Configuration File
-# SERVIDOR : zbgrdblx01 - 10.88.4.142
+# SERVIDOR : net002prdlnx849 - 10.88.4.142
 #
 # Criado por : Daniel Pimenta
 # Data: 30/09/2022
@@ -211,12 +210,6 @@ create user 'DBCOTI'@'%' IDENTIFIED BY 'coti#20#bd';
 DBUser= DBCOTI
 DBPassword= coti#20#bd
 
-innodb_buffer_pool_size             | 10737418240
-
-set global innodb_buffer_pool_size = 37580963840;
-37580963840
-
-
 
 SELECT TABLE_SCHEMA,PARTITION_NAME,TABLE_NAME,TABLE_ROWS
 FROM information_schema.partitions             
@@ -231,62 +224,9 @@ FROM information_schema.partitions
 WHERE table_schema = 'zabbix_prod'  AND table_name in ('trends','history','trends_uint','history_str','history_uint','history_text','history_log');
 
 
-
-select count(irt.itemid) as count, i.hostid, h.name, irt.error from item_rtdata irt inner join items i on irt.itemid = i.itemid inner join hosts h on h.hostid = i.hostid where i.status =0 and irt.state = 1 group by i.hostid, irt.error order by count
-INTO OUTFILE '/mysql/backup/tbl_medicao.csv'
-FIELDS ENCLOSED BY '"'
-TERMINATED BY ';'
-ESCAPED BY '"'
-LINES TERMINATED BY '\r\n';
-
-#################################################
-innotop
+/mysql  	  - 49G
+/mysql/log    - 98G
+/mysql/backup - 1.1T
+/mysql/data   - 1.7T
 
 
-############### Queries Zabbix ###################################################
-
-SELECT table_name AS 'Table', round(((data_length + index_length) / 1024 / 1024 / 1024), 2) 'Size (GB)', round(((data_free) / 1024 / 1024 / 1024), 2) 'Data Free Size (GB)' FROM information_schema.TABLES WHERE table_schema = "zabbix" and (table_name like 'history%' or table_name like 'trends%' or table_name like 'events') order by 'Size (GB)' desc;
-
-select count(i.itemid) as count, h.host, i.delay from items i inner join hosts h on h.hostid = i.hostid where i.flags = 1 and i.status = 0 and h.status = 0 and (i.delay = '1m' or i.delay = '30s' or i.delay = '15s' or i.delay = '60s') group by delay, h.host order by count deac limit 100;
-
-select count(i.itemid) as count, h.host, i.delay from items i inner join hosts h on h.hostid = i.hostid where i.flags = 1 and i.status = 0 and h.status = 0 and (i.delay = '1m' or i.delay = '30s' or i.delay = '15s' or i.delay = '60s') group by delay, h.host order by count desc limit 100;
-
-select count(i.itemid) as count, h.host, i.delay from items i inner join hosts h on h.hostid = i.hostid where i.flags = 1 and i.status = 0 and h.status = 0 and (i.delay = '2m' or i.delay = '120s' or i.delay = '3m' or i.delay = '180s') group by delay, h.host order by count desc limit 100;
-
- SELECT hosts.host, COUNT(items.itemid) AS item_count
-FROM hosts
-JOIN items ON items.hostid = hosts.hostid
-GROUP BY hosts.host order by item_count DESC limit 100;
-
-SELECT items.itemid, items.name, items.delay FROM items WHERE items.delay like '%;%' and items.status = 0;
-########################################################################################################################################################
-
-max_allowed_packet=256M
-max_connect_errors              = 1000000
-innodb_buffer_pool_instances=48
-innodb_log_buffer_size=128M
-innodb_log_file_size            = 4G
-innodb_flush_log_at_trx_commit  = 2
-innodb_thread_concurrency=14
-innodb_read_io_threads=14
-innodb_write_io_threads=14
-key_buffer_size                 = 64M  
-innodb_lock_wait_timeout        = 600
-
-########
-secure_file_priv=""
-
-
-
-SELECT @@innodb_thread_concurrency,@@innodb_read_io_threads,@@innodb_write_io_threads;
-[MySQL] root@localhost> SELECT @@innodb_thread_concurrency,@@innodb_read_io_threads,@@innodb_write_io_threads;
-+-----------------------------+--------------------------+---------------------------+
-| @@innodb_thread_concurrency | @@innodb_read_io_threads | @@innodb_write_io_threads |
-+-----------------------------+--------------------------+---------------------------+
-|                           6 |                        6 |                         6 |
-+-----------------------------+--------------------------+---------------------------+
-
-
-SET GLOBAL innodb_thread_concurrency = 8;
-SET GLOBAL innodb_read_io_threads = 8;
-SET GLOBAL innodb_write_io_threads = 8;

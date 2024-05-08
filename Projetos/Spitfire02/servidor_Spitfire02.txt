@@ -1,0 +1,91 @@
+
+
+Projeto Spitfire02 (MCK)
+Hostname: CBM2AM17420 
+VCPU: 4 Mem: 16GB 
+Disk S.O: 100 GB Disk 
+APP: 1 TB
+VLAN: NET-MCK-IAAS-EXT-PROD-01
+IP: 10.88.132.251 
+MAC Address: 00:50:56:bc:ce:75 
+S.O: Oracle Linux 8
+
+
+ssh -l mysql 10.88.132.251
+
+rm -rf /mysql/data/databases/*
+rm /mysql/data/innodb/ibdata1
+rm /mysql/data/innodb/ibdata2
+rm /mysql/data/binario_log/*
+rm -r /mysql/data/innodb/log/*
+
+########################################################### Instalação ######################################################################### 
+
+1)
+    #Diretorios de configurações	
+
+        mkdir -p /mysql/conf.d/mysqld
+        mkdir -p /mysql/app.d
+        mkdir -p /mysql/log/
+
+    #Direotrios de Dados
+        mkdir -p /mysql/data/databases
+        mkdir -p /mysql/data/innodb/log
+        mkdir -p /mysql/data/tmpdir
+        mkdir -p /mysql/data/binario_log
+
+    # Diretorios de Backup
+
+        mkdir -p /mysql/backup/MEB
+        mkdir -p /mysql/backup/scripts
+
+2) Criar e ajustar o arquivo my.cnf
+
+3) Links simbólicos
+
+ln -s /mysql/conf.d/mysqld/my.cnf /etc/my.cnf
+
+ln -s /mysql/app.d/mysql-commercial-8.0.33-el7-x86_64  mysql
+
+ln -s /mysql/app.d/mysql  /usr/local/mysql
+
+#BUG
+	ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5  
+ 	ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5 
+
+4) Comando para subir o mysql pela primeira vez { obs: --initialize } PEGAR A SENHA DO ROOT NO LOG
+
+./mysqld_safe  --defaults-file=/mysql/conf.d/mysqld/my.cnf --initialize --user=mysql  --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --datadir=/mysql/data/databases --log-error=/mysql/log/log_error.log  &
+
+b?vui9KdUlfy
+
+## Iniciar  o mysql para poder alterar a senha do root
+./mysql/app.d/mysql-commercial-8.0.33-el7-x86_64/bin/mysqld_safe --defaults-file=/mysql/conf.d/mysqld/my.cnf  --user=mysql  --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --log-error=/mysql/log/log_error.log --datadir=/mysql/data/databases  &
+
+Conectar no mysql : ./mysql -uroot -p --socket=/mysql/mysql.sock
+Alterar a senha  do root : ALTER USER 'root'@'localhost' IDENTIFIED BY '<senha_do_root>';
+
+# Iniciando o Mysql normal
+./mysqld --defaults-file=/mysql/conf.d/mysqld/my.cnf  --user=mysql  --basedir=/mysql/app.d/mysql-commercial-8.0.33-el7-x86_64 --log-error=/mysql/log/log_error.log --datadir=/mysql/data/databases  &
+
+5)Adicionar no final do arquivo:   /home/mysql/.bash_profile
+
+   export PATH=$PATH:/mysql/app.d/mysql/bin
+
+
+
+
+ 6) Criar usuario para backup
+
+
+CREATE USER 'mysqlbackup'@'localhost' IDENTIFIED BY 'BackupMy#007';
+
+mysql_config_editor set --login-path=backup   --host=localhost --user=mysqlbackup --password
+
+GRANT BACKUP_ADMIN ON *.* TO `mysqlbackup`@`localhost`
+GRANT SELECT, INSERT, UPDATE, CREATE, DROP, ALTER ON `mysql`.`backup_history` TO `mysqlbackup`@`localhost`;
+GRANT INSERT, UPDATE, CREATE, DROP ON `mysql`.`backup_progress` TO `mysqlbackup`@`localhost`;
+GRANT SELECT ON `performance_schema`.`replication_group_members` TO `mysqlbackup`@`localhost`;
+  
+
+/mysql/backup/mysql-commercial-backup-8.0.26-el7-x86_64/bin/mysqlbackup   --login-path=backup --port=3306 --protocol=tcp --backup-dir=/mysql/backup/net002prdlnx849 --compress-method=lz4 --backup_innodb_data_file_path='ibdata1:100M;ibdata2:100M:autoextend'  --with-timestamp backup-and-apply-log

@@ -1,5 +1,23 @@
 
 
+Inventário PRD
+select distinct concat("INSERT INTO  databases_mysql values " ,"('LAP','clstsgslx4262',","'",db,"'" , ",'8.0','31','HOM','ORA','S','S','N','N',' ' ,'SGP','Projeto SHADOWN','CLA','10.88.132.214',NULL,'S',NULL,NULL,'N');") from db;
+ 
+
+select distinct concat("INSERT INTO  databases_mysql values " ,"('LAP','clsgelx4859',","'",schema,"'" , ",'8.0','31','HOM','ORA','S','S','N','N',' ' ,'SGP','Projeto SHADOWN','CLA','10.88.132.98',NULL,'S',NULL,NULL,'N');") from INFORMATION_SCHEMA.SCHEMATA;
+
+
+Inventário HOM
+select distinct concat("INSERT INTO  databases_mysql values " ,"('LAP','clstsgslx4262',","'",db,"'" , ",'8.0','31','HOM','ORA','S','S','N','N',' ','SGP','Projeto SHADOWN','CLA','10.88.132.214',NULL,'S',NULL,NULL,'N');") from db;
+
+Inventário DEV
+select distinct concat("INSERT INTO  databases_mysql values " ,"('LAP','clstsgslx4262',","'",db,"'" , ",'8.0','31','DEV','ORA','S','S','N','N',' ','SGP','Projeto SHADOWN','CLA','10.88.134.60',NULL,'S',NULL,NULL,'N');") from db;
+
+ 
+
+
+
+
 expense: 
 
 
@@ -106,6 +124,9 @@ set GLOBAL log_bin_trust_function_creators = ON;
 SPD :
 
 Dump_Novo.sql
+
+usuario:usr_dev_spd
+senha: S#p00D01
 
 
 erros:

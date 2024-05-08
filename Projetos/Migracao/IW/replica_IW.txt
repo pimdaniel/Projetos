@@ -1,0 +1,58 @@
+# Usuário de replicação
+* Já está no comando de configuração da réplica
+replicator
+esS1RaT0zf3!ra
+
+
+# Logar no servidor ponte BRUX1279
+
+# IW Master
+ssh -l mysql BRUX0395
+
+# IW Slave
+ssh -l mysql BRUX0762
+
+
+# Diretório a ser copiado entre hosts
+/mysql/mysqldata01/db
+
+Antes da cópia dos dados, é necessário parar o banco na origem.
+
+# Comando para parar o banco MySQL em ambos os hosts
+/iw/scripts/mysql.server stop
+
+Posterior a cópia dos dados, iniciar o banco primeiramente na origem.
+
+# Comando para iniciar o banco MySQL em ambos os hosts
+/iw/scripts/mysql.server start
+
+Conectar no banco para pegar informações pertinentes a réplica.
+
+# Comando para pegar informação do Master para configurar Slave(Réplica)(BRUX0762)
+* Essa informação deve ser extraída antes da cópia dos dados
+mysql> show master status\G
+
+Antes de iniciar o banco no destino.
+
+# Depois da cópia dos dados, excluir o arquivo abaixo no servidor destino(BRUX0762):
+./mysqldata01/db/auto.cnf
+
+# Comando para iniciar o banco MySQL em ambos os hosts
+/iw/scripts/mysql.server start
+
+# Comando para configurar a réplica(BRUX0762):
+mysql> 
+CHANGE MASTER TO MASTER_HOST = '10.18.52.174',
+MASTER_PORT = 3306,
+MASTER_USER = 'replicator',
+MASTER_PASSWORD = 'esS1RaT0zf3!ra',
+MASTER_LOG_FILE = '<Informação mostrada no comando acima>', 
+MASTER_LOG_POS = <Informação mostrada no comando acima>;
+
+# Comando para iniciar a réplica(BRUX0762):
+mysql> start slave;
+
+# Comando para validar execução de réplica(BRUX0762):
+mysql> show master status\G
+SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST
+

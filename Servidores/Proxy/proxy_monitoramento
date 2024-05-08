@@ -1,0 +1,13 @@
+
+
+Zabbix Proxy Campinas - zbcpqpxlx01 - 10.88.13.167
+
+
+
+set global binlog_expire_logs_seconds=3600;
+
+
+   
+   
+   
+expire_logs_days               = 1

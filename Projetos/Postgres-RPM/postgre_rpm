@@ -1,0 +1,104 @@
+
+Servidor :  vcopscaslx15
+IP:         10.88.68.15
+
+
+postgres=# select version();
+                                                 version
+---------------------------------------------------------------------------------------------------------
+ PostgreSQL 14.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-15), 64-bit
+
+
+
+Serviço do postgre instalado:
+
+postgres 1017161       1  0 Feb16 ?        00:00:02 /usr/pgsql-14/bin/postmaster -D /var/lib/pgsql/14/data/
+
+Obs: Observa-se que o postgre está apontando para o diretório :/var/lib/pgsql/14/data/ e conforme evidencia abaixo o mesmo só possui 7.2G livre.
+
+/dev/mapper/vg00-var         8.0G  910M  7.2G  12% /var
+
+Sendo assim para cada servidor será preciso informar qual o tamanho necessário em disco para o armazenamento, pois este diretório e pre requisito para a instalação do postgre.
+
+Referente as EXTENSION é preciso que as mesmas sejam enviadas para tentarmos realizar as instalações visto que elas nao fazem parte da instalação do postgres.
+
+
+vcopscaslx15 10.88.68.15
+vcopsdlelx44 10.88.68.44  
+vcopsdlelx45 10.88.68.45
+vcopsdlelx46 10.88.68.46
+vcopsdlelx47 10.88.68.47
+
+#####################################################################################################################################################################################################
+
+vcopscaslx15 10.88.68.15
+
+
+cll14547     10.88.68.231    [ smartcapacity ]
+ssh postgres@10.88.68.231
+
+Claro@123456
+
+
+scp tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm postgres@10.88.68.44:/var/lib/pgsql/tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm
+scp tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm postgres@10.88.68.45:/var/lib/pgsql/tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm
+scp tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm postgres@10.88.68.46:/var/lib/pgsql/tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm
+scp tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm postgres@10.88.68.47:/var/lib/pgsql/tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm
+
+
+
+scp pgagent_14-4.2.2-1.rhel8.x86_64.rpm  postgres@10.88.68.44:/var/lib/pgsql/pgagent_14-4.2.2-1.rhel8.x86_64.rpm
+scp pgagent_14-4.2.2-1.rhel8.x86_64.rpm  postgres@10.88.68.45:/var/lib/pgsql/pgagent_14-4.2.2-1.rhel8.x86_64.rpm
+scp pgagent_14-4.2.2-1.rhel8.x86_64.rpm  postgres@10.88.68.46:/var/lib/pgsql/pgagent_14-4.2.2-1.rhel8.x86_64.rpm
+scp pgagent_14-4.2.2-1.rhel8.x86_64.rpm  postgres@10.88.68.47:/var/lib/pgsql/pgagent_14-4.2.2-1.rhel8.x86_64.rpm
+
+
+
+
+vcopsdlelx44 10.88.68.44  
+
+    ssh postgres@10.88.68.44
+
+Alterações :
+                mkdir -p /data/db_data/postgresql/pgsql/14/data/
+                sudo chown -R postgres:postgres /data/db_data/postgresql/
+
+
+    – Abrir o arquivo : /usr/lib/systemd/system/postgresql-14.service
+
+    OLD  : Environment=PGDATA=/var/lib/pgsql/14/data/
+    NEW : Environment=PGDATA=/data/db_data/postgresql/pgsql/14/data/
+
+ Pacotes: 
+
+        sudo systemctl stop postgresql-14
+        sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
+        sudo systemctl daemon-reload
+        sudo systemctl enable postgresql-14
+        sudo systemctl start postgresql-14
+
+Instalar :  /var/lib/pgsql
+
+        rpm -ivh tds_fdw_14-2.0.2-3.rhel8.x86_64.rpm
+        rpm -ivh tst_14-4.2.2-1.rhel8.x86_64.rpm
+
+
+
+
+
+
+  -------------------------------------------------------------------------------------------------
+
+
+vcopsdlelx45 10.88.68.45 - ssh postgres@10.88.68.45
+
+
+-------------------------------------------------------------------------------------------------
+vcopsdlelx46 10.88.68.46  -   ssh postgres@10.88.68.46
+
+
+-------------------------------------------------------------------------------------------------
+
+vcopsdlelx47 10.88.68.47  -   ssh postgres@10.88.68.47
+
+-------------------------------------------------------------------------------------------------

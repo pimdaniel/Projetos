@@ -1,0 +1,62 @@
+
+### Acesso
+
+ssh root@10.18.49.21
+claro123
+
+
+
+### Versao 
+
+NAME="Red Hat Enterprise Linux Server"
+VERSION="7.9 (Maipo)"
+ID="rhel"
+ID_LIKE="fedora"
+VARIANT="Server"
+VARIANT_ID="server"
+VERSION_ID="7.9"
+PRETTY_NAME=RHEL
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:redhat:enterprise_linux:7.9:GA:server"
+HOME_URL="https://www.redhat.com/"
+BUG_REPORT_URL="https://bugzilla.redhat.com/"
+
+REDHAT_BUGZILLA_PRODUCT="Red Hat Enterprise Linux 7"
+REDHAT_BUGZILLA_PRODUCT_VERSION=7.9
+REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux"
+REDHAT_SUPPORT_PRODUCT_VERSION="7.9"
+
+
+### Discos
+
+Filesystem                       Size  Used Avail Use% Mounted on
+devtmpfs                         126G     0  126G   0% /dev
+tmpfs                            126G  116K  126G   1% /dev/shm
+tmpfs                            126G  4.1G  122G   4% /run
+tmpfs                            126G     0  126G   0% /sys/fs/cgroup
+/dev/mapper/vg00-root            9.8G  1.1G  8.3G  12% /
+/dev/mapper/vg00-usr             7.8G  2.7G  4.7G  37% /usr
+/dev/sda1                        477M  202M  246M  46% /boot
+/dev/mapper/vg00-home            2.0G  663M  1.2G  37% /home
+/dev/mapper/vg00-hist            976M  4.5M  905M   1% /historico
+/dev/mapper/vg00-UNIX            3.9G   31M  3.6G   1% /UNIX
+/dev/mapper/vg00-opt             7.8G  884M  6.5G  12% /opt
+/dev/mapper/vg00-tmp             9.8G   21M  9.4G   1% /tmp
+/dev/mapper/vg00-var             7.8G  3.2G  4.3G  43% /var
+/dev/mapper/vg00-perf            3.9G  184M  3.5G   5% /var/opt/perf/datafiles
+/dev/mapper/vg00-crash            16G  2.5G   13G  17% /var/crash
+/dev/mapper/vgbrux0395100-lvol7   50G   53M   47G   1% /var/avamar
+tmpfs                             26G     0   26G   0% /run/user/502
+/dev/mapper/vgbrux0395100-lvol8   15G   41M   14G   1% /opt/dynatrace
+/dev/mapper/vgbrux0395101-lvol0  3.0T  2.4T  512G  83% /mysql_old
+tmpfs                             26G     0   26G   0% /run/user/1003
+
+
+/dev/mapper/vgbrux0395100-lvol0   20G  8.5G   11G  46% /iw
+/dev/mapper/vgbrux0395100-lvol1   25G   19G  5.0G  79% /iw/log.d/mysqld
+/dev/mapper/vgmysql001-lvol0     6.0T  4.0T  1.8T  70% /mysql
+/dev/mapper/vgbrux0395100-lvol2  6.9T  2.5T  4.2T  37% /mysql/backup
+
+
+
+

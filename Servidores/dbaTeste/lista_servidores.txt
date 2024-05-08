@@ -3,6 +3,11 @@ CBM2BM14203 - 10.88.134.88
 
 CBM2BM89492 - 10.88.134.89
 
+
+
+curl -v telnet://10.88.134.89:3306
+
+
 echo -n > /mysql/log.d/log_error.log
 
 10.88.134.88 , 10.88.134.89
@@ -15,3 +20,13 @@ echo -n > /mysql/log.d/log_error.log
 
 ################################################################
 
+[MySQL] root@localhost> select @@sort_buffer_size;
++--------------------+
+| @@sort_buffer_size |
++--------------------+
+|             131072 |
++--------------------+
+
+ 
+
+ REVOKE ALL PRIVILEGES, GRANT OPTION ON *.* FROM 'z293955'@'%';

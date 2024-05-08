@@ -13,7 +13,7 @@ ln -s  /mysql/app.d/mysql  /usr/local/mysql
 
 
 ###################################################
-
+SET GLOBAL local_infile = 'ON';
 
 
 
@@ -21,6 +21,66 @@ ln -s  /mysql/app.d/mysql  /usr/local/mysql
 
 CREATE USER 'dbmon'@'localhost' IDENTIFIED BY 'monitoracaocoti20';
 
+
+***********************************************************************************************************************************************************
+
+@@internal_tmp_mem_storage_engine | @@tmp_table_size | @@max_heap_table_size | @@temptable_max_ram |
++-----------------------------------+------------------+-----------------------+---------------------+
+| MEMORY                            |        536870912 |             536870912 |          1073741824 |
+
+
+
+
+SET GLOBAL temptable_max_ram = 2147483648;
+SET GLOBAL 
+
+temptable_max_ram = 2147483648;
+ 
+
+ [MySQL] root@localhost> select @@join_buffer_size,@@table_open_cache;
++--------------------+--------------------+
+| @@join_buffer_size | @@table_open_cache |
++--------------------+--------------------+
+|           33554432 |               1000 |
++--------------------+--------------------+
+
+
+set global table_open_cache = 51200;
+
+[MySQL] root@localhost> select @@join_buffer_size,@@table_open_cache;
++--------------------+--------------------+
+| @@join_buffer_size | @@table_open_cache |
++--------------------+--------------------+
+|           33554432 |              32768 |
++--------------------+--------------------+
+
+
+
+
+[MySQL] root@localhost> select @@internal_tmp_mem_storage_engine,@@tmp_table_size,@@max_heap_table_size,@@temptable_max_ram;
++-----------------------------------+------------------+-----------------------+---------------------+
+| @@internal_tmp_mem_storage_engine | @@tmp_table_size | @@max_heap_table_size | @@temptable_max_ram |
++-----------------------------------+------------------+-----------------------+---------------------+
+| MEMORY                            |        536870912 |             536870912 |          2147483648 |
++-----------------------------------+------------------+-----------------------+---------------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*********************************************************************************************************************************************************************
 
 
 ############################# Servidor de Orgiem que foi migrado ################################################
@@ -97,13 +157,25 @@ GROUP BY table_schema;
 
 curl -v telnet://10.29.3.89:3306
 
+
+pearl tuning.pl --user root --pass --outputfile /iw/scripts/result_mysqltuner.txt
+
+
+SET GLOBAL tmp_table_size = 2147483648;
+SET GLOBAL max_heap_table_size = 2147483648;
+
+CREATE INDEX ix_dba01 ON tbl_contrato (dia_inicial,dia_final);
+create index ix_dba on tbl_solicitacoes  (id_empresa,id_origem,data_execucao_os,data_abertura);
+
 ########################################### Servidor Novo ####################################################################
+
+select concat('mysqldump --login-path=root ',TABLE_SCHEMA,' ',TABLE_NAME, ' > ', TABLE_NAME,'.sql')  from TABLES where TABLE_SCHEMA = 'db_scm';
 
 
 Claro@12345
 curl -v telnet://10.29.3.89:3306      [ LAPA ]
 
-#####My.cnf10.29.3.89
+#####My.cnf  10.29.3.89 - net002prdlnx849
 
 # ----------------------------------------------------------------------
 # MySQL Server Configuration File
@@ -658,3 +730,39 @@ create  index IX_DATA on tb_snr(dttoday);
 
 init-file=/mysql/conf.d/initSql.sql
 SET GLOBAL local_infile = 'ON';
+
+
+##########################
+
+drop database db_planorc;                  -- > dump-db_planorc.sql CORRETO
+
+drop database calendar;                     --> dump-calendar-202401170924.sql CORRETO
+
+drop database  db_admin_expense;          dump-db_admin_expense.sql
+
+drop database  db_admin_kronus;          --> dump-db_admin_kronus.sql CORRETO
+
+drop database db_kronus;                   --> dump-db_admin_kronus.sql CORRETO
+
+
+
+nohup mysql -uroot -p db_planorc < dump-db_planorc.sql &
+
+nohup mysql -uroot -p calendar  <  dump-calendar-202401170924.sql &
+
+nohup mysql -uroot -p db_admin_expense < dump-db_admin_expense.sql  &
+
+nohup mysql -uroot -p db_admin_kronus  <  dump-db_admin_kronus.sql  &
+
+nohup mysql -uroot -p db_kronus  < dump-db_admin_kronus.sql  &
+
+
+
+set session sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+
+
+
+SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES
+WHERE ROUTINE_SCHEMA = 'yourdb' AND ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = "proc_complete_me_inst";
+

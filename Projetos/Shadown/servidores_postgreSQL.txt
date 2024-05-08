@@ -1,0 +1,427 @@
+
+
+
+---------------- Projeto SHADOWN ---------------------------------------
+
+usuario S.O:postgre
+senha:#P0stSQL#
+
+#P0stSQL#2
+
+#Mudar#Teste01
+
+Servidores PRODUÇÃO
+
+ 
+
+
+
+CBC2AM00354 -  10.88.14.35
+
+CBC2AM80574 -  10.88.14.36
+
+
+
+
+CBC2AM00354 -  10.88.14.35   ssh postgre@10.88.14.35   
+
+CBC2AM80574 -  10.88.14.36   ssh postgre@10.88.14.36
+
+Origem
+
+CBC2AM00354 -  10.88.14.35
+
+ATHENA 2(MEDWEB) CBC2AM80574 -  10.88.14.36
+
+destino
+
+10.53.8.208     capsulemck.claro.com.br
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#P0stSQL#
+
+curl -v telnet://10.88.14.75:22
+
+#Mudar#Teste01
+CBC2BM69498	
+10.88.14.75	
+1000GB	BD (POSTGREE)
+ssh postgre@10.88.14.75
+
+------------------------------------------    Instalacao   ----------------------------------------------------------------
+
+SELECT * FROM pg_catalog.pg_tables;
+
+
+
+:: Verificar se esses pacotes existem no servidor  ::
+-> gcc 
+-> make
+-> readline-devel ou libreadline-dev  (varia o nome de acordo com o SO)
+-> zlib-devel ou zlib1g-dev (varia o nome de acordo com o SO)
+
+ 
+
+
+
+1) criar usuario postgre com bash
+
+2) criar diretorio dos binarios  :: /postgre/app/postgresql/pg12  
+
+3) criar diretorio dos dados ::  /postgre/data 
+
+4) criar diretorio de log : /postgre/log
+
+5) entrar no diretorio do  instlador
+
+6) ./configure --prefix=/postgre/app/postgresql/pg14 --with-pgport=5433   
+
+7)make
+
+8) make install
+
+9)  Iniciar o sistema :  /postgre/app/postgresql/pg12/bin/initdb -D /postgre/data --encoding=UTF8 --lc-locale=pt_BR.UTF-8  --lc-ctype=pt_BR.UTF-8  --lc-monetary=pt_BR.UTF-8 [ logado como postgre ]
+
+Success. You can now start the database server using:
+
+   /postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt start
+	/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt stop
+
+
+
+--encoding=UTF8
+--lc-ctype=Portuguese_Brazil.1252
+
+
+
+## Restore
+#P0stSQL#
+ATHENA 2(MEDWEB) CBC2AM80574 -  10.88.14.36
+ssh postgre@10.88.14.36
+
+nohup  psql -h localhost -U postgres -d SRT< /home/backup/SRT_bkp.backup
+
+
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2         1167 Aug  9 15:20 inovacao_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2    260712277 Aug  9 15:22 tabelas_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2   1376556034 Aug  9 15:26 cca_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2   4807183081 Dec 15 12:10 medwebnovo_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2     40406338 Dec 15 12:24 cobilling_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2   3494356716 Dec 15 12:32 faturamentoEmpresarial_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2   2813278838 Dec 15 12:52 faturamentoResidencial_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2      2632792 Dec 15 13:32 faturamentoPessoal_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2    158975952 Dec 15 13:33 faturamentomovel_bkp.backup.gz
+-rw-rw-r-- 1 ops_crkathena2 ops_crkathena2   2593087281 Dec 15 13:39 igr_bkp.backup.gz
+
+[15/12/23 17:07] Henriques, Carine G.
+ 
+inovacao                - ok   
+tabelas                 - ok
+CCA                     - ok
+medwebnovo              -     -- nohup  psql -h localhost -U postgres -d medwebnovo < /backup/dump/medwebnovo_bkp.backup &
+cobilling               - ok  -- nohup  psql -h localhost -U postgres -d cobilling < /backup/dump/cobilling_bkp.backup &
+faturamentoEmpresarial  - ok  -- nohup  psql -h localhost -U postgres -d faturamentoEmpresarial < /backup/dump/faturamentoEmpresarial_bkp.backup &   
+faturamentoResidencial  -     -- nohup  psql -h localhost -U postgres -d faturamentoresidencial < /backup/dump/faturamentoResidencial_bkp.backup &   
+faturamentoPessoal      - ok  -- nohup  psql -h localhost -U postgres -d faturamentoPessoal < /backup/dump/faturamentoPessoal_bkp.backup &
+faturamentomovel        - ok  -- nohup  psql -h localhost -U postgres -d faturamentomovel < /backup/dump/faturamentomovel_bkp.backup &
+igr                     - ok  -- nohup  psql -h localhost -U postgres -d igr < /backup/dump/igr_bkp.backup &2222
+
+
+SMARTRULES
+
+CBC2BM69498	
+10.88.14.75	
+1000GB	BD (POSTGREE)
+ssh postgre@10.88.14.75
+#P0stSQL#
+#Mudar#Teste01
+
+
+
+nohup  psql -h localhost -U postgres -d postgres < /backup/dump/backup_postgresql_12012024.backup &
+
+
+nohup  psql -h localhost -U postgres --c -d postgres  < /backup/dump/backup_postgresql10_20032024.backup &
+
+
+
+02 - nohup pg_restore --host=localhost --port=5432 --username=postgres --clean --dbname=postgres --verbose  /backup/dump/backup_postgresql7_20032024.backup &
+
+01 - nohup pg_restore --host=localhost --port=5432 --username=postgres --clean --dbname=postgres --verbose /backup/dump/backup_postgresql10_20032024.backup &
+
+
+
+Athenas02
+
+nohup  psql -h localhost -U postgres -d CCA < /athena_app/bkp/cca_bkp.backup & 
+
+
+nohup  psql -h localhost -U postgres -d tabelas < /backup/dump/tabelas_bkp.backup & 
+
+nohup  psql -h localhost -U postgres -d cobilling < /backup/dump/cobilling_bkp.backup &
+
+nohup  psql -h localhost -U postgres -d igr < /backup/dump/igr_bkp.backup &
+
+
+
+
+
+########################################## Table spaces #####################
+
+mkdir /postgre/data/prd_movel
+mkdir /postgre/data/prd_cadastro
+mkdir /postgre/data/prd_fixa
+mkdir /postgre/data/prd_conectividade
+mkdir /postgre/data/prd_cca
+mkdir /postgre/data/homologacao_conectividade
+
+
+CREATE TABLESPACE prd_movel   OWNER smart_movel   LOCATION '/postgre/data/prd_movel';
+CREATE TABLESPACE prd_cadastro   OWNER smart_cadastro   LOCATION '/postgre/data/prd_cadastro';
+CREATE TABLESPACE prd_fixa   OWNER smart_fixa   LOCATION '/postgre/data/prd_fixa';
+CREATE TABLESPACE prd_conectividade   OWNER smart_conect   LOCATION '/postgre/data/prd_conectividade';
+CREATE TABLESPACE prd_cca   OWNER smart_cca   LOCATION '/postgre/data/prd_cca';
+CREATE TABLESPACE homologacao_conectividade   OWNER smart_conect_homolog   LOCATION '/postgre/data/homologacao_conectividade';
+
+ALTER TABLESPACE prd_movel   OWNER TO smart_movel;
+ALTER TABLESPACE prd_cadastro   OWNER TO smart_cadastro;
+ALTER TABLESPACE prd_fixa   OWNER TO smart_fixa;
+GRANT CREATE ON TABLESPACE prd_fixa TO smart_fixa WITH GRANT OPTION;
+GRANT CREATE ON TABLESPACE prd_fixa TO PUBLIC; 
+ALTER TABLESPACE prd_conectividade   OWNER TO smart_conect;
+GRANT CREATE ON TABLESPACE prd_conectividade TO smart_conect WITH GRANT OPTION;
+ALTER TABLESPACE prd_cca   OWNER TO smart_cca;
+GRANT CREATE ON TABLESPACE prd_cca TO smart_cca WITH GRANT OPTION;
+ALTER TABLESPACE homologacao_conectividade   OWNER TO smart_conect_homolog;
+GRANT CREATE ON TABLESPACE homologacao_conectividade TO smart_conect_homolog WITH GRANT OPTION;
+
+################################################################################################################################################################################################################################################################################################################################################
+
+
+
+#### ROLES 
+
+-- Role: postgres
+-- DROP ROLE postgres;
+
+CREATE ROLE postgres WITH
+  LOGIN
+  SUPERUSER
+  INHERIT
+  CREATEDB
+  CREATEROLE
+  REPLICATION
+  ENCRYPTED PASSWORD 'md5ea50c131c02ddc6a6ec340dcf0d04ca1';
+  
+-- Role: smart_cadastro
+-- DROP ROLE smart_cadastro;
+
+CREATE ROLE smart_cadastro WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md523262c800eff0de62fa3454035336139';
+
+-------------------------------------
+
+-- Role: smart_cca
+-- DROP ROLE smart_cca;
+
+CREATE ROLE smart_cca WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md5c3af16e6654f0d70d212c4519641e54d';
+
+---------------------------------------
+
+-- Role: smart_conect
+-- DROP ROLE smart_conect;
+
+CREATE ROLE smart_conect WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md5e85ced2a8592d94db12a33fa58ec2b97';
+
+
+
+--------------------------------------------
+
+
+
+-- Role: smart_conect_homolog
+-- DROP ROLE smart_conect_homolog;
+
+CREATE ROLE smart_conect_homolog WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md58a07412c6bb688eff493dac6c9d996a8';
+
+----------------------------------------------------
+-- Role: smart_fixa
+-- DROP ROLE smart_fixa;
+
+CREATE ROLE smart_fixa WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md533b33d7a5fe26f5ee461a430ef1fcb99';
+
+
+-----------------------------------------------------
+-- Role: smart_movel
+-- DROP ROLE smart_movel;
+
+CREATE ROLE smart_movel WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md5fc16571997bd920ce6679efe1380b302';
+
+CREATE ROLE smart_rules_genai WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md537dd3c9ed22d0500c060e8aa0cbd503b';
+
+ALTER ROLE smart_cadastro IN DATABASE postgres SET default_tablespace TO 'prd_cadastro';
+ALTER ROLE smart_cadastro IN DATABASE postgres SET search_path TO smart_rules_cadastro;
+ALTER ROLE smart_cca IN DATABASE postgres SET default_tablespace TO 'prd_cca';
+ALTER ROLE smart_cca IN DATABASE postgres SET search_path TO smart_rules_cca;
+ALTER ROLE smart_conect IN DATABASE postgres SET default_tablespace TO 'prd_conectividade';
+ALTER ROLE smart_conect IN DATABASE postgres SET search_path TO smart_rules_conectividade;
+ALTER ROLE smart_conect_homolog IN DATABASE postgres SET default_tablespace TO 'homologacao_conectividade';
+ALTER ROLE smart_conect_homolog IN DATABASE postgres SET search_path TO smart_rules_conectividade_homolog;
+ALTER ROLE smart_fixa IN DATABASE postgres SET default_tablespace TO 'prd_fixa';
+ALTER ROLE smart_fixa IN DATABASE postgres SET search_path TO smart_rules_fixa;
+ALTER ROLE smart_movel IN DATABASE postgres SET default_tablespace TO 'prd_movel';
+ALTER ROLE smart_movel IN DATABASE postgres SET search_path TO smart_rules_movel;
+
+
+
+#####  Extensoes
+
+nohup  psql -h localhost -U postgres -d postgres < /postgre/app/postgresql-12.17/contrib/adminpack/sql/adminpack.sql
+
+
+
+:: Verificar se esses pacotes existem no servidor  ::
+-> gcc 
+-> make
+-> readline-devel ou libreadline-dev  (varia o nome de acordo com o SO)
+-> zlib-devel ou zlib1g-dev (varia o nome de acordo com o SO)
+
+ 
+############## INSTALACAO SMARTRULES  - Setando o database para um collate / lctype específica para portugues - #########
+
+
+1) criar usuario postgre com bash
+
+2) criar diretorio dos binarios  :: /postgre/app/postgresql/pg12 
+
+3) criar diretorio dos dados ::  /postgre/data 
+
+4) criar diretorio de log : /postgre/log
+
+5) entrar no diretorio do  instlador
+
+6) ./configure --prefix=/postgre/app/postgresql/pg12 --with-pgport=5432   
+
+7)make
+
+8) make install
+
+9)  Iniciar o sistema :  /postgre/app/postgresql/pg12/bin/initdb -D /postgre/data --encoding='UTF8' --lc-ctype='pt_BR.UTF-8'  --lc-collate='pt_BR.UTF-8' --lc-monetary=pt_BR.UTF-8  [ logado como postgre ]
+
+Success. You can now start the database server using:
+
+   /postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt start
+	/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log.txt stop
+
+
+
+/* Criando um database com especificações específicas */
+
+CREATE DATABASE testea10 ENCODING  'UTF8' LC_CTYPE  'pt_BR.UTF-8' LC_COLLATE = 'pt_BR' TEMPLATE template0;
+ 
+
+
+CREATE EXTENSION adminpack;
+CREATE EXTENSION pldbgapi;
+CREATE EXTENSION tablefunc;
+CREATE EXTENSION adminpack;
+CREATE EXTENSION pg_stat_statements;
+CREATE EXTENSION dblink;
+
+SELECT * FROM pg_extension;
+
+
+
+
+ #### Restore  ###################
+
+
+nohup pg_restore --host=localhost --port=5432 --username=postgre  --dbname=postgres --verbose /backup/dump/backup_postgresql_12012024.backup &
+
+nohup pg_restore --host=localhost --port=5432 --username=postgre  --dbname=postgres --verbose /backup/dump/backup_postgresql10_12012024.backup &
+
+-- /postgre/app/postgresql/pg12/bin/pg_restore --host=localhost --port5432 --username=postgre --dbname=postgres cdr_cef_29032023.backup
+-- nohup  psql -h localhost -U postgres -d postgres < /backup/dump/backup_postgresql_12012024.backup &
+-- nohup  psql -h localhost -U postgres -d postgres < /backup/dump/backup_postgresql10_12012024.backup &
+
+
+
+SELECT * FROM pg_extension;
+
+
+pg_restore: error: could not execute query: ERROR:  role "smart_rules_genai" does not exist
+
+error: could not execute query: ERROR:  could not open extension control file "/postgre/app/postgresql/pg12/share/extension/adminpack.control": No such file or directory
+
+ERROR:  could not open extension control file "/postgre/app/postgresql/pg12/share/extension/adminpack.control": Arquivo ou diretório inexistente
+ERROR:  could not open extension control file "/postgre/app/postgresql/pg12/share/extension/tablefunc.control": Arquivo ou diretório inexistente
+
+
+/postgre/app/postgresql-12.17/contrib/dblink
+
+
+
+#### Restore 25/03
+
+
+nohup pg_restore --host=localhost --port=5432 --username=postgre  --dbname=postgres --verbose backup_postgresql7_20032024.backup &
+
+nohup pg_restore --host=localhost --port=5432 --username=postgre  --dbname=postgres --verbose backup_postgresql10_20032024.backup &
+
+
+
+
+02 - nohup pg_restore --host=localhost --port=5432 --username=postgres --clean --dbname=postgres --verbose  /backup/dump/backup_postgresql7_20032024.backup &
+
+01 - nohup pg_restore --host=localhost --port=5432 --username=postgres --clean --dbname=postgres --verbose /backup/dump/backup_postgresql10_20032024.backup &
