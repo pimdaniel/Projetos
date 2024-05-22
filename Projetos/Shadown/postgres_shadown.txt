@@ -5,7 +5,8 @@ Claro@1234
 
 ssh postgre@10.88.14.35
 
-CBC2AM00354 -  10.88.14.35   ssh postgre@10.88.14.35   - #P0stSQL#2
+CBC2AM00354 -  10.88.14.35   ssh postgre@10.88.14.35   - #P0stSQL#2   #P0stSQL#3
+
   
 CBC2AM80574 -  10.88.14.36   ssh postgre@10.88.14.36
  

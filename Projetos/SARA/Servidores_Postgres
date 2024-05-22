@@ -1,0 +1,89 @@
+
+
+:: Homologação ::
+
+#P0stSQL#
+
+CLFWALNXHML01 - 10.88.8.114 - ssh postgre@10.88.8.114
+CLFWALNXHML02 - 10.88.8.103 - ssh postgre@10.88.8.103
+CLFWALNXHML03 - 10.88.8.102 - ssh postgre@10.88.8.102
+
+
+#### Instalação
+
+1) criar usuario postgre com bash
+
+2) criar diretorio dos binarios  ::  mkdir -p /postgre/app/postgresql/pg12 
+
+3) criar diretorio dos dados :: mkdir -p /postgre/data 
+
+4) criar diretorio de log : mkdir -p /postgre/log
+
+5) entrar no diretorio do  instlador
+
+6) ./configure --prefix=/postgre/app/postgresql/pg12 --with-pgport=5432   
+
+7) make
+
+8) make install
+
+9)  Iniciar o sistema :  /postgre/app/postgresql/pg12/bin/initdb -D /postgre/data   [ logado como postgre ]
+
+10) opicional  # --encoding='UTF8' --lc-ctype='pt_BR.UTF-8'  --lc-collate='pt_BR.UTF-8' --lc-monetary=pt_BR.UTF-8
+
+
+ 
+
+/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt start
+
+/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt stop
+
+## criando bando de dados
+
+        create database clarobrazil ;
+
+## Usuario sara
+
+    create user sara with encrypted password 'M#sL58ar@';
+
+    grant all privileges on database clarobrazil to sara;
+
+## Conexao 
+psql -Usara -W -d clarobrazil
+
+## Configuração requerida 
+
+
+data_directory = '/home/pg_data/'                   # use data in another directory
+listen_addresses = '*'                              # what IP address(es) to listen on;
+max_connections = 5000                              # (change requires restart)
+shared_buffers = 32GB                               # min 128kB
+work_mem = 55924kB                                  # min 64kB
+maintenance_work_mem = 2GB                          # min 1MB
+dynamic_shared_memory_type = posix                  # the default is the first option
+effective_io_concurrency = 200                      # 1-1000; 0 disables prefetching
+max_worker_processes = 22                           # (change requires restart)
+max_parallel_workers = 22                           # maximum number of max_worker_processes that
+wal_buffers = 16MB                                  # min 32kB, -1 sets based on shared_buffers
+max_wal_size = 8GB
+min_wal_size = 4GB
+checkpoint_completion_target = 0.9                  # checkpoint target duration, 0.0 - 1.0
+random_page_cost = 1.1                              # same scale as above
+effective_cache_size = 96GB
+default_statistics_target = 500                     # range 1-10000
+log_destination = 'stderr'                          # Valid values are combinations of
+logging_collector = on                              # Enable capturing of stderr and csvlog
+log_directory = 'log'                               # directory where log files are written,
+log_filename = 'postgresql-%a.log'                  # log file name pattern,
+log_truncate_on_rotation = on                       # If on, an existing log file with the
+log_rotation_age = 1d                               # Automatic rotation of logfiles will
+log_rotation_size = 0                               # Automatic rotation of logfiles will
+log_line_prefix = '%m [%p] '                        # special values:
+log_timezone = 'America/Sao_Paulo'
+datestyle = 'iso, mdy'
+timezone = 'America/Sao_Paulo'
+lc_messages = 'en_US.UTF-8'                         # locale for system error message
+lc_monetary = 'en_US.UTF-8'                         # locale for monetary formatting
+lc_numeric = 'en_US.UTF-8'                          # locale for number formatting
+lc_time = 'en_US.UTF-8'                             # locale for time formatting
+default_text_search_config = 'pg_catalog.english' 

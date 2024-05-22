@@ -425,7 +425,7 @@ nohup  psql -h localhost -U postgres -d postgres < /postgre/app/postgresql-12.17
 Success. You can now start the database server using:
 
    /postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt start
-	/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log.txt stop
+	/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt stop
 
 
 
