@@ -1,0 +1,1 @@
+[ERROR] [FATAL] InnoDB: Table flags are 0 in the data dictionary but the flags in file /iw/database/innodb829/ibdata1 are 0x4800!

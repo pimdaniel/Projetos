@@ -102,3 +102,76 @@ vcopsdlelx46 10.88.68.46  -   ssh postgres@10.88.68.46
 vcopsdlelx47 10.88.68.47  -   ssh postgres@10.88.68.47
 
 -------------------------------------------------------------------------------------------------
+
+
+login: VCOPSDBOWNER
+senha: C0fr$PstRp
+
+CREATE USER OPS_CRK_SMTFIXA WITH PASSWORD 'C0fr$Sm@rt';
+
+Criacao usuario:  VCOPSDBOWNER
+
+
+create role vcops WITH SUPERUSER;
+
+CREATE USER VCOPSDBOWNER WITH PASSWORD 'C0fr$PstRp';
+
+grant vcops to VCOPSDBOWNER;
+ 
+ALTER USER vcopsdbowner with Superuser;
+
+vcopscaslx15  ssh postgres@10.88.68.15
+10.88.68.15
+vcopsdlelx44  ssh postgres@10.88.68.44
+10.88.68.44
+vcopsdlelx45  ssh postgres@10.88.68.45  ***
+10.88.68.45
+vcopsdlelx46  ssh postgres@10.88.68.46
+10.88.68.46
+vcopsdlelx47   ssh postgres@10.88.68.47
+
+
+CREATE USER dbmon WITH PASSWORD 'monitoracaocoti20'; 
+GRANT SELECT ON ALL TABLES IN SCHEMA public  TO dbmon;
+
+
+
+10.88.8.114
+Password for user dbmon:
+10.88.8.103
+Password for user dbmon:
+10.88.8.102
+Password for user dbmon:
+
+
+
+
+10.88.68.47
+
+systemctl status postgresql-14.service
+psql -d postgres -Uvcopsdbowner
+#P0stSQL#
+
+
+CREATE USER teste WITH PASSWORD 'teste';
+
+CREATE USER teste2    WITH PASSWORD 'teste2' SUPERUSER;
+
+GRANT 
+
+
+ # TYPE  DATABASE        USER            ADDRESS                 METHOD
+ 87
+ 88 # "local" is for Unix domain socket connections only
+ 89 local   all             all                                     trust
+ 90 # IPv4 local connections:
+ 91 host    all             all             127.0.0.1/32            trust
+ 92 host    all             all             0.0.0.0/0               trust
+ 93
+ 94 # IPv6 local connections:
+ 95 host    all             all             ::1/128                 trust
+ 96 # Allow replication connections from localhost, by a user with the
+ 97 # replication privilege.
+ 98 local   replication     all                                     trust
+ 99 host    replication     all             127.0.0.1/32            trust
+100 host    replication     all             ::1/128                 trust

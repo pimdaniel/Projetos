@@ -1,12 +1,16 @@
 
+
+ 
+
+
+CREATE USER dbmon WITH PASSWORD 'monitoracaocoti20';
+
 Claro@1234
 
-#P0stSQL#
 
 ssh postgre@10.88.14.35
 
 CBC2AM00354 -  10.88.14.35   ssh postgre@10.88.14.35   - #P0stSQL#2   #P0stSQL#3
-
   
 CBC2AM80574 -  10.88.14.36   ssh postgre@10.88.14.36
  
@@ -84,4 +88,104 @@ CBC2AM95018  - 10.88.6.173  [DEV]
  
  /postgre/app/postgresql/pg14/bin/pg_basebackup -Ft -D $bkp_dir
 
+ssh postgre@10.88.14.75
+ 
 
+https://clarobr.atlassian.net/servicedesk/customer/portal/1015/PC-207446
+
+OPS_CRK_SMTCCA
+10.88.14.75 | CBC2BM69498
+
+Obs: Este usuário deve ser criado com o mesmo perfil de acesso do usuário smart_rules_cca já existente no banco.
+Criação de tabela, view, índice, sequence e procedure
+Edição de tabela, view, índice, sequence e procedure
+Permissão dos comandos básicos: select, insert, update, delete e truncate
+Permissão de acesso a tabela pg_stat_activity e execução do comando pg_terminate_backend(xxxx ) para matar algum processo que fique travado no banco.
+As instancias para as quais o usuário deve estar liberado são: smart_rules_cca
+
+
+
+https://clarobr.atlassian.net/jira/servicedesk/projects/PC/queues/issue/PC-207446
+
+
+CREATE USER OPS_CRK_SMTCCA WITH PASSWORD 'C0fr$Sm@rt';
+
+      grant Super usuario to ops_crk_smtpostgres;
+
+      psql -ops_crk_smtcadastro -W -dpostgres
+
+https://clarobr.atlassian.net/servicedesk/customer/portal/1015/PC-208661
+
+OPS_CRK_SMTPOSTGRES 
+10.88.14.75 | CBC2BM69498
+
+
+  
+      CREATE USER OPS_CRK_SMTPOSTGRES WITH PASSWORD 'C0fr$Sm@rt';
+      grant Super usuario to ops_crk_smtpostgres;
+
+      psql -ops_crk_smtcadastro -W -dpostgres
+
+
+https://clarobr.atlassian.net/servicedesk/customer/portal/1015/PC-208673
+
+OPS_CRK_SMTCADASTRO 
+10.88.14.75 | CBC2BM69498
+
+Obs: Este usuário deve ser criado com o mesmo perfil de acesso do usuário smart_cadastro já existente no banco.
+     As instancias para as quais o usuário deve estar liberado são: smart_rules_cadastro
+       
+      CREATE USER OPS_CRK_SMTCADASTRO WITH PASSWORD 'C0fr$Sm@rt';
+      grant smart_cadastro to ops_crk_smtcadastro;
+
+      psql -ops_crk_smtcadastro -W -dpostgres
+
+
+
+
+
+  https://clarobr.atlassian.net/servicedesk/customer/portal/1015/PC-208686 [ sem acesso ] 
+  
+  OPS_CRK_SMTCONECT
+  10.88.14.75 | CBC2BM69498
+
+  Obs:
+        Este usuário deve ser criado com o mesmo perfil de acesso do usuário smart_conect já existente no banco.
+        As instancias para as quais o usuário deve estar liberado são: smart_rules_conectividade
+
+CREATE USER OPS_CRK_SMTCONECT WITH PASSWORD 'C0fr$Sm@rt';
+      grant smart_conect to ops_crk_smtconect;
+
+      psql -Uops_crk_smtconect -W -dpostgres
+
+
+
+  https://clarobr.atlassian.net/servicedesk/customer/portal/1015/PC-208694
+
+  OPS_CRK_SMTFIXA
+  10.88.14.75 | CBC2BM69498
+
+  Obs: Este usuário deve ser criado com o mesmo perfil de acesso do usuário smart_fixa já existente no banco.
+       As instancias para as quais o usuário deve estar liberado são: smart_rules_fixa
+
+
+    CREATE USER OPS_CRK_SMTFIXA WITH PASSWORD 'C0fr$Sm@rt';
+      grant smart_fixa to ops_crk_smtfixa;
+
+      psql -Uops_crk_smtfixa -W -dpostgres
+
+
+https://clarobr.atlassian.net/servicedesk/customer/portal/1015/PC-208701
+
+
+OPS_CRK_SMTMOVEL
+10.88.14.75 | CBC2BM69498
+
+Obs:  Este usuário deve ser criado com o mesmo perfil de acesso do usuário smart_movel já existente no banco.
+      As instancias para as quais o usuário deve estar liberado são: smart_rules_movel
+
+
+      CREATE USER OPS_CRK_SMTMOVE WITH PASSWORD 'C0fr$Sm@rt';
+      grant smart_movel to ops_crk_smtmove;
+
+      psql -Uops_crk_smtmove -W -dpostgres

@@ -1,0 +1,67 @@
+
+
+/usr/sbin/mysqld --basedir=/usr --datadir=/app/mysql --plugin-dir=/usr/lib64/mysql/plugin --log-error=/app/mysql/mysqld.log --pid-file=/app/mysql/mysqld.pid --socket=/var/lib/mysql/mysql.sock
+
+
+/usr/sbin/mysqld --basedir=/usr --datadir=/app/mysql --plugin-dir=/usr/lib64/mysql/plugin --log-error=/app/mysql/mysqld.log --pid-file=/app/mysql/mysqld.pid --socket=/var/lib/mysql/mysql.sock
+
+
+Servidor
+CBL2CM84186 
+(10.29.236.109)
+
+
+servidor : cbl2cm84186
+
+ln -s /app/mysql/app.d/mysql-advanced-5.7.22-el7-x86_64 mysql
+
+ln -s  /app/mysql/app.d/mysql  /usr/local/mysql
+
+ln -s /etc/my.cnf  /app/mysql/conf.d/mysql/my.cnf
+
+
+ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5 
+ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5    
+
+
+## Comando para subir o mysql pela primeira vez { obs: --initialize } PEGAR A SENHA DO ROOT NO LOG
+/app/mysql/app.d/mysql/bin/mysqld_safe  --defaults-file=/app/mysql/conf.d/mysql/my.cnf --initialize --user=mysql  --basedir=/app/mysql/app.d/mysql --datadir=/app/mysql/databases --log-error=/app/mysql/mysqld.log  &
+5QFvk.,yaJJs
+
+## Iniciar  o mysql para poder alterar a senha do root
+/app/mysql/app.d/mysql/bin/mysqld_safe --defaults-file=/app/mysql/conf.d/mysql/my.cnf    --user=mysql    --basedir=/app/mysql/app.d/mysql --log-error=/app/mysql/mysqld.log --datadir=/app/mysql/databases  &
+
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mysql#007';
+
+/app/opt
+
+
+
+Starting MySQL ERROR! Couldn't find MySQL server (/app/mysql/bin/mysqld_safe)
+
+
+/app/mysql/app.d/meb-4.0.3-el7-x86-64bit/bin
+
+
+/app/mysql/app.d/meb-4.0.3-el7-x86-64bit/bin/mysqlbackup --datadir=/app/mysql/databases   --backup-image=/backup/NET002PRDLNX148_IMAGE_BACKUP_20240817_1911.mbi --backup-dir=/backup   copy-back-and-apply-log --uncompress --force
+
+
+
+export PATH=$PATH:/usr/local/mysql/bin
+
+
+
+
+/app/opt/backup_mysql/FULL_148/2024-07-07_15-26-02
+
+NET002PRDLNX148_IMAGE_BACKUP_20240707_1526.mbi
+
+local
+
+scp mysql@10.29.236.207:/app/opt/backup_mysql/FULL_148/2024-08-17_19-11-01/NET002PRDLNX148_IMAGE_BACKUP_20240817_1911.mbi  NET002PRDLNX148_IMAGE_BACKUP_20240817_1911.mbiv
+
+unixODBC-2.3.7-1.rh.x86_64.rpm
+mssql-tools-17.6.1.1-1.x86_64.rpm
+
+https://packages.microsoft.com/rhel/7/prod/Packages/m/mssql-tools-17.6.1.1-1.x86_64.rpm

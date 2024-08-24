@@ -198,3 +198,20 @@ ALTER TABLE  `iwprd_gen`.`crc_frm_decisao_credito` FORCE;
 ALTER TABLE  `iwprd_gen`.`sgt_profissional_idm` FORCE;
 ALTER TABLE  `iwprd_gen`.`sgt_solicitacao` FORCE;
 ALTER TABLE  `iwprd_gen`.`frm_ged_inspecao_pf` FORCE;
+
+
+
+SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE  COMMAND <> 'Sleep' and COMMAND <> 'Binlog Dump' and time > 1000\G;
+
+SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE   state like '%lock%' \G;
+
+SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE   time > 500 \G;
+
+
+SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE  COMMAND <> 'Sleep' \G;
+
+SELECT * 
+from INFORMATION_SCHEMA.PROCESSLIST
+WHERE
+ COMMAND <> 'Sleep'
+AND HOST NOT LIKE '10.164.25.133%' \G

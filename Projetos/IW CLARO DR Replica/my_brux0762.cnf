@@ -1,0 +1,305 @@
+[mysqld]
+#bind-address = 127.0.0.1
+
+## 2023-07-14
+init-file=/iw/conf.d/mysqld/inisql.sql
+
+datadir=/mysql/mysqldata01/db
+socket=/mysql/mysqldata01/mysql.sock
+user=mysql
+
+# MyISAM
+myisam_sort_buffer_size=16777216
+
+## UPGRADE 2016-11-20
+sql_mode="NO_ENGINE_SUBSTITUTION"
+secure_file_priv=
+
+
+## UPDATE 2017-09-29
+innodb_max_dirty_pages_pct=75.00
+
+plugin-load="thread_pool.so"
+
+##### REMOVIDO EM 2014-04-23 ####
+##### RECOLOCADO EM 2016-05-22 ##
+##plugin-load=audit_log.so
+#audit_log_file=/mysql/auditlog/brux0762-audit.log
+#audit_log_policy=LOGINS
+#audit_log_strategy=PERFORMANCE
+#audit_log_rotate_on_size=128M
+#audit_log_buffer_size=2097152
+
+##### INSERIDO EM 2014-04-23 ####
+# entre 6 e 40
+#thread_pool_size=36                #nao existe mais
+#thread_pool_stall_limit=100        #nao existe mais
+#thread_pool_prio_kickup_timer=1000 #nao existe mais
+#thread_pool_max_unused_threads=0   #nao existe mais
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=1
+default-storage-engine=innodb
+default_tmp_storage_engine=InnoDB
+
+slow_query_log=1
+slow_query_log_file=/iw/log.d/mysqld/brux0762-slow.log
+long_query_time=30
+log_error_verbosity=3
+
+## Binary Log Configuration
+log-bin=/mysql/tmpdir/brux0762
+sync_binlog=1
+max_binlog_size=128M
+expire_logs_days=2
+binlog_format=ROW
+
+## Relay Log Configuration
+relay_log=/mysql/binario_log/relay_log/brux0762-relay-bin
+relay-log-index=/mysql/binario_log/relay_log/brux0762-relay-bin.index
+master-info-file=/mysql/binario_log/relay_log/brux0762-master.info
+relay-log-info-file=/mysql/binario_log/relay_log/brux0762-relay-log.info
+
+
+#PARAMETROS NOVOS
+replica_compressed_protocol=ON
+replica_skip_errors=1032,1062
+
+# Parametros que a aplicacao precisa
+explicit_defaults_for_timestamp = OFF;
+local_infile=on;
+
+
+slave-net-timeout=30
+#binlog_group_commit_sync_delay=0
+slave-rows-search-algorithms = 'INDEX_SCAN,HASH_SCAN'
+slave-pending-jobs-size-max=1G
+
+
+slave_preserve_commit_order = 1
+log_slave_updates = 1
+#enforce_gtid_consistency = 1
+# gtid_mode=on
+master-info-repository = table
+relay-log-info-repository = table
+
+slave-parallel-type=LOGICAL_CLOCK
+read-only=0
+slave_parallel_workers=20
+
+
+
+# Desabilitar pesquisa de DNS
+skip-name-resolve
+
+log-error=/iw/log.d/mysqld/mysqld.log
+pid-file=/iw/lock.d/mysqld/mysqld.pid
+
+tmpdir=/mysql/tmpdir
+
+max_connections=2048
+max_allowed_packet=2048M
+open_files_limit =131072
+
+key_buffer_size = 50G # aprox 25% da memória
+
+tmp_table_size = 512M
+max_heap_table_size = 512M
+sort_buffer_size=64K
+
+net_write_timeout=1200
+net_read_timeout=1200
+
+transaction-isolation=READ-COMMITTED
+
+table_open_cache=25600
+table_definition_cache=6144
+
+### INSERIDO EM 2013-12-13 ###
+##innodb_flush_method=O_DSYNC
+
+sort_buffer_size=256M # 64K aumentado a pedido do mysql pelo log de erro
+join_buffer_size=32K
+read_rnd_buffer_size=32K
+read_buffer_size=32K
+net_buffer_length=8K
+innodb_log_compressed_pages=0
+innodb_flush_method=O_DIRECT
+innodb_read_io_threads=64
+innodb_write_io_threads=64
+innodb_flush_neighbors=0
+innodb_buffer_pool_instances=64
+innodb_page_cleaners=64
+innodb_open_files=-1
+innodb_stats_persistent_sample_pages=100
+innodb_stats_persistent=1
+innodb_io_capacity=1000
+innodb_io_capacity_max=2500
+innodb_lru_scan_depth=256
+innodb_data_home_dir=
+log_timestamps=SYSTEM
+
+
+
+
+# query_cache_type = 0  # nao existe mais
+# query_cache_limit = 2M
+# query_cache_size = 128M
+# query_cache_min_res_unit=2K
+#concurrent_insert=2
+
+#master-host=172.28.146.130
+#master-user=repl
+#master-password=repl_pwd
+#master-port=3306
+#master-connect-retry=60
+#slave-skip-errors=all
+#slave_parallel_workers=100
+#skip-slave-start
+
+
+########################################################
+# You can write your other MySQL server options here
+# ...
+innodb_data_home_dir =
+#
+# Data files must be able to hold your data and indexes
+innodb_data_file_path = /mysql/mysqldata01/innodb/ibdata1:100M;/mysql/mysqldata01/innodb/ibdata2:100M:autoextend
+#
+# Set buffer pool size to 50-80% of your computer's memory,
+# but make sure on Linux x86 total memory usage is < 2GB
+
+innodb_buffer_pool_size=130G # anterior 120
+innodb_log_group_home_dir = /mysql/mysqldata01/innodb/iblogs
+
+#
+# Set the log file size to about 25% of the buffer pool size
+# Old Slave innodb_log_file_size=2G
+innodb_log_file_size=8G
+innodb_log_buffer_size=16M
+
+# 2011.06.07
+innodb_flush_log_at_trx_commit = 2
+innodb_doublewrite             = false
+innodb_file_per_table=1
+
+##########################################
+## configuracao para replicacao de dados
+## Este servidor eh o SLAVE do processo
+
+server-id=33060762
+
+
+################################################
+# Ignora banco
+
+replicate-wild-ignore-table = iwtmp%.%
+replicate-wild-ignore-table = test%.%
+replicate-ignore-db = iwhis%.%
+
+
+# Tabela retirada a pedida de DEV
+replicate-wild-ignore-table =iwprd_crm.fp_ordem_acao_consolidado
+
+
+
+#Desabilitando o binlog
+
+binlog-ignore-db=calendarioprd;
+binlog-ignore-db=iwhis_atd;
+binlog-ignore-db=iwhis_cad;
+binlog-ignore-db=iwhis_com;
+binlog-ignore-db=iwhis_hem;
+binlog-ignore-db=iwhis_itv;
+binlog-ignore-db=iwhis_sys;
+binlog-ignore-db=iwhis_vnd;
+binlog-ignore-db=iwprd_ags;
+binlog-ignore-db=iwprd_all;
+binlog-ignore-db=iwprd_atd;
+binlog-ignore-db=iwprd_cad;
+binlog-ignore-db=iwprd_cdc;
+binlog-ignore-db=iwprd_cem;
+binlog-ignore-db=iwprd_cmc;
+binlog-ignore-db=iwprd_cne;
+binlog-ignore-db=iwprd_com;
+binlog-ignore-db=iwprd_comta;
+binlog-ignore-db=iwprd_cor;
+binlog-ignore-db=iwprd_crm;
+binlog-ignore-db=iwprd_ctv;
+binlog-ignore-db=iwprd_dbhis;
+binlog-ignore-db=iwprd_dim;
+binlog-ignore-db=iwprd_ebt;
+binlog-ignore-db=iwprd_eng;
+binlog-ignore-db=iwprd_ent;
+binlog-ignore-db=iwprd_fin;
+binlog-ignore-db=iwprd_fsv;
+binlog-ignore-db=iwprd_gda;
+binlog-ignore-db=iwprd_gen;
+binlog-ignore-db=iwprd_geo;
+binlog-ignore-db=iwprd_hem;
+binlog-ignore-db=iwprd_itv;
+binlog-ignore-db=iwprd_ltv;
+binlog-ignore-db=iwprd_mobile;
+binlog-ignore-db=iwprd_ool;
+binlog-ignore-db=iwprd_pcd;
+binlog-ignore-db=iwprd_prc;
+binlog-ignore-db=iwprd_prd;
+binlog-ignore-db=iwprd_pta;
+binlog-ignore-db=iwprd_rem;
+binlog-ignore-db=iwprd_rh;
+binlog-ignore-db=iwprd_stq;
+binlog-ignore-db=iwprd_sup;
+binlog-ignore-db=iwprd_sys;
+binlog-ignore-db=iwprd_vnd;
+binlog-ignore-db=iwprd_wfw;
+binlog-ignore-db=iwprd_wrp;
+binlog-ignore-db=iwprd_wvd;
+binlog-ignore-db=iwprocedure;
+binlog-ignore-db=iwtmp_all;
+binlog-ignore-db=iwtmp_atd;
+binlog-ignore-db=iwtmp_bi;
+binlog-ignore-db=iwtmp_cad;
+binlog-ignore-db=iwtmp_cem;
+binlog-ignore-db=iwtmp_cor;
+binlog-ignore-db=iwtmp_crm;
+binlog-ignore-db=iwtmp_ctv;
+binlog-ignore-db=iwtmp_dim;
+binlog-ignore-db=iwtmp_dv;
+binlog-ignore-db=iwtmp_dwh;
+binlog-ignore-db=iwtmp_ebt;
+binlog-ignore-db=iwtmp_eng;
+binlog-ignore-db=iwtmp_ent;
+binlog-ignore-db=iwtmp_fin;
+binlog-ignore-db=iwtmp_fp;
+binlog-ignore-db=iwtmp_gda;
+binlog-ignore-db=iwtmp_gen;
+binlog-ignore-db=iwtmp_hem;
+binlog-ignore-db=iwtmp_itv;
+binlog-ignore-db=iwtmp_ool;
+binlog-ignore-db=iwtmp_prd;
+binlog-ignore-db=iwtmp_pta;
+binlog-ignore-db=iwtmp_rem;
+binlog-ignore-db=iwtmp_rh;
+binlog-ignore-db=iwtmp_stq;
+binlog-ignore-db=iwtmp_sys;
+binlog-ignore-db=iwtmp_trf;
+binlog-ignore-db=iwtmp_vnd;
+binlog-ignore-db=iwtmp_wfw;
+binlog-ignore-db=iwtmp_wrp;
+binlog-ignore-db=iwtmp_wvd;
+binlog-ignore-db=test;
+binlog-ignore-db=vt_migracao;
+
+
+[mysql]
+socket=/mysql/mysqldata01/mysql.sock
+
+[mysqladmin]
+socket=/mysql/mysqldata01/mysql.sock
+
+[mysql_upgrade]
+socket=/mysql/mysqldata01/mysql.sock
+
+
+[client]
+# Parametros que a aplicacao precisa

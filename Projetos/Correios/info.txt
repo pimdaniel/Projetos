@@ -1,0 +1,23 @@
+
+
+Servidor: lxctac3prd01
+IP: 10.36.11.204
+
+Binario: /u01/mysql/bin/mysql
+
+criar
+
+ * ln -s  /mysql/app.d/mysql  /usr/local/mysql
+ * ln -s /u01/app/mysql  /usr/local/mysql
+
+
+
+ /u01/mysql
+ /u01/mysql/log
+
+
+slow_query_log = 1
+long_query_time = 120
+slow_query_log_file =/u01/mysql/log/mysql_slow_query_log.log
+
+tmpdir=/u01/mysql/temp

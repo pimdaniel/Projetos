@@ -9,6 +9,8 @@ CLFWALNXHML02 - 10.88.8.103 - ssh postgre@10.88.8.103
 CLFWALNXHML03 - 10.88.8.102 - ssh postgre@10.88.8.102
 
 
+PGPASSWORD=monitoracaocoti20 psql -h10.88.8.114 -t -Udbmon -Wmonitoracaocoti20 --output=InvPostgres.csv -dpostgres -c "COPY (SELECT pg_database.datname,pg_size_pretty(pg_database_size(pg_database.datname))  FROM pg_database)  TO STDOUT (FORMAT csv, HEADER on)"
+
 #### Instalação
 
 1) criar usuario postgre com bash

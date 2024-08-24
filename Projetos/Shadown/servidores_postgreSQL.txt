@@ -1,5 +1,8 @@
 
 
+#P0stSQL#2
+
+SELECT pg_database.datname AS "DB Name",pg_size_pretty(pg_database_size(pg_database.datname)) AS "Size"    FROM pg_database   ORDER BY (pg_database_size(pg_database.datname)) DESC;
 
 ---------------- Projeto SHADOWN ---------------------------------------
 
@@ -7,6 +10,7 @@ usuario S.O:postgre
 senha:#P0stSQL#
 
 #P0stSQL#2
+#P0stSQL#3
 
 #Mudar#Teste01
 
@@ -29,19 +33,24 @@ select pid,datname,usename,application_name,client_hostname,pg_terminate_backend
 
 nohup  psql -h localhost -U postgres -d cca < /backup/dump/cca_bkp.backup &
 
+
+
+
+SELECT usename AS role_name,
+ CASE
+  WHEN usesuper AND usecreatedb THEN
+    CAST('superuser, create database' AS pg_catalog.text)
+  WHEN usesuper THEN
+    CAST('superuser' AS pg_catalog.text)
+  WHEN usecreatedb THEN
+    CAST('create database' AS pg_catalog.text)
+  ELSE
+    CAST('' AS pg_catalog.text)
+ END role_attributes
+FROM pg_catalog.pg_user
+ORDER BY role_name desc;
+
  
-
-
-
-
-
-
-
-
-
-
-
-
 
 CBC2AM80574 -  10.88.14.36
 
@@ -113,6 +122,7 @@ SELECT * FROM pg_catalog.pg_tables;
 Success. You can now start the database server using:
 
    /postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt start
+   
 	/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt stop
 
 
@@ -199,7 +209,7 @@ CBC2BM69498
 10.88.14.75	
 1000GB	BD (POSTGREE)
 ssh postgre@10.88.14.75
-#P0stSQL#
+#P0stSQL#2
 #Mudar#Teste01
 
 
@@ -424,7 +434,7 @@ nohup  psql -h localhost -U postgres -d postgres < /postgre/app/postgresql-12.17
 
 Success. You can now start the database server using:
 
-   /postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt start
+  /postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt start
 	/postgre/app/postgresql/pg12/bin/pg_ctl -D /postgre/data -l /postgre/log/log_12.txt stop
 
 
@@ -488,3 +498,74 @@ nohup pg_restore --host=localhost --port=5432 --username=postgre  --dbname=postg
 02 - nohup pg_restore --host=localhost --port=5432 --username=postgres --clean --dbname=postgres --verbose  /backup/dump/backup_postgresql7_20032024.backup &
 
 01 - nohup pg_restore --host=localhost --port=5432 --username=postgres --clean --dbname=postgres --verbose /backup/dump/backup_postgresql10_20032024.backup &
+
+
+
+ssh postgre@10.88.14.36
+#P0stSQL#3
+#P0stSQL#4
+configure
+OPS$DP_ATHENA2
+
+ops$dp_athena2  -  At0n@Cyb#r
+
+At0n@Cyb#r
+
+psql -Uops$dp_athena2 -WAt0n@Cyb#r -b igr
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON ALL TABLES IN SCHEMA public 
+TO user_name;
+
+
+create role athenarole;
+
+GRANT SELECT,INSERT,UPDATE,DELETE ON tables TO athenarole; 
+
+grant athenarole to ops$dp_athena2;
+
+ 
+GRANT SELECT ON DATABASE inovacao TO athenarole;
+
+
+GRANT USAGE ON SCHEMA public TO athenarole; 
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO athenarole;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO athenarole;
+GRANT ALL PRIVILEGES ON ALL PROCEDURES IN SCHEMA public TO athenarole;
+
+
+
+
+ 
+GRANT ALL PRIVILEGES ON DATABASE inovacao TO public;
+
+GRANT ALL PRIVILEGES ON DATABASE inovacao TO public;
+
+
+Daniel basicmente os acessos que temos hoje são os que precisamos manter para o usuário do cofre (OPS$DP_ATHENA2):
+Criação de tabela, view, indíce, sequence e procedure
+Edição de tabela, view, indíce, sequence e procedure
+Permissão dos comandos básicos: select, insert, update, delete e truncate
+Permissão de acesso a tabela pg_stat_activity e execução do comando pg_terminate_backend(xxxx ) para matar algum processo que fique travado no banco
+
+
+
+\dump
+
+
+Criação de tabela, view, indíce, sequence e procedure
+Edição de tabela, view, indíce, sequence e procedure
+Permissão dos comandos básicos: select, insert, update, delete e truncate
+Permissão de acesso a tabela pg_stat_activity
+execução do comando pg_terminate_backend(xxxx )
+
+
+cobilling
+faturamentoempresarial
+faturamentomovel
+faturamentopessoal
+faturamentoresidencial
+igr
+inovacao
+medwebnovo
+tabelas
