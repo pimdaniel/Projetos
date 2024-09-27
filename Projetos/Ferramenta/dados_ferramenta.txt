@@ -1,5 +1,10 @@
 
 
+chmod 600
+
+10.88.134.60 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBM35Ym7txsvCo6sAxke/QqyDuBVM2wvvSz3mJJaMIA3tChnwmbWgaSPPQjs4XImIKYHmuPf6+Loi2qgOUrOjYlY=
+10.88.134.60 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBM35Ym7txsvCo6sAxke/QqyDuBVM2wvvSz3mJJaMIA3tChnwmbWgaSPPQjs4XImIKYHmuPf6+Loi2qgOUrOjYlY=
+
 
 /mysql/app.d
 scp mysql@10.88.134.60:/mysql/app.d/mysql-commercial-8.0.31-el7-x86_64.tar.gz /mysql/jwatter/IW/
@@ -205,3 +210,10 @@ GRANT ALL PRIVILEGES  on  db_sgp_rel.*   to admsgp@'%';
  ALTER DATABASE [tempdb] ADD FILE   (NAME = N'tempd20', FILENAME = N'Q:\TEMPDB\tempde20.ndf' , SIZE = 10GB , FILEGROWTH = 100);
  ALTER DATABASE [tempdb] ADD FILE      (NAME = N'tempd21', FILENAME = N'Q:\TEMPDB\tempde21.ndf' , SIZE = 10GB , FILEGROWTH = 100);
  ALTER DATABASE [tempdb] ADD FILE      (NAME = N'tempd22', FILENAME = N'Q:\TEMPDB\tempde22.ndf' , SIZE = 10GB , FILEGROWTH = 100);
+
+
+10.88.134.60 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBM35Ym7txsvCo6sAxke/QqyDuBVM2wvvSz3mJJaMIA3tChnwmbWgaSPPQjs4XImIKYHmuPf6+Loi2qgOUrOjYlY=
+
+
+
+ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+4GgNd4xMeTlZvcOZYOpV3R85/tTPFrRvTTz4pgNLlU6OqVixVNXTUSbc+RIzfp086x1NRWMr0I9jlPfRl9dFgeJY9l0UfPA/rzLYLD2XwGFgINJNZ6g2HVJixitD6Qes+N7GHDpFxyGNOzKlYIHPgXJWfU8g36ktTbbhEFvtqb2rn08LRt9e7tcKXub1TpXBmiU7WchPYkkOPtrq5LtP+ErvaHGhzb468cnmbq+plp+sr3qekx93m0exbWoRus0EUp+rHmfQvnM/3q7t9wC8Khd08clpR00qaSSEoXRvlFKopVoFa054upU8SkUx8P80RYjIv1Rk0H+HLcS/+P1V oracle@brux1279.claro.com.br

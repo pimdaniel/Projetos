@@ -13,4 +13,13 @@ Senha#01
 mysql_config_editor set --login-path=shellbackup --user=mysqlbackup --password 
 
 
-mysql_config_editor set --login-path=admin --user=root --password
+/usr/local/mysql/bin/mysql_config_editor set --login-path=admin --user=root --password
+
+
+curl -T access.txt ftp://10.2.20.33/
+
+curl -T db_scm.dump ftp://10.2.20.33/
+
+curl -T db_admin_scm.dump ftp://10.2.20.33/
+
+ 

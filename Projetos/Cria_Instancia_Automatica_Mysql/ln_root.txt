@@ -1,0 +1,35 @@
+
+ 
+RHEL 8:
+ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5
+ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5
+
+RHEL 9:
+ln -s /usr/lib64/libncurses.so.6.2 /usr/lib64/libncurses.so.5
+ln -s /usr/lib64/libtinfo.so.6.2  /usr/lib64/libtinfo.so.5
+
+
+ln -s /mysql/app.d/mysql /usr/local/mysql
+ln -s /mysql/conf.d/mysqld/my.cnf   /etc/my.cnf
+
+
+
+ln -s /usr/lib64/libncurses.so.6.2 /usr/lib64/libncurses.so.5
+ln -s /usr/lib64/libtinfo.so.6.2  /usr/lib64/libtinfo.so.5
+
+ln -s /mysql/app.d/mysql /usr/local/mysql
+ln -s /mysql/conf.d/mysqld/my.cnf   /etc/my.cnf
+
+Senhores,
+
+    Foi criado um script para automatizar a instalação de servidores mysql. Mas para isto 
+temos que realizar a criação de 4 links simbolicos. 
+
+Sendo assim precisamos de sudo para os 4 comandos abaixo :
+
+ln -s /usr/lib64/libncurses.so.6.1 /usr/lib64/libncurses.so.5
+ln -s /usr/lib64/libtinfo.so.6.1  /usr/lib64/libtinfo.so.5
+ln -s /mysql/app.d/mysql /usr/local/mysql
+ln -s /mysql/conf.d/mysqld/my.cnf   /etc/my.cnf
+
+Seria possível este acesso ?

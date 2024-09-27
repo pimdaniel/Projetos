@@ -1,0 +1,76 @@
+
+
+/mysql :  80G
+/mysql/data : 
+/mysql/backup :
+/mysql/log/ : 80G
+
+
+#Diretorios de configurações
+	
+	mkdir -p /mysql/conf.d/mysqld
+	mkdir -p /mysql/app.d
+
+#Direotrios de Dados
+	mkdir -p /mysql/data/databases   #datadir
+	mkdir -p /mysql/data/innodb/log
+	mkdir -p /mysql/data/tmpdir
+	mkdir -p /mysql/data/binario_log
+
+# Diretorios de Backup
+
+	mkdir    /mysql/backup/dump
+	mkdir -p /mysql/backup/hotbackup
+	mkdir -p /mysql/backup/scripts
+ll 
+
+rm -rf /mysql/data/databases/*
+rm /mysql/log/*
+rm /mysql/data/innodb/ibdata1 
+rm /mysql/data/innodb/ibdata2
+rm -rf /mysql/data/binario_log/*  
+rm -rf /mysql/data/innodb/log/* 
+
+backup : mysql_MEB_backup.sh
+/mysql/app.d/mysql-commercial-backup-8.0.33-el7-x86_64/bin/mysqlbackup   --login-path=admin --port=3306 --protocol=tcp --backup-dir=/mysql/backup/hotbackup --compress-method=lz4 --backup_innodb_data_file_path='ibdata1:100M;ibdata2:100M:autoextend'  --with-timestamp backup-and-apply-log
+
+limpa: limpeza_MEB.sh
+#!/bin/bash
+
+# find /mysql/backup/export -name "*.bz2" -type f -mtime +1 -exec rm -f {} \;
+find  /mysql/backup/hotbackup/*  -type d -ctime +2 -exec rm -rf {} \;
+
+mysql_config_editor set --login-path=admin --user=mysqlbackup --password 
+
+00 1 * * * /mysql/backup/scripts/limpeza_MEB.sh 
+00 2 * * * /mysql/backup/scripts/mysql_MEB_backup.sh 1>/mysql/log/mysql_MEB_backup_out.log 2>/mysql/log/mysql_MEB_backup_err.log
+
+
+ssh mysql@10.88.132.251
+ssh mysql@10.88.132.207
+ssh mysql@10.88.132.242
+
+
+
+cbl2am73567 :
+mysql> create database zabbix character set utf8mb4 collate utf8mb4_bin;
+
+  create user zabbix@10.29.3.136 identified by 'Z@vgBl!x';
+  create user zabbix@10.29.3.137 identified by 'Z@vgBl!x';
+  create user zabbix@10.29.3.138 identified by 'Z@vgBl!x';
+  create user zabbix@10.29.3.139 identified by 'Z@vgBl!x';
+
+mysql>
+ grant all privileges on zabbix.* to zabbix@10.29.3.136;
+ grant all privileges on zabbix.* to zabbix@10.29.3.137;
+ grant all privileges on zabbix.* to zabbix@10.29.3.138;
+ grant all privileges on zabbix.* to zabbix@10.29.3.139;
+
+mysql> set global log_bin_trust_function_creators = 1;
+
+
+
+CBL2AM55205	10.29.3.136  Zabbix Server
+CBL2AM88076	10.29.3.137  Zabbix Server HA 
+CBL2AM24394	10.29.3.138  Zabbix Front 1
+CBL2AM92451	10.29.3.139  Zabbix Front 2

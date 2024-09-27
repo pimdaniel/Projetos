@@ -10,6 +10,45 @@ Servidor
 CBL2CM84186 
 (10.29.236.109)
 
+Servidor antigo:
+    +--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | latin1                     |
+| character_set_connection | latin1                     |
+| character_set_database   | latin1                     |
+| character_set_filesystem | binary                     |
+| character_set_results    | latin1                     |
+| character_set_server     | latin1                     |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+
+
+
+Servidor novo :
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| *character_set_client     | latin1                     |
+| *character_set_connection | latin1                     |
+| character_set_database   | latin1                     |
+| character_set_filesystem | binary                     |
+| *character_set_results    | latin1                     |
+| character_set_server     | latin1                     |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /app/mysql/share/charsets/ |
++--------------------------+----------------------------+
+
+# Variable_name, Value
+'character_set_client', 'utf8'
+'character_set_connection', 'utf8'
+'character_set_database', 'latin1'
+'character_set_filesystem', 'binary'
+'character_set_results', 'utf8'
+'character_set_server', 'latin1'
+'character_set_system', 'utf8'
+'character_sets_dir', '/usr/share/mysql/charsets/'
 
 servidor : cbl2cm84186
 
@@ -44,9 +83,9 @@ Starting MySQL ERROR! Couldn't find MySQL server (/app/mysql/bin/mysqld_safe)
 /app/mysql/app.d/meb-4.0.3-el7-x86-64bit/bin
 
 
-/app/mysql/app.d/meb-4.0.3-el7-x86-64bit/bin/mysqlbackup --datadir=/app/mysql/databases   --backup-image=/backup/NET002PRDLNX148_IMAGE_BACKUP_20240817_1911.mbi --backup-dir=/backup   copy-back-and-apply-log --uncompress --force
+/app/mysql/app.d/meb-4.0.3-el7-x86-64bit/bin/mysqlbackup --datadir=/app/mysql/databases   --backup-image=/app/mysql_temp/NET002PRDLNX148_IMAGE_BACKUP_20240912_2012.mbi --backup-dir=/backup   copy-back-and-apply-log --uncompress --force
 
-
+ 
 
 export PATH=$PATH:/usr/local/mysql/bin
 
@@ -59,9 +98,16 @@ NET002PRDLNX148_IMAGE_BACKUP_20240707_1526.mbi
 
 local
 
-scp mysql@10.29.236.207:/app/opt/backup_mysql/FULL_148/2024-08-17_19-11-01/NET002PRDLNX148_IMAGE_BACKUP_20240817_1911.mbi  NET002PRDLNX148_IMAGE_BACKUP_20240817_1911.mbiv
+scp mysql@10.29.236.207:/app/opt/backup_mysql/FULL_148/2024-09-12_20-12-51/NET002PRDLNX148_IMAGE_BACKUP_20240912_2012.mbi  NET002PRDLNX148_IMAGE_BACKUP_20240912_2012.mbi
 
-unixODBC-2.3.7-1.rh.x86_64.rpm
-mssql-tools-17.6.1.1-1.x86_64.rpm
+#Copia  backup
+scp mysql@10.29.236.207:/app/opt/backup_mysql/FULL_148/2024-09-12_20-12-51/NET002PRDLNX148_IMAGE_BACKUP_20240912_2012.mbi  NET002PRDLNX148_IMAGE_BACKUP_20240912_2012.mbi
 
-https://packages.microsoft.com/rhel/7/prod/Packages/m/mssql-tools-17.6.1.1-1.x86_64.rpm
+#Restore
+app/mysql/app.d/meb-4.0.3-el7-x86-64bit/bin/mysqlbackup --datadir=/app/mysql/databases   --backup-image=/app/mysql_temp/NET002PRDLNX148_IMAGE_BACKUP_20240912_2012.mbi --backup-dir=/backup   copy-back-and-apply-log --uncompress --force
+
+
+
+
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+4GgNd4xMeTlZvcOZYOpV3R85/tTPFrRvTTz4pgNLlU6OqVixVNXTUSbc+RIzfp086x1NRWMr0I9jlPfRl9dFgeJY9l0UfPA/rzLYLD2XwGFgINJNZ6g2HVJixitD6Qes+N7GHDpFxyGNOzKlYIHPgXJWfU8g36ktTbbhEFvtqb2rn08LRt9e7tcKXub1TpXBmiU7WchPYkkOPtrq5LtP+ErvaHGhzb468cnmbq+plp+sr3qekx93m0exbWoRus0EUp+rHmfQvnM/3q7t9wC8Khd08clpR00qaSSEoXRvlFKopVoFa054upU8SkUx8P80RYjIv1Rk0H+HLcS/+P1V oracle@net002prdlnx687

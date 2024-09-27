@@ -501,6 +501,24 @@ nohup pg_restore --host=localhost --port=5432 --username=postgre  --dbname=postg
 
 
 
+
+##################
+
+
+CREATE ROLE cofre LOGIN PASSWORD 'At0n@Cyb#r';
+
+GRANT SELECT ON DATABASE igr TO cofre;
+ 
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO cofre;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO cofre;
+GRANT ALL PRIVILEGES ON ALL PROCEDURES IN SCHEMA public TO cofre;
+
+
+
+
+
+##################
+
 ssh postgre@10.88.14.36
 #P0stSQL#3
 #P0stSQL#4
@@ -520,6 +538,9 @@ TO user_name;
 
 create role athenarole;
 
+
+
+
 GRANT SELECT,INSERT,UPDATE,DELETE ON tables TO athenarole; 
 
 grant athenarole to ops$dp_athena2;
@@ -529,7 +550,11 @@ GRANT SELECT ON DATABASE inovacao TO athenarole;
 
 
 GRANT USAGE ON SCHEMA public TO athenarole; 
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO athenarole;
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON ALL TABLES IN SCHEMA public TO athenarole;
+
+
+
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO athenarole;
 GRANT ALL PRIVILEGES ON ALL PROCEDURES IN SCHEMA public TO athenarole;
 

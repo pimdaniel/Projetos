@@ -205,13 +205,35 @@ SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE  COMMAND <> 'Sleep' and COMM
 
 SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE   state like '%lock%' \G;
 
-SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE   time > 500 \G;
+SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE   time > 60 \G;
 
 
-SELECT *  from INFORMATION_SCHEMA.PROCESSLIST WHERE  COMMAND <> 'Sleep' \G;
+SELECT command,count(0)   from INFORMATION_SCHEMA.PROCESSLIST WHERE  COMMAND <> 'Sleep' \G;
+
+
+SELECT command,count(0)   from INFORMATION_SCHEMA.PROCESSLIST group by command;
+
 
 SELECT * 
 from INFORMATION_SCHEMA.PROCESSLIST
 WHERE
  COMMAND <> 'Sleep'
 AND HOST NOT LIKE '10.164.25.133%' \G
+
+
+SELECT command,state,count(0)   from INFORMATION_SCHEMA.PROCESSLIST group by command,state;
+
+
+
+root       5543      1  0 Feb10 ?        00:00:00 /bin/sh /usr/bin/mysqld_safe --datadir=/app/mysql/data --pid-file=/app/mysql/mysqld.pid
+mysql      8161   5543 99 Feb10 ?        349-16:22:51 /usr/sbin/mysqld --basedir=/usr --datadir=/app/mysql/data --plugin-dir=/usr/lib64/mysql/plugin --user=mysql --log-error=/app/mysql/net002prdlnx554.log --pid-file=/app/mysql/mysqld.pid --socket=/var/lib/mysql/mysql.sock --port=3306
+
+The redo log file /mysql/mysqldata01/innodb/iblogs/#innodb_redo/#ib_redo36216 size 1087276380 is not a multiple of innodb_page_size
+
+innodb_redo_log_capacity = 8589934592                            
+innodb_page_size=16384
+
+cat /dev/null > \#ib_redo36216
+cat /dev/null > \#ib_redo35
+
+[ERROR] [MY-010020] [Server] Data Dictionary initialization failed.
